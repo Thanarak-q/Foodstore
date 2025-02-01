@@ -4,7 +4,7 @@ from sqlalchemy_serializer import SerializerMixin
 
 
 class Contact(db.Model, SerializerMixin):
-    __tablename__ = "sad_contact"
+    __tablename__ = "contacts"
 
     id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(50))

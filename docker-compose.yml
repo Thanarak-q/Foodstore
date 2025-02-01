@@ -33,7 +33,7 @@ services:
         reservations:
           memory: 256M
   pgadmin:
-    container_name: pgadmin4_container
+    container_name: pgadmin4_pladug
     image: dpage/pgadmin4
     restart: always
     environment:
