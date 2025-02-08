@@ -1,4 +1,5 @@
-name: "Pladug Resturant"
+version: "3.8"
+
 services:
   flask:
     build: flask
@@ -6,6 +7,7 @@ services:
       - "56733:8000"
     volumes:
       - ./flask:/flask_app
+    working_dir: /flask_app
     env_file:
       - .env.dev
     depends_on:
@@ -16,24 +18,26 @@ services:
           memory: 512M
         reservations:
           memory: 256M
+
   db:
     image: postgres:13-alpine
     ports:
       - "5432:5432"
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data/
     environment:
       POSTGRES_USER: Pladug
       POSTGRES_PASSWORD: Pladug
-      POSTGRES_DB: Pladug
+      POSTGRES_DB: Pladug_dev
     deploy:
       resources:
         limits:
           memory: 512M
         reservations:
           memory: 256M
+
   pgadmin:
-    container_name: pgadmin4_pladug
+    container_name: pgadmin_pladug
     image: dpage/pgadmin4
     restart: always
     environment:
@@ -41,5 +45,6 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - "5050:80"
+
 volumes:
   postgres_data:
