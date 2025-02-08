@@ -36,7 +36,7 @@
 
 - **Student ID:** 660510702
 - **GitHub ID:** [ntchz](https://github.com/ntchz)
-- **Role:** Frontend / Sub Backend
+- **Role:** Frontend / Sup Backend
 
 ---
 
