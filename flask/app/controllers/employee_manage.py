@@ -6,6 +6,7 @@ from app.models.base import Employee
 from flask import (jsonify, render_template,
                   request, url_for, flash, redirect)
 
+from app.controllers import Admin
 
 @app.route('/em', methods=('GET', 'POST'))
 def em_list():
@@ -42,7 +43,7 @@ def em_list():
             db.session.commit()
 
         return em_db_ems()
-    return app.send_static_file('Admin_page/list_em.html')
+    return render_template('Admin_page/list_em.html')
 
 @app.route("/em/ems")
 def em_db_ems():

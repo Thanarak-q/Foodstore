@@ -6,7 +6,7 @@ from sqlalchemy.sql import text
 from app import app
 from app import db
 
-
+from app.controllers import Admin
 from app.models.base import CTable
 
 @app.route('/table', methods=('GET', 'POST'))
@@ -44,7 +44,7 @@ def table_list():
             db.session.commit()
 
         return table_db_tables()
-    return app.send_static_file('Admin_page/list_table.html')
+    return render_template('Admin_page/list_table.html')
 
 
 

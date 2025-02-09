@@ -10,9 +10,11 @@ from app.models.contact import Contact
 
 
 
-from app.controllers import table_mange
-from app.controllers import menu_manage
-from app.controllers import employee_manage
+
+'''
+หน้า Admin
+'''
+from app.controllers import Admin
 
 
 

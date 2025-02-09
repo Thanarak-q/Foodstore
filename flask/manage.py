@@ -56,19 +56,19 @@ def seed_db():
                         description='ข้าวผัดหมู', 
                         price=50, 
                         category='อาหารคาว', 
-                        image_url='https://www.maggi.co.th/sites/default/files/styles/image_744_x_419/public/srh_recipes/a1b6cab9710d963ab0d30f62e5d3a88a.jpeg?h=b6717701&itok=URfn156q'))
+                        image_url='มาฮั้ฮัโตะ'))
     
     db.session.add(Menu(name='Pizza', 
                         description='Pizza', 
                         price=10, 
                         category='อาหารอิตารี่', 
-                        image_url='https://img.kapook.com/u/2022/wanwanat/A01.jpg'))
+                        image_url='มาฮั้ฮัโตะ'))
     
     db.session.add(Menu(name='ไก่ย่าง', 
                         description='ไก่ย่างจากญี่ปุ่น', 
                         price=50, 
                         category='อาหารคาว', 
-                        image_url='https://www.sgethai.com/wp-content/uploads/2022/11/221115-Content-%E0%B8%AA%E0%B8%B9%E0%B8%95%E0%B8%A3-%E0%B8%9B%E0%B8%B5%E0%B8%81%E0%B9%84%E0%B8%81%E0%B9%88%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%8702.jpg'))
+                        image_url='มาฮั้ฮัโตะ'))
 
     # #?-------------------------------------------------------------------------
     # สร้างข้อมูลพนักงาน
@@ -79,7 +79,7 @@ def seed_db():
     db.session.add(Employee(firstname='ทิวัตถ์', 
                              lastname='ทาจุมปู', 
                              phone='082-222-2222', 
-                             role='superstarใToTไ'))
+                             role="i tell you it's a threat not a promise"))
     db.session.add(Employee(firstname='กฤตภาส',
                             lastname='เกตุกำเนิด', 
                             phone='083-333-3333', 

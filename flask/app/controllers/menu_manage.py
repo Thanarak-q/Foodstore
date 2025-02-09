@@ -6,7 +6,7 @@ from sqlalchemy.sql import text
 from app import app
 from app import db
 
-
+from app.controllers import Admin
 from app.models.base import Menu
 
 @app.route('/menu', methods=('GET', 'POST'))
@@ -48,7 +48,7 @@ def menu_list():
             db.session.commit()
 
         return menu_db_menus()
-    return app.send_static_file('Admin_page/list_menu.html')
+    return render_template('Admin_page/list_menu.html')
 
 @app.route("/menu/menus")
 def menu_db_menus():
