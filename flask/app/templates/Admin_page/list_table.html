@@ -3,44 +3,65 @@
 {% block content %}
 <div id="add-edit" class="container" hidden="hidden">
   <div id="header" class="container">
-    <h1>Table Management</h1>
+    <h1 class="title has-text-black">Table Management</h1>
   </div>
   <div id="add-edit" class="container">
-    <h2 id="add-edit-caption">Add/Edit a Table:</h2>
-    <form id="addTableForm">
-      <label for="qr_code">QR Code</label>
-      <input type="text" id="qr_code" name="qr_code" placeholder="QR Code URL.." required />
-      <label for="status">Status</label>
-      <select id="status" name="status" required>
-        <option value="Available">Available</option>
-        <option value="Occupied">Occupied</option>
-        <option value="Reserved">Reserved</option>
-      </select>
-      <label for="ctable_name">Table name</label>
-      <input type="text" id="ctable_name" name="ctable_name" value="" required placeholder="Enter Table ID" />
+    <h2 id="add-edit-caption" class="subtitle has-text-black">Add/Edit a Table:</h2>
+    <form id="addTableForm" class="box">
+      <div class="field">
+        <label class="label has-text-black" for="ctable_name">Table Name</label>
+        <div class="control">
+          <input class="input" type="text" id="ctable_name" name="ctable_name" placeholder="Table Name.." required />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label has-text-black" for="qr_code">QR Code</label>
+        <div class="control">
+          <input class="input" type="text" id="qr_code" name="qr_code" placeholder="QR Code.." />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label has-text-black" for="status">Status</label>
+        <div class="control">
+          <input class="input" type="text" id="status" name="status" placeholder="Status.." required />
+        </div>
+      </div>
       <input type="hidden" id="table_id" name="id" />
-      <input type="submit" name="submit" value="Submit" />
-      <button id="clear_form" type="button">Clear</button>
-      <button id="cancel_form" type="button">Cancel</button>
+      <div class="field is-grouped">
+        <div class="control">
+          <input class="button is-link" type="submit" name="submit" value="Submit" />
+        </div>
+        <div class="control">
+          <button id="clear_form" class="button is-light" type="button">Clear</button>
+        </div>
+        <div class="control">
+          <button id="cancel_form" class="button is-light" type="button">Cancel</button>
+        </div>
+      </div>
     </form>
   </div>
 </div>
 <div id="table_display" class="container">
-  <button id="add_table" type="button">Create Table</button>
+  <button id="add_table" class="button is-primary" type="button">Create Table</button>
   <p></p><br />
-  <h2>Tables:</h2>
-  <table class="table-striped border-success" id="table-table">
-    <thead>
-      <tr>
-        <th data-field="ctable_name"><span class="text-success"> Table name </span></th>
-        <th data-field="qr_code"><span class="text-success"> QR Code </span></th>
-        <th data-field="status"><span class="text-success"> Status </span></th>
-        <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
-          <span class="text-success"> Edit/Delete </span>
-        </th>
-      </tr>
-    </thead>
-  </table>
+  <h2 class="subtitle has-text-black">Tables:</h2>
+  <div class="table-container">
+    <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="table-table" data-search="true" data-sort-name="table_id" data-sort-order="asc">
+      <thead>
+        <tr>
+          <th data-field="table_id" data-sortable="true"><span class="has-text-black"> Table ID </span></th>
+          <th data-field="qr_code" data-sortable="true"><span class="has-text-black"> QR Code </span></th>
+          <th data-field="status" data-sortable="true"><span class="has-text-black"> Status </span></th>
+          <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
+            <span class="has-text-black"> Edit/Delete </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Add rows dynamically -->
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}
 
@@ -52,57 +73,52 @@
       loadingTemplate: function () {
         return '' // เอาข้อความ "Loading, please wait" ออก
       }
-    })
-
-    $('#table-table').bootstrapTable('hideColumn') // Hide the ID column
+    });
   }
 
   $(document).ready(function () {
-    ;(function () {
-      $.getJSON('/table/tables', populate_table)
-    })()
-  })
+    (function () {
+      $.getJSON('/table/tables', populate_table);
+    })();
+  });
 
   function refresh_table(table_data) {
-    $('#table-table').bootstrapTable('load', table_data)
+    $('#table-table').bootstrapTable('load', table_data);
   }
 
   $('#addTableForm').submit(function (event) {
-    // prevent default html form submission action
-    event.preventDefault()
+    event.preventDefault();
 
-    // pack the inputs into a dictionary
-    var formData = {}
+    var formData = {};
     $(':input').each(function () {
-      var key = $(this).attr('name')
-      var val = $(this).val()
+      var key = $(this).attr('name');
+      var val = $(this).val();
       if (key != 'submit') {
-        formData[key] = val
+        formData[key] = val;
       }
-    })
+    });
 
-    var $form = $(this)
-    var url = '/table'
+    var $form = $(this);
+    var url = '/table';
 
-    // make a POST call to the back end w/ a callback to refresh the table
     $.post(url, formData, function (table_data) {
-      refresh_table(table_data)
-      clearForm()
-      toggleView()
-    })
-  })
+      refresh_table(table_data);
+      clearForm();
+      toggleView();
+    });
+  });
 
   function clearForm() {
-    $('#addTableForm')[0].reset()
+    $('#addTableForm')[0].reset();
   }
 
   function toggleView() {
     if ($('#table_display').attr('hidden')) {
-      $('#table_display').removeAttr('hidden')
-      $('#add-edit').attr('hidden', 'hidden')
+      $('#table_display').removeAttr('hidden');
+      $('#add-edit').attr('hidden', 'hidden');
     } else {
-      $('#table_display').attr('hidden', 'hidden')
-      $('#add-edit').removeAttr('hidden')
+      $('#table_display').attr('hidden', 'hidden');
+      $('#add-edit').removeAttr('hidden');
     }
   }
 
@@ -114,50 +130,50 @@
       '<a class="remove" href="javascript:void(0)" title="Remove">',
       '🗑️',
       '</a>',
-    ].join('')
+    ].join('');
   }
 
   window.operateEvents = {
     'click .edit': function (e, value, row, index) {
-      prePopulateForm(row)
+      prePopulateForm(row);
     },
     'click .remove': function (e, value, row, index) {
-      removeItem(row)
+      removeItem(row);
     },
-  }
+  };
 
   function prePopulateForm(row) {
     $('#addTableForm')[0].reset();
-    $('#table_id').val(row.ctable_name	);
+    $('#table_id').val(row.table_id);
+    $('#ctable_name').val(row.ctable_name);
     $('#qr_code').val(row.qr_code);
     $('#status').val(row.status);
-    $('#ctable_name').val(row.ctable_name	); // ตั้งค่าของ ctable_name	
     toggleView();
-}
-
-function removeItem(row) {
-  if (!confirm('Delete table with ID ' + row.ctable_name	 + '?')) {
-      return false
   }
-  var url = '/table/remove_table'
-  var formData = { id: row.ctable_name	 }
-  $.post(url, formData, function (table_data) {
-      refresh_table(table_data)
-  })
-}
+
+  function removeItem(row) {
+    if (!confirm('Delete table with ID ' + row.table_id + '?')) {
+      return false;
+    }
+    var url = '/table/remove_table';
+    var formData = { id: row.table_id };
+    $.post(url, formData, function (table_data) {
+      refresh_table(table_data);
+    });
+  }
 
   $('#add_table').click(function () {
-    clearForm()
-    toggleView()
-  })
+    clearForm();
+    toggleView();
+  });
 
   $('#clear_form').click(function () {
-    clearForm()
-  })
+    clearForm();
+  });
 
   $('#cancel_form').click(function () {
-    clearForm()
-    toggleView()
-  })
+    clearForm();
+    toggleView();
+  });
 </script>
 {% endblock %}

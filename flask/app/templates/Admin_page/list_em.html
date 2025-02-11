@@ -1,10 +1,183 @@
 {% extends 'Admin_page/base.html' %}
 
 {% block content %}
+<div id="add-edit" class="container" hidden="hidden">
+  <div id="header" class="container">
+    <h1 class="title has-text-black">Employee Management</h1>
+  </div>
+  <div id="add-edit" class="container">
+    <h2 id="add-edit-caption" class="subtitle has-text-black">Add/Edit an Employee:</h2>
+    <form id="addEmployeeForm" class="box">
+      <div class="field">
+        <label class="label has-text-black" for="firstname">First Name</label>
+        <div class="control">
+          <input class="input" type="text" id="firstname" name="firstname" placeholder="First Name" required />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label has-text-black" for="lastname">Last Name</label>
+        <div class="control">
+          <input class="input" type="text" id="lastname" name="lastname" placeholder="Last Name" required />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label has-text-black" for="phone">Phone</label>
+        <div class="control">
+          <input class="input" type="text" id="phone" name="phone" placeholder="Phone Number" required />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label has-text-black" for="role">Role</label>
+        <div class="control">
+          <input class="input" type="text" id="role" name="role" placeholder="Role" required />
+        </div>
+      </div>
+      <input type="hidden" id="employee_id" name="id" />
+      <div class="field is-grouped">
+        <div class="control">
+          <input class="button is-link" type="submit" name="submit" value="Submit" />
+        </div>
+        <div class="control">
+          <button id="clear_form" class="button is-light" type="button">Clear</button>
+        </div>
+        <div class="control">
+          <button id="cancel_form" class="button is-light" type="button">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div id="employee_display" class="container">
+  <button id="add_employee" class="button is-primary" type="button">Create Employee</button>
+  <p></p><br />
+  <h2 class="subtitle has-text-black">Employees:</h2>
+  <div class="table-container">
+    <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="employee-table" data-search="true" data-sort-name="em_id" data-sort-order="asc">
+      <thead>
+        <tr>
+          <th data-field="em_id" data-sortable="true"><span class="has-text-black"> ID </span></th>
+          <th data-field="firstname" data-sortable="true"><span class="has-text-black"> First Name </span></th>
+          <th data-field="lastname" data-sortable="true"><span class="has-text-black"> Last Name </span></th>
+          <th data-field="phone" data-sortable="true"><span class="has-text-black"> Phone </span></th>
+          <th data-field="role" data-sortable="true"><span class="has-text-black"> Role </span></th>
+          <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
+            <span class="has-text-black"> Edit/Delete </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Add rows dynamically -->
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
+  function populate_employee_table(employee_data) {
+    $('#employee-table').bootstrapTable({
+      data: employee_data,
+      loadingTemplate: function () {
+        return '' // เอาข้อความ "Loading, please wait" ออก
+      }
+    });
+  }
 
+  $(document).ready(function () {
+    (function () {
+      $.getJSON('/em/ems', populate_employee_table);
+    })();
+  });
+
+  function refresh_employee_table(employee_data) {
+    $('#employee-table').bootstrapTable('load', employee_data);
+  }
+
+  $('#addEmployeeForm').submit(function (event) {
+    event.preventDefault();
+
+    var formData = {};
+    $('#addEmployeeForm').serializeArray().forEach(function (item) {
+      formData[item.name] = item.value;
+    });
+
+    var url = '/em';
+
+    $.post(url, formData, function (employee_data) {
+      refresh_employee_table(employee_data);
+      clearForm();
+      toggleView();
+    });
+  });
+
+  function clearForm() {
+    $('#addEmployeeForm')[0].reset();
+  }
+
+  function toggleView() {
+    if ($('#employee_display').attr('hidden')) {
+      $('#employee_display').removeAttr('hidden');
+      $('#add-edit').attr('hidden', 'hidden');
+    } else {
+      $('#employee_display').attr('hidden', 'hidden');
+      $('#add-edit').removeAttr('hidden');
+    }
+  }
+
+  function actionFormatter(value, row, index) {
+    return [
+      '<a class="edit" href="javascript:void(0)" title="Edit">',
+      '✏️',
+      '</a>  ',
+      '<a class="remove" href="javascript:void(0)" title="Remove">',
+      '🗑️',
+      '</a>',
+    ].join('');
+  }
+
+  window.operateEvents = {
+    'click .edit': function (e, value, row, index) {
+      prePopulateForm(row);
+    },
+    'click .remove': function (e, value, row, index) {
+      removeItem(row);
+    },
+  };
+
+  function prePopulateForm(row) {
+    $('#addEmployeeForm')[0].reset();
+    $('#employee_id').val(row.em_id);  // ใช้ em_id แทน id
+    $('#firstname').val(row.firstname);
+    $('#lastname').val(row.lastname);
+    $('#phone').val(row.phone);
+    $('#role').val(row.role);
+    toggleView();
+  }
+
+  function removeItem(row) {
+    if (!confirm('Delete employee with ID ' + row.em_id + '?')) {
+      return false;
+    }
+    var url = '/em/remove_em';
+    var formData = { id: row.em_id };
+    $.post(url, formData, function (employee_data) {
+      refresh_employee_table(employee_data);
+    });
+  }
+
+  $('#add_employee').click(function () {
+    clearForm();
+    toggleView();
+  });
+
+  $('#clear_form').click(function () {
+    clearForm();
+  });
+
+  $('#cancel_form').click(function () {
+    clearForm();
+    toggleView();
+  });
 </script>
 {% endblock %}

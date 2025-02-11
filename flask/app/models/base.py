@@ -26,13 +26,14 @@ class CTable(db.Model, SerializerMixin):
 
     def __init__(self, ctable_name, qr_code=None, status="Available"):
             self.ctable_name = ctable_name
-            self.qr_code = qr_code or "https://www.youtube.com/watch?v=1Sq0-Y_K2w0"
+            self.qr_code = qr_code or "let me love you like a woman"
             self.status = status
 
     def update(self, ctable_name, qr_code, status):
         self.qr_code = qr_code
         self.status = status
         self.ctable_name = ctable_name
+        
 
 
 

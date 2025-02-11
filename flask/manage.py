@@ -24,7 +24,6 @@ payment เก็บข้อมูลการชำระเงิน
 '''
 # from app.models.payment import Payment
 
-
 '''
 docker compose exec db psql --username=Pladug --dbname=Pladug_dev
 to see database
@@ -39,7 +38,6 @@ def create_db():
     db.create_all()
     db.session.commit()
 
-
 @cli.command("seed_db")
 def seed_db():
     '''
@@ -47,63 +45,106 @@ def seed_db():
     '''
     #?-------------------------------------------------------------------------
     # สร้างข้อมูลโต๊ะ
-    db.session.add(CTable(ctable_name="t1", status='Occupied'))
-    db.session.add(CTable(ctable_name="t2", status='Occupied'))
+    for i in range(1, 21):
+        db.session.add(CTable(ctable_name=f"t{i}", status='Available'))
 
     #?-------------------------------------------------------------------------
     # สร้างข้อมูลเมนู
-    db.session.add(Menu(name='ข้าวผัด',
-                        description='ข้าวผัดหมู', 
-                        price=50, 
-                        category='อาหารคาว', 
-                        image_url='มาฮั้ฮัโตะ'))
-    
-    db.session.add(Menu(name='Pizza', 
-                        description='Pizza', 
-                        price=10, 
-                        category='อาหารอิตารี่', 
-                        image_url='มาฮั้ฮัโตะ'))
-    
-    db.session.add(Menu(name='ไก่ย่าง', 
-                        description='ไก่ย่างจากญี่ปุ่น', 
-                        price=50, 
-                        category='อาหารคาว', 
-                        image_url='มาฮั้ฮัโตะ'))
+    sample_menus = [
+    # อาหารคาว
+    ('ข้าวผัด', 'ข้าวผัดหมู', 50, 'อาหารคาว'),
+    ('ไก่ย่าง', 'ไก่ย่างสูตรพิเศษ', 100, 'อาหารคาว'),
+    ('ต้มยำกุ้ง', 'ต้มยำกุ้งรสแซ่บ', 150, 'อาหารคาว'),
+    ('แกงเขียวหวานไก่', 'แกงเขียวหวานไก่รสเข้มข้น', 120, 'อาหารคาว'),
+    ('ผัดกะเพรา', 'ผัดกะเพราหมูสับไข่ดาว', 70, 'อาหารคาว'),
+    ('หมูทอดกระเทียม', 'หมูทอดกระเทียมพริกไทย', 90, 'อาหารคาว'),
+    ('ปลาทอดน้ำปลา', 'ปลากะพงทอดน้ำปลา', 180, 'อาหารคาว'),
+    ('ไข่พะโล้', 'ไข่พะโล้ใส่หมูสามชั้น', 80, 'อาหารคาว'),
+    ('ข้าวมันไก่', 'ข้าวมันไก่สูตรต้นตำรับ', 75, 'อาหารคาว'),
+    ('ข้าวหมูแดง', 'ข้าวหมูแดงราดน้ำซอสหวาน', 70, 'อาหารคาว'),
 
-    # #?-------------------------------------------------------------------------
-    # สร้างข้อมูลพนักงาน
-    db.session.add(Employee(firstname='ธนารักษ์', 
-                             lastname='กันยาประสิทธิ์', 
-                             phone='081-111-1111', 
-                             role='Admin'))
-    db.session.add(Employee(firstname='ทิวัตถ์', 
-                             lastname='ทาจุมปู', 
-                             phone='082-222-2222', 
-                             role="i tell you it's a threat not a promise"))
-    db.session.add(Employee(firstname='กฤตภาส',
-                            lastname='เกตุกำเนิด', 
-                            phone='083-333-3333', 
-                            role='chicken hunter'))
-    db.session.add(Employee(firstname='พ่อใหญ่นน',
-                            lastname='เทพสุข', 
-                            phone='084-444-4444', 
-                            role='darkknights'))
-    # #?-------------------------------------------------------------------------
-    # # สร้างคำสั่งซื้อ (orders) และรายละเอียดการสั่งซื้อ (order_details)
-    # # สมมติว่าโต๊ะที่ 1 สั่งข้าวผัด 2 จานและไก่ย่าง 1 จาน
-    # order = Order(table_name=1, status="Preparing", total_price=150)
-    # db.session.add(order)
-    # db.session.flush()  # ใช้เพื่อให้ `order_id` ถูกสร้างขึ้น
+    # อาหารไทย
+    ('ส้มตำ', 'ส้มตำไทย', 60, 'อาหารไทย'),
+    ('ลาบหมู', 'ลาบหมูรสเด็ด', 80, 'อาหารไทย'),
+    ('น้ำตกเนื้อ', 'น้ำตกเนื้อย่างจิ้มแจ่ว', 120, 'อาหารไทย'),
+    ('ต้มแซ่บกระดูกหมู', 'ต้มแซ่บกระดูกอ่อน', 130, 'อาหารไทย'),
+    ('ข้าวเหนียวไก่ทอด', 'ข้าวเหนียวไก่ทอดสูตรเด็ด', 75, 'อาหารไทย'),
+    ('ข้าวซอยไก่', 'ข้าวซอยไก่สูตรเชียงใหม่', 100, 'อาหารไทย'),
+    ('แกงส้มชะอมไข่', 'แกงส้มชะอมไข่กุ้งสด', 120, 'อาหารไทย'),
+    ('ห่อหมกทะเล', 'ห่อหมกทะเลเครื่องแน่น', 150, 'อาหารไทย'),
+    ('ขนมจีนน้ำยา', 'ขนมจีนน้ำยาใต้รสเข้มข้น', 90, 'อาหารไทย'),
+    ('หมูปิ้ง', 'หมูปิ้งไม้ละ 10 บาท', 10, 'อาหารไทย'),
 
-    # # รายการคำสั่งซื้อ
-    # db.session.add(OrderDetail(order_id=order.order_id, menu_id=1, quantity=2, price_per_unit=50))
-    # db.session.add(OrderDetail(order_id=order.order_id, menu_id=3, quantity=1, price_per_unit=50))
+    # อาหารฝรั่ง
+    ('Pizza', 'Pizza อิตาลี', 200, 'อาหารฝรั่ง'),
+    ('สเต็กหมู', 'สเต็กหมูซอสพริกไทยดำ', 180, 'อาหารฝรั่ง'),
+    ('สเต็กเนื้อ', 'สเต็กเนื้อริบอายซอสเกรวี่', 350, 'อาหารฝรั่ง'),
+    ('พาสต้า', 'พาสต้าคาโบนาร่า', 160, 'อาหารฝรั่ง'),
+    ('เบอร์เกอร์เนื้อ', 'เบอร์เกอร์เนื้อชีส', 140, 'อาหารฝรั่ง'),
+    ('ซุปเห็ด', 'ซุปครีมเห็ดทรัฟเฟิล', 120, 'อาหารฝรั่ง'),
+    ('สปาเก็ตตี้โบโลเนส', 'สปาเก็ตตี้ซอสโบโลเนส', 150, 'อาหารฝรั่ง'),
+    ('แซนด์วิชแฮมชีส', 'แซนด์วิชแฮมชีสกรอบ', 100, 'อาหารฝรั่ง'),
+    ('ซีซาร์สลัด', 'ซีซาร์สลัดไก่กรอบ', 130, 'อาหารฝรั่ง'),
+    ('Fish and Chips', 'ปลาทอดกรอบเสิร์ฟพร้อมมันฝรั่งทอด', 190, 'อาหารฝรั่ง')
+    ]
+
+    for name, desc, price, cat in sample_menus:
+        db.session.add(Menu(name=name, description=desc, price=price, category=cat, image_url='image_url_placeholder'))
 
     #?-------------------------------------------------------------------------
-    db.session.add(Contact(firstname='John', lastname='Doe', phone='123456789'))
+    # สร้างข้อมูลพนักงาน
+    sample_employees = [
+    ('ธนารักษ์', 'กันยาประสิทธิ์', '081-111-1111', 'Admin'),
+    ('ทิวัตถ์', 'ทาจุมปู', '082-222-2222', 'Manager'),
+    ('กฤตภาส', 'เกตุกำเนิด', '083-333-3333', 'Chef'),
+    ('พ่อใหญ่นน', 'เทพสุข', '084-444-4444', 'Waiter'),
+    ('สุริยา', 'จันทร์สว่าง', '085-555-5555', 'Cashier'),
+
+    ('นที', 'วงศ์เจริญ', '086-111-1111', 'Let me close my eyes with dignity'),
+    ('จิรายุ', 'ทองดี', '087-222-2222', 'Let\'s end it all, the world\'s not far behind'),
+    ('พีรพัฒน์', 'เกษมสุข', '088-333-3333', 'So what\'s the point of staying?'),
+    ('กันตภณ', 'ศิริวัฒน์', '089-444-4444', 'It\'s going up in flames, I know'),
+    ('สุวัฒน์', 'ปรีชาธรรม', '090-555-5555', 'Yes, I know, ooh'),
+    
+    ('ภาณุวัฒน์', 'อินทรีทอง', '091-666-6666', 'Oh-oh-oh'),
+    ('อริยะ', 'โชติพงษ์', '092-777-7777', 'Hey-hey Oh-oh (Hey)'),
+    ('รัชพล', 'ศรีสุข', '093-888-8888', 'Just hold my heartbeat close to you'),
+    ('ศิวกร', 'ไพศาล', '094-999-9999', 'Remember how it always beats for you'),
+    ('สิรวิชญ์', 'พรหมวิเศษ', '095-000-0000', 'I\'m falling at the speed of light'),
+
+    ('ธวัชชัย', 'สุนทรกุล', '096-111-1111', 'I\'m staring at your shrinking face, don\'t cry'),
+    ('ปริญญา', 'อุดมทรัพย์', '097-222-2222', 'You know my heart belongs to you'),
+    ('วิชัย', 'เดชาศิลป์', '098-333-3333', 'One last time, say that you want me too'),
+    ('เอกชัย', 'สมบูรณ์', '099-444-4444', 'The only words that gave me life'),
+    ('จักรพงษ์', 'โชติภักดี', '080-555-5555', 'Now I\'ll see you on the other side'),
+
+    ('ปิยะ', 'เศรษฐวิทยา', '081-666-6666', 'Oh-oh, oh-oh, oh-oh'),
+    ('ณัฐพล', 'ทองกาญจน์', '082-777-7777', 'Oh-oh, oh-oh, oh-oh'),
+    ('ชัยวัฒน์', 'พงศ์เจริญ', '083-888-8888', 'Oh-oh, oh-oh, oh-oh'),
+    ('อธิป', 'จันทร์สม', '084-999-9999', 'Oh-oh, oh-oh, oh-oh'),
+
+    ('สรวิชญ์', 'ภูมิวัฒน์', '085-000-0000', 'Oh, mama, I\'ll pray'),
+    ('กฤษณะ', 'นวลศรี', '086-111-1111', 'I\'m running away'),
+    ('อานนท์', 'เทวะ', '087-222-2222', 'Oh-oh Hey-hey (Oh, no)'),
+    ('วิทยา', 'ศักดิ์ศรี', '088-333-3333', 'Is a threat not a promise? (Mmm)'),
+    ('ธนกฤต', 'รุ่งเรือง', '089-444-4444', 'If you\'re looking for rage (Mmm, oh)'),
+
+    ('ภาสกร', 'จิรเดช', '090-555-5555', 'If you\'re looking for ragin\''),
+    ('พงศกร', 'ธรรมเจริญ', '091-666-6666', 'Quiet for days'),
+    ('อนันต์', 'โชคชัย', '092-777-7777', 'Baby, running away'),
+    ('วีระ', 'ศรีวัฒน์', '093-888-8888', 'Ayy-yeah'),
+    ('นภดล', 'แสงจันทร์', '094-999-9999', 'It\'s a threat, not a promise'),
+    ]
+
+    for fname, lname, phone, role in sample_employees:
+        db.session.add(Employee(firstname=fname, lastname=lname, phone=phone, role=role))
+    
+    #?-------------------------------------------------------------------------
+    # เพิ่มเติม Contact 
+    for i in range(1, 21):
+        db.session.add(Contact(firstname=f'John{i}', lastname=f'Doe{i}', phone=f'12345678{i}'))
+    
     db.session.commit()
-
-
 
 if __name__ == "__main__":
     cli()

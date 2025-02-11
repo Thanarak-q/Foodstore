@@ -3,187 +3,221 @@
 {% block content %}
 <div id="add-edit" class="container" hidden="hidden">
   <div id="header" class="container">
-    <h1>Menu Management</h1>
+    <h1 class="title has-text-black">Menu Management</h1>
   </div>
   <div id="add-edit" class="container">
-    <h2 id="add-edit-caption">Add/Edit a Menu:</h2>
-    <form id="addMenuForm">
-      <label for="name">Menu Name</label>
-      <input type="text" id="name" name="name" placeholder="Menu Name.." required />
-      <label for="description">Description</label>
-      <input type="text" id="description" name="description" placeholder="Description.." />
-      <label for="price">Price</label>
-      <input type="number" id="price" name="price" placeholder="Price.." required />
-      <br>
-      <label for="category">Category</label>
-      <input type="text" id="category" name="category" placeholder="Category.." required />
-      <label for="image_url">Image URL</label>
-      <input type="text" id="image_url" name="image_url" placeholder="Image URL.." />
-      <label for="availability">Availability</label>
-      <select id="availability" name="availability" required>
-        <option value="true">Available</option>
-        <option value="false">Not Available</option>
-      </select>
+    <h2 id="add-edit-caption" class="subtitle has-text-black">Add/Edit a Menu:</h2>
+    <form id="addMenuForm" class="box">
+      <div class="field">
+        <label class="label has-text-black" for="name">Menu Name</label>
+        <div class="control">
+          <input class="input" type="text" id="name" name="name" placeholder="Menu Name.." required />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label has-text-black" for="description">Description</label>
+        <div class="control">
+          <input class="input" type="text" id="description" name="description" placeholder="Description.." />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label has-text-black" for="price">Price</label>
+        <div class="control">
+          <input class="input" type="number" id="price" name="price" placeholder="Price.." required />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label has-text-black" for="category">Category</label>
+        <div class="control">
+          <input class="input" type="text" id="category" name="category" placeholder="Category.." required />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label has-text-black" for="image_url">Image URL</label>
+        <div class="control">
+          <input class="input" type="text" id="image_url" name="image_url" placeholder="Image URL.." />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label has-text-black" for="availability">Availability</label>
+        <div class="control">
+          <div class="select">
+            <select id="availability" name="availability" required>
+              <option value="true">Available</option>
+              <option value="false">Not Available</option>
+            </select>
+          </div>
+        </div>
+      </div>
       <input type="hidden" id="menu_id" name="id" />
-      <input type="submit" name="submit" value="Submit" />
-      <button id="clear_form" type="button">Clear</button>
-      <button id="cancel_form" type="button">Cancel</button>
+      <div class="field is-grouped">
+        <div class="control">
+          <input class="button is-link" type="submit" name="submit" value="Submit" />
+        </div>
+        <div class="control">
+          <button id="clear_form" class="button is-light" type="button">Clear</button>
+        </div>
+        <div class="control">
+          <button id="cancel_form" class="button is-light" type="button">Cancel</button>
+        </div>
+      </div>
     </form>
   </div>
 </div>
 <div id="table_display" class="container">
-  <button id="add_menu" type="button">Create Menu</button>
+  <button id="add_menu" class="button is-primary" type="button">Create Menu</button>
   <p></p><br />
-  <h2>Menus:</h2>
-  <table class="table-striped border-success" id="menu-table">
-    <thead>
-      <tr>
-        <th data-field="name"><span class="text-success"> Menu Name </span></th>
-        <th data-field="description"><span class="text-success"> Description </span></th>
-        <th data-field="price"><span class="text-success"> Price </span></th>
-        <th data-field="category"><span class="text-success"> Category </span></th>
-        <th data-field="availability"><span class="text-success"> Availability </span></th>
-        <th data-field="image_url"><span class="text-success"> Image URL </span></th>
-        <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
-          <span class="text-success"> Edit/Delete </span>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Menu 1</td>
-        <td>Description of Menu 1</td>
-        <td>$10.00</td>
-        <td>Category 1</td>
-        <td>Available</td>
-        <td>
-          <a href="https://example.com/long-image-url.jpg" target="_blank">คลิกเพื่อดูภาพ</a>
-        </td>
-        <td>
-          <!-- Edit/Delete buttons here -->
-        </td>
-      </tr>
-      <!-- Add more rows as needed -->
-    </tbody>
-  </table>
+  <h2 class="subtitle has-text-black">Menus:</h2>
+  <div class="table-container">
+    <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="menu-table" data-search="true">
+      <thead>
+        <tr>
+          <th data-field="name" data-sortable="true"><span class="has-text-black"> Menu Name </span></th>
+          <th data-field="description" data-sortable="true"><span class="has-text-black"> Description </span></th>
+          <th data-field="price" data-sortable="true"><span class="has-text-black"> Price </span></th>
+          <th data-field="category" data-sortable="true"><span class="has-text-black"> Category </span></th>
+          <th data-field="availability" data-sortable="true"><span class="has-text-black"> Availability </span></th>
+          <th data-field="image_url" data-sortable="true"><span class="has-text-black"> Image URL </span></th>
+          <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
+            <span class="has-text-black"> Edit/Delete </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Menu 1</td>
+          <td>Description of Menu 1</td>
+          <td>$10.00</td>
+          <td>Category 1</td>
+          <td>Available</td>
+          <td>
+            <a href="https://example.com/long-image-url.jpg" target="_blank">คลิกเพื่อดูภาพ</a>
+          </td>
+          <td>
+            <!-- Edit/Delete buttons here -->
+          </td>
+        </tr>
+        <!-- Add more rows as needed -->
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-
 <script>
-      function populate_table(table_data) {
-        $('#menu-table').bootstrapTable({
-          data: table_data,
-          loadingTemplate: function () {
-            return '' // เอาข้อความ "Loading, please wait" ออก
-          }
-        })
+  function populate_table(table_data) {
+    $('#menu-table').bootstrapTable({
+      data: table_data,
+      loadingTemplate: function () {
+        return '' // เอาข้อความ "Loading, please wait" ออก
       }
+    });
+  }
 
-      $(document).ready(function () {
-        ;(function () {
-          $.getJSON('/menu/menus', populate_table)
-        })()
-      })
+  $(document).ready(function () {
+    (function () {
+      $.getJSON('/menu/menus', populate_table);
+    })();
+  });
 
-      function refresh_table(table_data) {
-        $('#menu-table').bootstrapTable('load', table_data)
+  function refresh_table(table_data) {
+    $('#menu-table').bootstrapTable('load', table_data);
+  }
+
+  $('#addMenuForm').submit(function (event) {
+    event.preventDefault();
+
+    var formData = {};
+    $(':input').each(function () {
+      var key = $(this).attr('name');
+      var val = $(this).val();
+      if (key != 'submit') {
+        formData[key] = val;
       }
+    });
 
-      $('#addMenuForm').submit(function (event) {
-        event.preventDefault()
+    var $form = $(this);
+    var url = '/menu';
 
-        var formData = {}
-        $(':input').each(function () {
-          var key = $(this).attr('name')
-          var val = $(this).val()
-          if (key != 'submit') {
-            formData[key] = val
-          }
-        })
+    $.post(url, formData, function (table_data) {
+      refresh_table(table_data);
+      clearForm();
+      toggleView();
+    });
+  });
 
-        var $form = $(this)
-        var url = '/menu'
+  function clearForm() {
+    $('#addMenuForm')[0].reset();
+  }
 
-        $.post(url, formData, function (table_data) {
-          refresh_table(table_data)
-          clearForm()
-          toggleView()
-        })
-      })
+  function toggleView() {
+    if ($('#table_display').attr('hidden')) {
+      $('#table_display').removeAttr('hidden');
+      $('#add-edit').attr('hidden', 'hidden');
+    } else {
+      $('#table_display').attr('hidden', 'hidden');
+      $('#add-edit').removeAttr('hidden');
+    }
+  }
 
-      function clearForm() {
-        $('#addMenuForm')[0].reset()
-      }
+  function actionFormatter(value, row, index) {
+    return [
+      '<a class="edit" href="javascript:void(0)" title="Edit">',
+      '✏️',
+      '</a>  ',
+      '<a class="remove" href="javascript:void(0)" title="Remove">',
+      '🗑️',
+      '</a>',
+    ].join('');
+  }
 
-      function toggleView() {
-        if ($('#table_display').attr('hidden')) {
-          $('#table_display').removeAttr('hidden')
-          $('#add-edit').attr('hidden', 'hidden')
-        } else {
-          $('#table_display').attr('hidden', 'hidden')
-          $('#add-edit').removeAttr('hidden')
-        }
-      }
+  window.operateEvents = {
+    'click .edit': function (e, value, row, index) {
+      prePopulateForm(row);
+    },
+    'click .remove': function (e, value, row, index) {
+      removeItem(row);
+    },
+  };
 
-      function actionFormatter(value, row, index) {
-        return [
-          '<a class="edit" href="javascript:void(0)" title="Edit">',
-          '✏️',
-          '</a>  ',
-          '<a class="remove" href="javascript:void(0)" title="Remove">',
-          '🗑️',
-          '</a>',
-        ].join('')
-      }
+  function prePopulateForm(row) {
+    $('#addMenuForm')[0].reset();
+    $('#menu_id').val(row.name);
+    $('#name').val(row.name);
+    $('#description').val(row.description);
+    $('#price').val(row.price);
+    $('#category').val(row.category);
+    $('#image_url').val(row.image_url);
+    $('#availability').val(row.availability.toString());
+    toggleView();
+  }
 
-      window.operateEvents = {
-        'click .edit': function (e, value, row, index) {
-          prePopulateForm(row)
-        },
-        'click .remove': function (e, value, row, index) {
-          removeItem(row)
-        },
-      }
+  function removeItem(row) {
+    if (!confirm('Delete menu with ID ' + row.name + '?')) {
+      return false;
+    }
+    var url = '/menu/remove_menu';
+    var formData = { id: row.name };
+    $.post(url, formData, function (table_data) {
+      refresh_table(table_data);
+    });
+  }
 
-      function prePopulateForm(row) {
-        $('#addMenuForm')[0].reset();
-        $('#menu_id').val(row.name);
-        $('#name').val(row.name);
-        $('#description').val(row.description);
-        $('#price').val(row.price);
-        $('#category').val(row.category);
-        $('#image_url').val(row.image_url);
-        $('#availability').val(row.availability.toString());
-        toggleView();
-      }
+  $('#add_menu').click(function () {
+    clearForm();
+    toggleView();
+  });
 
-      function removeItem(row) {
-        if (!confirm('Delete menu with ID ' + row.name + '?')) {
-          return false
-        }
-        var url = '/menu/remove_menu'
-        var formData = { id: row.name }
-        $.post(url, formData, function (table_data) {
-          refresh_table(table_data)
-        })
-      }
+  $('#clear_form').click(function () {
+    clearForm();
+  });
 
-      $('#add_menu').click(function () {
-        clearForm()
-        toggleView()
-      })
-
-      $('#clear_form').click(function () {
-        clearForm()
-      })
-
-      $('#cancel_form').click(function () {
-        clearForm()
-        toggleView()
-      })
-    </script>
+  $('#cancel_form').click(function () {
+    clearForm();
+    toggleView();
+  });
+</script>
 {% endblock %}
 
 
