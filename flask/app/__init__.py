@@ -2,6 +2,8 @@ import os
 from flask import Flask, request, redirect
 from werkzeug.debug import DebuggedApplication
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
 
 app = Flask(__name__, static_folder='static')
 app.url_map.strict_slashes = False
@@ -25,6 +27,7 @@ if app.debug:
 
 # Creating an SQLAlchemy instance
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 @app.before_request
 def remove_trailing_slash():

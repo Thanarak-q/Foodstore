@@ -17,7 +17,7 @@ def table_list():
         id_ = result.get('id', '')  # รับค่า id จากฟอร์ม
         validated = True
         validated_dict = dict()
-        valid_keys = ['ctable_name', 'qr_code', 'status']
+        valid_keys = ['qr_code', 'status']
 
         # Validate the input
         for key in result:
@@ -36,7 +36,7 @@ def table_list():
                 entry = CTable(**validated_dict)
                 db.session.add(entry)
             else:  # ถ้ามี id => แก้ไขรายการเดิม
-                table = CTable.query.filter_by(cTable_name=id_).first()
+                table = CTable.query.filter_by(CT_id=id_).first()
                 if table:
                     for key, value in validated_dict.items():
                         setattr(table, key, value)
@@ -46,20 +46,16 @@ def table_list():
         return table_db_tables()
     return render_template('Admin_page/list_table.html')
 
-
-
 @app.route("/table/tables")
 def table_db_tables():
     tables = []
-    # ดึงข้อมูลจากฐานข้อมูล พร้อมเรียงลำดับตาม ctable_name
-    db_tables = CTable.query.order_by(CTable.ctable_name).all()  # Use ctable_name instead of cTable_name
+    # ดึงข้อมูลจากฐานข้อมูล พร้อมเรียงลำดับตาม CT_id
+    db_tables = CTable.query.order_by(CTable.CT_id).all()
 
     tables = list(map(lambda x: x.to_dict(), db_tables))
     app.logger.debug("DB Tables (Sorted): " + str(tables))
 
     return jsonify(tables)
-
-
 
 @app.route('/table/remove_table', methods=('GET', 'POST'))
 def table_remove_table():

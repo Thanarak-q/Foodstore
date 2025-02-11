@@ -17,12 +17,12 @@
   <div class="columns is-gapless">
     <!-- Sidebar -->
     <div class="column is-2 sidebar">
-      <h1 class="title is-4 has-text-black ">Admin Panel</h1>
+      <h1 class="title is-2 has-text-black ">Admin Panel</h1>
       <aside class="menu">
         <ul class="menu-list">
-          <li><a href="{{ url_for('table_list') }}"><i class="fas fa-table"></i> Table Management</a></li>
-          <li><a href="{{ url_for('menu_list') }}"><i class="fas fa-utensils"></i> Menu Management</a></li>
-          <li><a href="{{ url_for('em_list') }}"><i class="fas fa-users"></i> Employee Management</a></li>
+          <li><a href="{{ url_for('table_list') }}" class="{% if request.endpoint == 'table_list' %}is-active{% endif %}"><i class="fas fa-table"></i> Table Management</a></li>
+          <li><a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'menu_list' %}is-active{% endif %}"><i class="fas fa-utensils"></i> Menu Management</a></li>
+          <li><a href="{{ url_for('em_list') }}" class="{% if request.endpoint == 'em_list' %}is-active{% endif %}"><i class="fas fa-users"></i> Employee Management</a></li>
         </ul>
       </aside>
     </div>
@@ -31,9 +31,6 @@
     <div class="column main-content">
       <div class="container">
         <div class="card">
-          <header class="card-header">
-            <p class="card-header-title has-text-black ">Dashboard Overview</p>
-          </header>
           <div class="card-content">
             {% block content %}{% endblock %}
           </div>

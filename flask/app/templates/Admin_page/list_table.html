@@ -9,12 +9,6 @@
     <h2 id="add-edit-caption" class="subtitle has-text-black">Add/Edit a Table:</h2>
     <form id="addTableForm" class="box">
       <div class="field">
-        <label class="label has-text-black" for="ctable_name">Table Name</label>
-        <div class="control">
-          <input class="input" type="text" id="ctable_name" name="ctable_name" placeholder="Table Name.." required />
-        </div>
-      </div>
-      <div class="field">
         <label class="label has-text-black" for="qr_code">QR Code</label>
         <div class="control">
           <input class="input" type="text" id="qr_code" name="qr_code" placeholder="QR Code.." />
@@ -23,10 +17,16 @@
       <div class="field">
         <label class="label has-text-black" for="status">Status</label>
         <div class="control">
-          <input class="input" type="text" id="status" name="status" placeholder="Status.." required />
+          <div class="select">
+            <select id="status" name="status" required>
+              <option value="Available">Available</option>
+              <option value="Occupied">Occupied</option>
+              <option value="Reserved">Reserved</option>
+            </select>
+          </div>
         </div>
       </div>
-      <input type="hidden" id="table_id" name="id" />
+      <input type="hidden" id="CT_id" name="id" />
       <div class="field is-grouped">
         <div class="control">
           <input class="button is-link" type="submit" name="submit" value="Submit" />
@@ -44,12 +44,11 @@
 <div id="table_display" class="container">
   <button id="add_table" class="button is-primary" type="button">Create Table</button>
   <p></p><br />
-  <h2 class="subtitle has-text-black">Tables:</h2>
   <div class="table-container">
-    <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="table-table" data-search="true" data-sort-name="table_id" data-sort-order="asc">
+    <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="table-table" data-search="true" data-sort-name="CT_id" data-sort-order="asc">
       <thead>
         <tr>
-          <th data-field="table_id" data-sortable="true"><span class="has-text-black"> Table ID </span></th>
+          <th data-field="CT_id" data-sortable="true"><span class="has-text-black"> Table ID </span></th>
           <th data-field="qr_code" data-sortable="true"><span class="has-text-black"> QR Code </span></th>
           <th data-field="status" data-sortable="true"><span class="has-text-black"> Status </span></th>
           <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
@@ -144,19 +143,18 @@
 
   function prePopulateForm(row) {
     $('#addTableForm')[0].reset();
-    $('#table_id').val(row.table_id);
-    $('#ctable_name').val(row.ctable_name);
+    $('#CT_id').val(row.CT_id);
     $('#qr_code').val(row.qr_code);
     $('#status').val(row.status);
     toggleView();
   }
 
   function removeItem(row) {
-    if (!confirm('Delete table with ID ' + row.table_id + '?')) {
+    if (!confirm('Delete table with ID ' + row.CT_id + '?')) {
       return false;
     }
     var url = '/table/remove_table';
-    var formData = { id: row.table_id };
+    var formData = { id: row.CT_id };
     $.post(url, formData, function (table_data) {
       refresh_table(table_data);
     });

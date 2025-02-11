@@ -16,7 +16,7 @@ nullable=False = ข้อมูลในคอลัมนั้นต้อง
 class CTable(db.Model, SerializerMixin):
     __tablename__ = "cTables"
 
-    ctable_name = db.Column(db.String(50), primary_key=True)  # รหัสโต๊ะ (Primary Key)
+    CT_id = db.Column(db.Integer, primary_key=True)  # เพิ่มคอลัมน์ id
     qr_code = db.Column(db.String(255), nullable=True)  # ลิงก์ QR Code สำหรับโต๊ะ
     status = db.Column(db.String(20), nullable=False, default="Available")  # สถานะโต๊ะ
 
@@ -24,24 +24,20 @@ class CTable(db.Model, SerializerMixin):
     สถานะโต๊ะ ("Available", "Occupied", "Reserved")
     '''
 
-    def __init__(self, ctable_name, qr_code=None, status="Available"):
-            self.ctable_name = ctable_name
-            self.qr_code = qr_code or "let me love you like a woman"
-            self.status = status
+    def __init__(self, qr_code=None, status="Available"):
+        self.qr_code = qr_code or "let me love you like a woman"
+        self.status = status
 
-    def update(self, ctable_name, qr_code, status):
+    def update(self, qr_code, status):
         self.qr_code = qr_code
         self.status = status
-        self.ctable_name = ctable_name
-        
-
-
 
 
 class Menu(db.Model, SerializerMixin):
     __tablename__ = "menu"
 
-    name = db.Column(db.String(100), primary_key=True)
+    menu_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
     description = db.Column(db.Text, nullable=True)
     price = db.Column(db.Float, nullable=False)
     category = db.Column(db.String(50), nullable=False)
