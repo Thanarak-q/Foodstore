@@ -10,28 +10,42 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <!-- Custom CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/Admin.css') }}">
-  
   {% block extra_css %}{% endblock %}
-  <style>
-    .submenu {
-      display: none;
-    }
-    .menu-label.is-active + .submenu {
-      display: block;
-    }
-    .dropdown-content {
-      display: none;
-    }
-    .dropdown.is-active .dropdown-content {
-      display: block;
-    }
-  </style>
 </head>
 <body>
+  <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="#">
+        <strong>Admin Panel</strong>
+      </a>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarAdmin">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+  
+    <div id="navbarAdmin" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            <i class="fas fa-user"></i>&nbsp; Admin
+          </a>
+          <div class="navbar-dropdown is-right">
+            <a class="navbar-item" href="/profile">
+              <i class="fas fa-id-badge"></i>&nbsp; Profile
+            </a>
+            <a class="navbar-item" href="/logout">
+              <i class="fas fa-sign-out-alt"></i>&nbsp; Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
   <div class="columns is-gapless">
-    <!-- Sidebar -->
-    <div class="column is-2 sidebar">
-      <h1 class="title is-2 has-text-black has-text-danger p-3 m-2">Admin Panel</h1>
+    <div class="column is-2 sidebar">      
       <aside class="menu">
         <ul class="menu-list">
           <li>
@@ -59,7 +73,7 @@
     <!-- Main Content -->
     <div class="column main-content">
       <div class="container">
-        <div class="card">
+        <div class="card fade-in">
           <div class="card-content">
             {% block content %}{% endblock %}
           </div>
@@ -71,21 +85,29 @@
   <!-- Scripts -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
-  <script>
-    document.getElementById('management-label').addEventListener('click', function() {
-      this.classList.toggle('is-active');
-    });
 
-    document.getElementById('dashboard-label').addEventListener('click', function() {
-      this.classList.toggle('is-active');
-      var submenu = this.nextElementSibling;
-      if (submenu.style.display === "block") {
-        submenu.style.display = "none";
-      } else {
-        submenu.style.display = "block";
-      }
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const burger = document.querySelector('.navbar-burger');
+      const menu = document.querySelector('#navbarAdmin');
+    
+      burger.addEventListener('click', () => {
+        burger.classList.toggle('is-active');
+        menu.classList.toggle('is-active');
+      });
+
+      // Toggle submenus
+      const menuLabels = document.querySelectorAll('.menu-label');
+      menuLabels.forEach(label => {
+        label.addEventListener('click', () => {
+          label.classList.toggle('is-active');
+          const submenu = label.nextElementSibling;
+          submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+        });
+      });
     });
   </script>
+
   {% block extra_js %}{% endblock %}
 </body>
 </html>
