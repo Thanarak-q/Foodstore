@@ -13,4 +13,3 @@ from app import db
 '''
 from app.controllers import Admin
 
-
