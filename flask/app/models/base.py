@@ -13,77 +13,31 @@ nullable=False = ข้อมูลในคอลัมนั้นต้อง
 '''
 
 # Model สำหรับตารางข้อมูลโต๊ะอาหาร
-class CTable(db.Model, SerializerMixin):
-    __tablename__ = "cTables"
+# class CTable(db.Model, SerializerMixin):
+#     __tablename__ = "cTables"
 
-    ctable_name = db.Column(db.String(50), primary_key=True)  # รหัสโต๊ะ (Primary Key)
-    qr_code = db.Column(db.String(255), nullable=True)  # ลิงก์ QR Code สำหรับโต๊ะ
-    status = db.Column(db.String(20), nullable=False, default="Available")  # สถานะโต๊ะ
+#     # table_id = db.Column(db.Integer, primary_key=True)
+#     ctable_name = db.Column(db.String(50), primary_key=True)  
+#     # qr_code = db.Column(db.LargeBinary, nullable=True)  # for qrcode image
+#     qr_code = db.Column(db.String(100), nullable=True)
+#     status = db.Column(db.String(20), nullable=False, default="Available")  # สถานะโต๊ะ
 
-    '''
-    สถานะโต๊ะ ("Available", "Occupied", "Reserved")
-    '''
+#     '''
+#     สถานะโต๊ะ ("Available", "Occupied", "Reserved")
+#     '''
 
-    def __init__(self, ctable_name, qr_code=None, status="Available"):
-            self.ctable_name = ctable_name
-            self.qr_code = qr_code or "https://www.youtube.com/watch?v=1Sq0-Y_K2w0"
-            self.status = status
+#     def __init__(self, ctable_name, qr_code=None, status="Available"):
+#             self.ctable_name = ctable_name
+#             self.qr_code = qr_code or "https://www.youtube.com/watch?v=1Sq0-Y_K2w0"
+#             self.status = status
 
-    def update(self, ctable_name, qr_code, status):
-        self.qr_code = qr_code
-        self.status = status
-        self.ctable_name = ctable_name
-
-
-
-
-class Menu(db.Model, SerializerMixin):
-    __tablename__ = "menu"
-
-    name = db.Column(db.String(100), primary_key=True)
-    description = db.Column(db.Text, nullable=True)
-    price = db.Column(db.Float, nullable=False)
-    category = db.Column(db.String(50), nullable=False)
-    image_url = db.Column(db.String(255), nullable=True)
-    availability = db.Column(db.Boolean, nullable=False)  # เปลี่ยนเป็น Boolean
-
-    def __init__(self, name, description, price, category, image_url=None, availability=True):
-        self.name = name
-        self.description = description
-        self.price = price
-        self.category = category
-        self.image_url = image_url
-        self.availability = availability
+#     def update(self, ctable_name, qr_code, status):
+#         self.qr_code = qr_code
+#         self.status = status
+#         self.ctable_name = ctable_name
 
 
-    def update(self, name, description, price, category, image_url, availability):
-        self.name = name
-        self.description = description
-        self.price = price
-        self.category = category
-        self.image_url = image_url
-        self.availability = availability
 
 
-# Model สำหรับตารางข้อมูลพนักงาน
-class Employee(db.Model, SerializerMixin):
-    __tablename__ = "employee"
 
-    em_id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(100), nullable=False)
-    lastname = db.Column(db.String(100), nullable=False)
-    phone = db.Column(db.String(15), nullable=False)
-    role = db.Column(db.String(50), nullable=False)
-
-    def __init__(self, firstname, lastname, phone, role):
-        self.firstname = firstname
-        self.lastname = lastname
-        self.phone = phone
-        self.role = role
-
-    def update(self, firstname, lastname, phone, role):
-        self.firstname = firstname
-        self.lastname = lastname
-        self.phone = phone
-        self.role = role
 

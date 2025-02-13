@@ -1,4 +1,4 @@
-from app.controllers import table_mange
+from app.controllers import ctable_mange
 from app.controllers import menu_manage
 from app.controllers import employee_manage
 

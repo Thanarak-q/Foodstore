@@ -2,8 +2,11 @@ import json
 from flask import (jsonify, render_template,
                   request, url_for, flash, redirect)
 
-
+from werkzeug.security import check_password_hash
+from werkzeug.urls import url_parse
+from app import login_manager
 from sqlalchemy.sql import text
+from flask_login import login_user
 from app import app
 from app import db
 from app.models.contact import Contact
@@ -14,8 +17,42 @@ from app.models.contact import Contact
 '''
 หน้า Admin
 '''
-from app.controllers import Admin
+from app.controllers import Admin, table_menage
 
+# @app.route('/test', methods=('GET', 'POST'))
+# def test():
+#     return render_template('test_bend.html')
+
+# @app.route('/lab11/login', methods=('GET', 'POST'))
+# def lab11_login():
+#     if request.method == 'POST':
+#         # login code goes here
+#         email = request.form.get('email')
+#         password = request.form.get('password')
+#         remember = bool(request.form.get('remember'))
+
+
+#         user = AuthUser.query.filter_by(email=email).first()
+ 
+#         # check if the user actually exists
+#         # take the user-supplied password, hash it, and compare it to the
+#         # hashed password in the database
+#         if not user or not check_password_hash(user.password, password):
+#             flash('Please check your login details and try again.')
+#             # if the user doesn't exist or password is wrong, reload the page
+#             return redirect(url_for('lab11_login'))
+
+
+#         # if the above check passes, then we know the user has the right
+#         # credentials
+#         login_user(user, remember=remember)
+#         next_page = request.args.get('next')
+#         if not next_page or url_parse(next_page).netloc != '':
+#             next_page = url_for('lab11_profile')
+#         return redirect(next_page)
+
+
+#     return render_template('lab11/login.html')
 
 
 

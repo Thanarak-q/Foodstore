@@ -2,12 +2,13 @@ import json
 from flask import (jsonify, render_template,
                   request, url_for, flash, redirect)
 
+import qrcode
 from sqlalchemy.sql import text
 from app import app
 from app import db
 
 from app.controllers import Admin
-from app.models.base import Menu
+from app.models.menu import Menu
 
 @app.route('/menu', methods=('GET', 'POST'))
 def menu_list():
@@ -75,3 +76,40 @@ def menu_remove_menu():
             app.logger.error(f"Error removing menu with id {id_}: {ex}")
             raise
     return menu_db_menus()
+
+# @app.route('/menu/create_menu', methods=('GET', 'POST'))
+# def hw10_create():
+#     app.logger.debug("menu - CREATE menu")
+#     if request.method == 'POST':
+#         result = request.form.to_dict()
+
+#         validated = True
+#         validated_dict = dict()
+#         valid_keys = ['email', 'name', 'message', 'date_created', 'owner_id']
+
+
+#         # validate the input
+#         for key in result:
+#             app.logger.debug(f"{key}: {result[key]}")
+#             # screen of unrelated inputs
+#             if key not in valid_keys:
+#                 continue
+
+
+#             value = result[key].strip()
+#             if not value or value == 'undefined':
+#                 validated = False
+#                 break
+#             validated_dict[key] = value
+            
+#         if validated:    
+#             try:
+#                 db.session.add(OwnBlogEntry(**validated_dict))
+#                 db.session.commit()
+#             except Exception as ex:
+#                 app.logger.error(f"Error create new blog: {ex}")
+#                 raise
+
+#     return menu_db_menus()
+
+

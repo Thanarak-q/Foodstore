@@ -1,6 +1,7 @@
 from flask.cli import FlaskGroup
 from app import app, db
 from app.models.contact import Contact
+import qrcode
 
 #!-------------------------------------------------------------------------
 ''' 
@@ -9,7 +10,10 @@ base เก็บข้อมูลพทัวไป
 : Menu สำหรับเก็บข้อมูลเมนูอาหาร
 : Employee สำหรับเก็บข้อมูลพนักงาน
 '''
-from app.models.base import CTable, Menu, Employee
+# from app.models.base import CTable, Menu, Employee
+from app.models.table import Tables
+from app.models.menu import Menu
+from app.models.employee import Employee
 
 '''
 buy 
@@ -47,8 +51,12 @@ def seed_db():
     '''
     #?-------------------------------------------------------------------------
     # สร้างข้อมูลโต๊ะ
-    db.session.add(CTable(ctable_name="t1", status='Occupied'))
-    db.session.add(CTable(ctable_name="t2", status='Occupied'))
+    # db.session.add(CTable(ctable_name="t1", status='Occupied'))
+    # db.session.add(CTable(ctable_name="t2", status='Occupied'))
+
+    db.session.add(Tables(table_id=1, qrcode='/static/qrcode/1.png'))
+    db.session.add(Tables(table_id=2, qrcode='/static/qrcode/2.png'))
+    db.session.commit()
 
     #?-------------------------------------------------------------------------
     # สร้างข้อมูลเมนู
@@ -100,8 +108,8 @@ def seed_db():
     # db.session.add(OrderDetail(order_id=order.order_id, menu_id=3, quantity=1, price_per_unit=50))
 
     #?-------------------------------------------------------------------------
-    db.session.add(Contact(firstname='John', lastname='Doe', phone='123456789'))
-    db.session.commit()
+    # db.session.add(Contact(firstname='John', lastname='Doe', phone='123456789'))
+    # db.session.commit()
 
 
 
