@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, redirect
 from werkzeug.debug import DebuggedApplication
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+# from flask_login import LoginManager
 from flask_migrate import Migrate
 
 
@@ -28,9 +28,9 @@ if app.debug:
 
 # Creating an SQLAlchemy instance
 db = SQLAlchemy(app)
-login_manager = LoginManager()
+# login_manager = LoginManager()
 # login_manager.login_view = 'lab11_login'
-login_manager.init_app(app)
+# login_manager.init_app(app)
 migrate = Migrate(app, db)
 
 @app.before_request

@@ -1,10 +1,10 @@
 # Model สำหรับตารางข้อมูลพนักงาน
 from app import db
 from sqlalchemy_serializer import SerializerMixin
-from flask_login import UserMixin
+# from flask_login import UserMixin
 
 # Model สำหรับตารางข้อมูลพนักงาน
-class Employee(db.Model, SerializerMixin, UserMixin):
+class Employee(db.Model, SerializerMixin):
     __tablename__ = "employee"
 
     em_id = db.Column(db.Integer, primary_key=True)
