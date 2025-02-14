@@ -53,6 +53,9 @@ from app.controllers import Admin, table_menage
 
 #     return render_template('lab11/login.html')
 
+@app.route('/table/test')
+def table_test():
+    return render_template('test_bend.html')
 
 
 

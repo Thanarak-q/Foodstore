@@ -19,7 +19,7 @@ class Tables(db.Model, SerializerMixin):
 
     def __init__(self, table_id, qrcode):
         self.table_id = table_id
-        self.qrcode = qrcode 
+        self.qrcode = qrcode
         self.status = "Available"
 
     def update(self, table_id, qrcode, status):
@@ -29,3 +29,9 @@ class Tables(db.Model, SerializerMixin):
 
     def update_status(self, status):
         self.status = status
+
+    # def gennerate_qrcode(self, id):
+    #     img = qrcode.make('google.com') # Must to change to menu select url
+    #     type(img)  # qrcode.image.pil.PilImage
+    #     img.save(f"app/static/qrcode/{id}.png")
+    #     return f"app/static/qrcode/{id}.png"

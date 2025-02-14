@@ -10,10 +10,10 @@ base เก็บข้อมูลพทัวไป
 : Menu สำหรับเก็บข้อมูลเมนูอาหาร
 : Employee สำหรับเก็บข้อมูลพนักงาน
 '''
-# from app.models.base import CTable, Menu, Employee
-from app.models.table import Tables
+from app.models.base import CTable
 from app.models.menu import Menu
 from app.models.employee import Employee
+from app.models.table import Tables
 
 '''
 buy 
@@ -49,13 +49,21 @@ def seed_db():
     '''
     #?-------------------------------------------------------------------------
     # สร้างข้อมูลโต๊ะ
-    for i in range(1, 21):
-        db.session.add(CTable(status='Available'))
+    # for i in range(1, 21):
+    #     db.session.add(CTable(status='Available'))
     # db.session.add(CTable(ctable_name="t1", status='Occupied'))
     # db.session.add(CTable(ctable_name="t2", status='Occupied'))
 
-    db.session.add(Tables(table_id=1, qrcode='/static/qrcode/1.png'))
-    db.session.add(Tables(table_id=2, qrcode='/static/qrcode/2.png'))
+    def gennerate_qrcode(id):
+        img = qrcode.make('google.com') # Must to change to menu select url
+        type(img)  # qrcode.image.pil.PilImage
+        img.save(f"app/static/qrcode/{id}.png")
+        return f"app/static/qrcode/{id}.png"
+
+    for i in range(1, 21):
+        db.session.add(Tables(table_id=i, qrcode=gennerate_qrcode(i)))
+    # db.session.add(Tables(table_id=1, qrcode='/static/qrcode/1.png'))
+    # db.session.add(Tables(table_id=2, qrcode='/static/qrcode/2.png'))
     db.session.commit()
 
     #?-------------------------------------------------------------------------
