@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>สั่งอาหารร้านขายปลาดุกทอด</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/Order_page.css') }}"
+    />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="cart-popup-backdrop" id="cart-backdrop"></div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+      <a
+        class="navbar-brand"
+        href="#"
+        id="nav-menu"
+        onclick="toggleCategoriesNav()"
+        >ประเภทอาหาร ⬇</a
+      >
+      <div class="ml-auto">
+        <button class="btn btn-link text-white" onclick="toggleSearchPopup()">
+          🔍
+        </button>
+        <button class="btn btn-link text-white" onclick="toggleCartPopup()">
+          🛒 <span id="cart-count" class="badge badge-warning">0</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Categories Navigation -->
+    <div
+      class="categories-nav bg-danger p-3"
+      id="categories-nav"
+      style="display: none"
+    ></div>
+
+    <!-- Search Bar -->
+    <div
+      class="search-bar-bottom bg-danger p-3 justify-content-center"
+      id="search-bar-bottom"
+      style="display: none"
+    >
+      <input
+        type="text"
+        class="form-control"
+        id="search-input-bottom"
+        placeholder="ค้นหาอาหาร..."
+      />
+      <button class="btn btn-warning ml-2" onclick="toggleSearchPopup()">
+        Close
+      </button>
+    </div>
+
+    <!-- Menu Grid -->
+    <div class="container mt-4" id="menu-grid-container"></div>
+
+    <!-- Product Popup -->
+    <div class="cart-popup-item" id="product-popup">
+      <div class="popup-content">
+        <img id="product-image" src="" alt="Product Image" class="img-fluid" />
+        <h3 id="product-name" class="mt-3"></h3>
+        <p id="product-description"></p>
+        <p id="product-price"></p>
+        <!-- เพิ่ม input สำหรับระบุจำนวนสินค้า -->
+        <div class="form-group">
+          <label for="quantity-input">จำนวน:</label>
+          <input
+            type="number"
+            id="quantity-input"
+            class="form-control"
+            value="1"
+            min="1"
+          />
+        </div>
+        <button class="btn btn-warning mt-2" onclick="closeProductPopup()">
+          ปิด
+        </button>
+        <button
+          id="add-from-popup"
+          class="btn btn-warning mt-2"
+          onclick="addToCartFromPopup()"
+        >
+          เพิ่มลงตะกร้า
+        </button>
+      </div>
+    </div>
+
+    <!-- Cart Popup -->
+    <div class="cart-popup" id="cart-popup">
+      <button
+        class="close-button btn btn-link text-dark float-right"
+        onclick="toggleCartPopup()"
+      >
+        ×
+      </button>
+      <h2>ตะกร้าสินค้า</h2>
+      <div id="cart-items"></div>
+      <div class="text-right">
+        <div id="total-price" class="mt-3 font-weight-bold">
+          รวมทั้งหมด: 0 บาท
+        </div>
+        <button class="btn btn-danger" onclick="clearcart()">ล้างค่า</button>
+        <button class="btn btn-warning" onclick="checkout()">
+          ยืนยันการสั่งซื้อ
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let menuItems = []; // Array to store menu items
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      $(document).ready(function () {
+        (function () {
+          $.getJSON("/menu/menus", populate_table);
+        })();
+        updateCart(); // Update the cart count
+
+        // Add event listener for search input
+        $("#search-input-bottom").on("input", function () {
+          const searchTerm = $(this).val().toLowerCase();
+          const filteredItems = menuItems.filter((item) =>
+            item.name.toLowerCase().includes(searchTerm)
+          );
+          renderMenuByCategory(filteredItems);
+        });
+      });
+
+      // Fetch menu data from the API
+      function populate_table(data) {
+        menuItems = data;
+        renderMenuByCategory();
+        renderCategoriesNav();
+      }
+
+      // Render categories dynamically
+      function renderCategoriesNav() {
+        const categoriesNav = $("#categories-nav");
+        categoriesNav.empty(); // Clear existing categories
+
+        // Get unique categories from the menu items
+        const categories = [...new Set(menuItems.map((item) => item.category))];
+
+        console.log(categories);
+        // Add an "All" category option
+        categoriesNav.append(`
+    <a href="javascript:void(0)" class="d-block text-white mb-2" onclick="filterMenucat('')">ทั้งหมด</a>
+  `);
+
+        // Loop through the unique categories and add them to the navigation
+        categories.forEach((category) => {
+          categoriesNav.append(`
+      <a href="javascript:void(0)" class="d-block text-white mb-2" onclick="filterMenucat('${category}')">${category}</a>
+    `);
+        });
+      }
+      // แก้ไขการแสดงผลเมนู
+      function renderMenuByCategory(filteredItems = menuItems) {
+        const menuContainer = $("#menu-grid-container");
+        menuContainer.empty(); // Clear existing items
+
+        const groupedByCategory = filteredItems.reduce((acc, item) => {
+          acc[item.category] = acc[item.category] || [];
+          acc[item.category].push(item);
+          return acc;
+        }, {});
+
+        Object.keys(groupedByCategory).forEach((category) => {
+          const categoryContainer = $("<div>").addClass("mb-4");
+
+          const categoryTitle = $("<h3>")
+            .addClass("text-danger font-weight-bold mb-3")
+            .text(category);
+          categoryContainer.append(categoryTitle);
+
+          const gridContainer = $("<div>").addClass("row");
+
+          groupedByCategory[category].forEach((item) => {
+            const cardDiv = $("<div>").addClass("col-md-4 mb-4");
+            cardDiv.html(`
+        <div class="card">
+          <img src="${item.image_url}" class="card-img-top" alt="${item.name}">
+          <div class="card-body">
+            <h5 class="card-title">${item.name}</h5>
+            <p class="card-text">ราคา: ${item.price} บาท</p>
+            <div class="form-group">
+              <label for="quantity-input-${item.menu_id}">จำนวน:</label>
+              <input
+                type="number"
+                id="quantity-input-${item.menu_id}"
+                class="form-control"
+                value="1"
+                min="1"
+              />
+            </div>
+            <button class="btn btn-warning btn-block" onclick="addToCart(${item.menu_id}, parseInt($('#quantity-input-${item.menu_id}').val(), 10))">เพิ่มลงตะกร้า</button>
+            <button class="btn btn-outline-secondary btn-block" onclick="showProductPopup(${item.menu_id})">ดูรายละเอียด</button>
+          </div>
+        </div>
+      `);
+            gridContainer.append(cardDiv);
+          });
+
+          categoryContainer.append(gridContainer);
+          menuContainer.append(categoryContainer);
+        });
+      }
+
+      // แก้ไขฟังก์ชัน addToCart เพื่อรับจำนวนสินค้า
+      function addToCart(itemId, quantity = 1) {
+        const item = menuItems.find((menuItem) => menuItem.menu_id === itemId);
+        if (!item) return;
+
+        const existingItem = cart.find(
+          (cartItem) => cartItem.menu_id === itemId
+        );
+        if (existingItem) {
+          existingItem.quantity += quantity;
+        } else {
+          cart.push({ ...item, quantity: quantity });
+        }
+
+        updateCart();
+      }
+
+      // Update cart function
+      function updateCart() {
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        // Calculate total quantity of items in cart
+        const totalQuantity = cart.reduce(
+          (acc, item) => acc + item.quantity,
+          0
+        );
+        $("#cart-count").text(totalQuantity);
+
+        renderCart();
+      }
+
+      // Render cart function
+      function renderCart() {
+        const cartItemsDiv = $("#cart-items");
+        const totalPriceDiv = $("#total-price");
+
+        cartItemsDiv.empty();
+        let totalPrice = 0;
+
+        cart.forEach((item) => {
+          const cartItemDiv = $("<div>").addClass("cart-item");
+          cartItemDiv.html(`
+            <span>${item.name}</span>
+            <div class="quantity-buttons">
+              <button class="btn btn-sm btn-danger" onclick="changeQuantity(${item.menu_id}, -1)">-</button>
+              <span>${item.quantity}</span>
+              <button class="btn btn-sm btn-success" onclick="changeQuantity(${item.menu_id}, 1)">+</button>
+              <button class="btn btn-sm btn-danger" onclick="removeItem(${item.menu_id})">🗑️</button>
+            </div>
+          `);
+          cartItemsDiv.append(cartItemDiv);
+          totalPrice += item.price * item.quantity;
+        });
+
+        totalPriceDiv.text(`รวมทั้งหมด: ${totalPrice} บาท`);
+      }
+
+      // Change quantity function
+      function changeQuantity(itemId, change) {
+        const item = cart.find((cartItem) => cartItem.menu_id === itemId);
+        if (!item) return;
+
+        item.quantity += change;
+        if (item.quantity <= 0) {
+          cart = cart.filter((cartItem) => cartItem.menu_id !== itemId);
+        }
+        updateCart();
+      }
+
+      // Remove item function
+      function removeItem(itemId) {
+        cart = cart.filter((cartItem) => cartItem.menu_id !== itemId);
+        updateCart();
+      }
+
+      // Checkout function
+      function checkout() {
+        alert("ทำการสั่งซื้อแล้ว!");
+        cart = [];
+        updateCart();
+        toggleCartPopup();
+      }
+
+      // Clear cart function
+      function clearcart() {
+        cart = [];
+        updateCart();
+      }
+
+      // Toggle search popup function
+      function toggleSearchPopup() {
+        $("#search-bar-bottom").css("display", function (i, v) {
+          return v === "none" ? "flex" : "none";
+        });
+        $("#search-input-bottom").focus();
+      }
+
+      // Toggle cart popup function
+      function toggleCartPopup() {
+        $("#cart-popup").toggleClass("show");
+        $("#cart-backdrop").toggle(); // Show or hide the backdrop
+      }
+
+      // Toggle categories navigation function
+      function toggleCategoriesNav() {
+        $("#categories-nav").toggle();
+      }
+
+      // Filter menu by category
+      function filterMenucat(category) {
+        let filteredItems = menuItems;
+        if (category) {
+          filteredItems = menuItems.filter(
+            (item) => item.category === category
+          );
+        }
+        renderMenuByCategory(filteredItems);
+        toggleCategoriesNav();
+      }
+
+      // Show product popup function
+      function showProductPopup(productId) {
+        const product = menuItems.find((item) => item.menu_id === productId);
+        if (!product) return;
+
+        // Display product details in the popup
+        $("#product-image").attr("src", product.image_url);
+        $("#product-name").text(product.name);
+        $("#product-description").text(`รายละเอียด: ${product.name}`);
+        $("#product-price").text(`ราคา: ${product.price} บาท`);
+        $("#add-from-popup").data("product-id", productId);
+
+        // Open the popup
+        $("#product-popup").addClass("show");
+      }
+
+      // แก้ไขฟังก์ชัน addToCartFromPopup เพื่อดึงค่าจำนวนสินค้าจาก input
+      function addToCartFromPopup() {
+        const productId = $("#add-from-popup").data("product-id");
+        const quantity = parseInt($("#quantity-input").val(), 10);
+
+        // ตรวจสอบว่าจำนวนสินค้ามีค่ามากกว่า 0 หรือไม่
+        if (quantity > 0) {
+          addToCart(productId, quantity);
+          closeProductPopup(); // ปิดป๊อปอัปหลังจากเพิ่มสินค้า
+        } else {
+          alert("กรุณาระบุจำนวนสินค้าที่มากกว่า 0");
+        }
+      }
+
+      // Close product popup function
+      function closeProductPopup() {
+        $("#product-popup").removeClass("show");
+      }
+    </script>
+  </body>
+</html>
