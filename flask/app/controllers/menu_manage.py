@@ -70,6 +70,7 @@ def menu_db_menus():
     db_menus = Menu.query.all()
 
     menus = list(map(lambda x: x.to_dict(), db_menus))
+    menus = menu_get_top3() + menus
     app.logger.debug("DB menus (Sorted): " + str(menus))
 
     return jsonify(menus)
@@ -215,13 +216,15 @@ def menu_delete():
 
     return menus_list()
 
-@app.route('/menus/top3', methods=('GET', 'POST'))
+# @app.route('/menus/top3', methods=('GET', 'POST'))
 def menu_get_top3():
     db_allmenus = Menu.query.all()
     menus = list(map(lambda x: x.to_dict(), db_allmenus))
     menus.sort(key=(lambda x: int(x['ordered'])), reverse=True)
-    temp = []
+    top3 = []
     for i in range(3):
-        temp += [menus[i]]
-    return jsonify(temp)
+        temp = menus[i]
+        temp['category'] = 'เมนูขายดี'
+        top3 += [temp]
+    return top3
 

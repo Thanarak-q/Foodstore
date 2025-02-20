@@ -1,6 +1,6 @@
 from flask.cli import FlaskGroup
 from app import app, db
-from app.models.contact import Contact
+from werkzeug.security import generate_password_hash
 import jwt
 import datetime 
 import qrcode
@@ -19,6 +19,7 @@ from app.models.menu import Menu
 from app.models.employee import Employee
 from app.models.table import Tables
 from app.models.order import Order
+# from app.models.employee import AuthUser
 
 '''
 buy 
@@ -212,6 +213,17 @@ def seed_db():
 
     for fname, lname, phone, role in sample_employees:
         db.session.add(Employee(firstname=fname, lastname=lname, phone=phone, role=role))
+
+#     db.session.add(AuthUser(email="flask@204212", name='สมชาย ทรงแบด',
+#                             password=generate_password_hash('1234',
+#                                                             method='sha256'),
+#                             avatar_url='https://ui-avatars.com/api/?name=\
+# สมชาย+ทรงแบด&background=83ee03&color=fff'))
+#     db.session.add(AuthUser(email="flask2@204212", name='ทรงแบด สมชาย',
+#                             password=generate_password_hash('1234',
+#                                                             method='sha256'),
+#                             avatar_url='https://ui-avatars.com/api/?name=\
+# ทรงแบด+สมชาย&background=83ee03&color=fff'))
     
     #?-------------------------------------------------------------------------
     # สร้างข้อมูลคำสั่งซื้อ
@@ -235,8 +247,6 @@ def seed_db():
 
     #?-------------------------------------------------------------------------
     # เพิ่มเติม Contact 
-    for i in range(1, 21):
-        db.session.add(Contact(firstname=f'John{i}', lastname=f'Doe{i}', phone=f'12345678{i}'))
     
     db.session.commit()
 

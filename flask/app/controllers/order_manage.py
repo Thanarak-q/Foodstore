@@ -2,9 +2,9 @@ import json
 from flask import (jsonify, render_template,
                   request, url_for, flash, redirect)
 
-import qrcode
 from app import app
 from app import db
+from sqlalchemy.sql import text
 from app.models.order import Order
 from app.models.menu import Menu
 
@@ -12,8 +12,16 @@ from app.models.menu import Menu
 def orders_list():
     db_allOrder = Order.query.all()
     orders = list(map(lambda x: x.to_dict(), db_allOrder))
-    orders.sort(key=(lambda x: int(x['id'])))
-    app.logger.debug(f"DB Get tables data: {orders}")
+    orders.sort(key=(lambda x: int(x['order_id'])))
+    # app.logger.debug(f"DB Get tables data: {orders}")
+    return jsonify(orders)
+
+@app.route('/orders/preparing')
+def orders_preparing_list():
+    db_allOrder = Order.query.filter(Order.status == 'Preparing')
+    orders = list(map(lambda x: x.to_dict(), db_allOrder))
+    orders.sort(key=(lambda x: x['order_time']))
+    # app.logger.debug(f"DB Get tables data: {orders[0]['menu_list']}")
     return jsonify(orders)
 
 @app.route('/orders/create', methods=('GET', 'POST'))

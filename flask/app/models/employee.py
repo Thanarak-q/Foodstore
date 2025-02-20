@@ -1,7 +1,7 @@
 # Model สำหรับตารางข้อมูลพนักงาน
 from app import db
 from sqlalchemy_serializer import SerializerMixin
-# from flask_login import UserMixin
+from flask_login import UserMixin
 
 # Model สำหรับตารางข้อมูลพนักงาน
 class Employee(db.Model, SerializerMixin):
@@ -24,3 +24,4 @@ class Employee(db.Model, SerializerMixin):
         self.lastname = lastname
         self.phone = phone
         self.role = role
+

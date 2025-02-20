@@ -12,6 +12,7 @@ from manage import SECRET_KEY
 
 from app.controllers import Admin
 from app.models.table import Tables
+from app.models.order import Order
 
 @app.route('/table/get_all_table')
 def table_list():
