@@ -74,16 +74,17 @@
   <button id="add_menu" class="button is-primary" type="button">Create Menu</button>
   <p></p><br />
   <div class="table-container">
-    <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="menu-table" data-search="true">
+    <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="menu-table" data-sort-name="id" data-search="true">
       <thead>
         <tr>
-          <th data-field="menu_id" data-visible="false"><span class="has-text-black"> Menu ID </span></th>
+          <th data-field="id" data-visible="false"><span class="has-text-black"> ID </span></th>
           <th data-field="name" data-sortable="true"><span class="has-text-black"> Menu Name </span></th>
           <th data-field="description" data-sortable="true"><span class="has-text-black"> Description </span></th>
           <th data-field="price" data-sortable="true"><span class="has-text-black"> Price </span></th>
           <th data-field="category" data-sortable="true"><span class="has-text-black"> Category </span></th>
           <th data-field="availability" data-sortable="true"><span class="has-text-black"> Availability </span></th>
           <th data-field="image_url" data-sortable="true"><span class="has-text-black"> Image URL </span></th>
+          <th data-field="ordered" data-sortable="true"><span class="has-text-black"> ordered </span></th>
           <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
             <span class="has-text-black"> Edit/Delete </span>
           </th>
@@ -104,7 +105,11 @@
       columns: [
       {
         field: 'id',
+<<<<<<< HEAD
         title: 'Menu ID',
+=======
+        title: 'id',
+>>>>>>> 2c0481e9344aa19048ec05c46b76ac4f40335960
         visible: true
       }, {
         field: 'name',
@@ -126,6 +131,10 @@
         field: 'availability',
         title: 'Availability',
         sortable: true
+      },{
+        field: 'ordered',
+        title: 'ordered',
+        sortable: true
       }, {
         field: 'image_url',
         title: 'Image URL',
@@ -138,7 +147,10 @@
         title: 'Edit/Delete',
         formatter: actionFormatter,
         events: operateEvents
-      }]
+      }],
+      loadingTemplate: function () {
+        return ''
+      }
     });
   }
 

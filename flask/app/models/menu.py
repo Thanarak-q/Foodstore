@@ -1,5 +1,6 @@
 from app import db
 from sqlalchemy_serializer import SerializerMixin
+import random
 
 class Menu(db.Model, SerializerMixin):
     __tablename__ = "menu"
@@ -20,7 +21,7 @@ class Menu(db.Model, SerializerMixin):
         self.category = category
         self.image_url = image_url
         self.availability = availability
-        self.ordered = 0
+        self.ordered = random.randint(0, 200)
 
 
     def update(self, name, description, price, category, image_url, availability):

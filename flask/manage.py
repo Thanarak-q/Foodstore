@@ -170,45 +170,7 @@ def seed_db():
     # สร้างข้อมูลพนักงาน
     sample_employees = [
     ('ธนารักษ์', 'กันยาประสิทธิ์', '081-111-1111', 'Admin'),
-    ('ทิวัตถ์', 'ทาจุมปู', '082-222-2222', 'Best manager ever'),
-    ('กฤตภาส', 'เกตุกำเนิด', '083-333-3333', 'Chef'),
-    ('พ่อใหญ่นน', 'เทพสุข', '084-444-4444', 'Waiter'),
-    ('สุริยา', 'จันทร์สว่าง', '085-555-5555', 'Cashier'),
-
-    ('นที', 'วงศ์เจริญ', '086-111-1111', 'Let me close my eyes with dignity'),
-    ('จิรายุ', 'ทองดี', '087-222-2222', 'Let\'s end it all, the world\'s not far behind'),
-    ('พีรพัฒน์', 'เกษมสุข', '088-333-3333', 'So what\'s the point of staying?'),
-    ('กันตภณ', 'ศิริวัฒน์', '089-444-4444', 'It\'s going up in flames, I know'),
-    ('สุวัฒน์', 'ปรีชาธรรม', '090-555-5555', 'Yes, I know, ooh'),
-    
-    ('ภาณุวัฒน์', 'อินทรีทอง', '091-666-6666', 'Oh-oh-oh'),
-    ('อริยะ', 'โชติพงษ์', '092-777-7777', 'Hey-hey Oh-oh (Hey)'),
-    ('รัชพล', 'ศรีสุข', '093-888-8888', 'Just hold my heartbeat close to you'),
-    ('ศิวกร', 'ไพศาล', '094-999-9999', 'Remember how it always beats for you'),
-    ('สิรวิชญ์', 'พรหมวิเศษ', '095-000-0000', 'I\'m falling at the speed of light'),
-
-    ('ธวัชชัย', 'สุนทรกุล', '096-111-1111', 'I\'m staring at your shrinking face, don\'t cry'),
-    ('ปริญญา', 'อุดมทรัพย์', '097-222-2222', 'You know my heart belongs to you'),
-    ('วิชัย', 'เดชาศิลป์', '098-333-3333', 'One last time, say that you want me too'),
-    ('เอกชัย', 'สมบูรณ์', '099-444-4444', 'The only words that gave me life'),
-    ('จักรพงษ์', 'โชติภักดี', '080-555-5555', 'Now I\'ll see you on the other side'),
-
-    ('ปิยะ', 'เศรษฐวิทยา', '081-666-6666', 'Oh-oh, oh-oh, oh-oh'),
-    ('ณัฐพล', 'ทองกาญจน์', '082-777-7777', 'Oh-oh, oh-oh, oh-oh'),
-    ('ชัยวัฒน์', 'พงศ์เจริญ', '083-888-8888', 'Oh-oh, oh-oh, oh-oh'),
-    ('อธิป', 'จันทร์สม', '084-999-9999', 'Oh-oh, oh-oh, oh-oh'),
-
-    ('สรวิชญ์', 'ภูมิวัฒน์', '085-000-0000', 'Oh, mama, I\'ll pray'),
-    ('กฤษณะ', 'นวลศรี', '086-111-1111', 'I\'m running away'),
-    ('อานนท์', 'เทวะ', '087-222-2222', 'Oh-oh Hey-hey (Oh, no)'),
-    ('วิทยา', 'ศักดิ์ศรี', '088-333-3333', 'Is a threat not a promise? (Mmm)'),
-    ('ธนกฤต', 'รุ่งเรือง', '089-444-4444', 'If you\'re looking for rage (Mmm, oh)'),
-
-    ('ภาสกร', 'จิรเดช', '090-555-5555', 'If you\'re looking for ragin\''),
-    ('พงศกร', 'ธรรมเจริญ', '091-666-6666', 'Quiet for days'),
-    ('อนันต์', 'โชคชัย', '092-777-7777', 'Baby, running away'),
-    ('วีระ', 'ศรีวัฒน์', '093-888-8888', 'Ayy-yeah'),
-    ('นภดล', 'แสงจันทร์', '094-999-9999', 'It\'s a threat, not a promise'),
+    ('ทิวัตถ์', 'ทาจุมปู', '082-222-2222', 'chef'),
     ]
 
     for fname, lname, phone, role in sample_employees:

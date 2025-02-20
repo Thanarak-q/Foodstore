@@ -1,0 +1,222 @@
+{% extends 'Admin_page/base.html' %} {% block content %}
+
+<!-- <div class="row">
+  <div class="card">
+    <div class="card-header">Dashboard</div>
+  </div>
+</div> -->
+<div class="row">
+  <div class="columns">
+    <div class="column">
+      <div class="card">
+        <header class="card-header">
+          <p class="card-header-title">Total sale</p>
+        </header>
+        <div class="card-content">
+
+        </div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="card">
+        <header class="card-header">
+          <p class="card-header-title">Order count</p>
+        </header>
+        <div class="card-content"></div>
+      </div>
+    </div>
+    <div class="column">
+      <div class="card">
+        <header class="card-header">
+          <p class="card-header-title">Test case</p>
+        </header>
+        <div class="card-content">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="columns is-multiline">
+
+    <div class="column is-full-mobile is-half-desktop">
+        <h1 class="title has-text-black has-text-centered-touch">10 อันดับเมนูยอดนิยม</h1>
+        <div class="box">
+            <canvas id="top10MenuChart" style="height: 400px;"></canvas>
+        </div>
+    </div>
+
+
+    <div class="column is-full-mobile is-half-desktop">
+        <h1 class="title has-text-black has-text-centered-touch">10 อันดับเมนูที่สร้างรายได้มากที่สุด</h1>
+        <div class="box">
+            <canvas id="top10RevenueChart" style="height: 400px;"></canvas>
+        </div>
+    </div>
+
+   
+    <div class="column is-full-mobile is-half-desktop">
+        <h1 class="title has-text-black has-text-centered-touch">10 อันดับเมนูที่ขายได้น้อยที่สุด</h1>
+        <div class="box">
+            <canvas id="top10WorseMenuChart" style="height: 400px;"></canvas>
+        </div>
+    </div>
+
+
+    <div class="column is-full-mobile is-half-desktop">
+        <h1 class="title has-text-black has-text-centered-touch">10 อันดับเมนูที่มีราคาสูงที่สุด</h1>
+        <div class="box">
+            <canvas id="top10ExpensiveMenuChart" style="height: 400px;"></canvas>
+        </div>
+    </div>
+
+</div>
+{% endblock %} {% block extra_js %}
+<!-- ✅ เรียกใช้งาน Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- total -->
+<script>
+  $(document).ready(function () {
+    $.getJSON("/menus/get_all_menus", function (data) {
+      // คำนวณ Total Sale
+      const totalSale = data.reduce((acc, menu) => acc + (menu.ordered * menu.price), 0);
+  
+      // แสดงผลยอดขายรวม
+      $("#totalSale").text(`ยอดขายรวม: ${totalSale.toLocaleString()} บาท`);
+    });
+  });
+  
+</script>
+
+
+
+
+<script>
+  $(document).ready(function () {
+    $.getJSON("/menus/get_all_menus", function (data) {
+      // 🎯 กราฟ 10 อันดับเมนูยอดนิยม (ตามจำนวนการสั่ง)
+      const top10Popular = [...data]
+        .sort((a, b) => b.ordered - a.ordered)
+        .slice(0, 10);
+      renderChart(
+        "top10MenuChart",
+        top10Popular.map((m) => m.name),
+        top10Popular.map((m) => m.ordered),
+        "จำนวนการสั่ง",
+        "10 อันดับเมนูยอดนิยม",
+        "จำนวนการสั่ง (ครั้ง)",
+        "ชื่อเมนู",
+        "rgba(75, 192, 192, 0.5)",
+        "rgba(75, 192, 192, 1)"
+      );
+
+      // 💰 กราฟ 10 อันดับเมนูที่สร้างรายได้มากที่สุด
+      const top10Revenue = [...data]
+        .sort((a, b) => b.ordered * b.price - a.ordered * a.price)
+        .slice(0, 10);
+      renderChart(
+        "top10RevenueChart",
+        top10Revenue.map((m) => m.name),
+        top10Revenue.map((m) => m.ordered * m.price),
+        "รายได้รวม (บาท)",
+        "10 อันดับเมนูที่สร้างรายได้มากที่สุด",
+        "รายได้ (บาท)",
+        "ชื่อเมนู",
+        "rgba(54, 162, 235, 0.5)",
+        "rgba(54, 162, 235, 1)"
+      );
+
+      // ❌ กราฟ 10 อันดับเมนูที่ขายได้น้อยที่สุด
+      const top10Worse = [...data]
+        .sort((a, b) => a.ordered - b.ordered)
+        .slice(0, 10);
+      renderChart(
+        "top10WorseMenuChart",
+        top10Worse.map((m) => m.name),
+        top10Worse.map((m) => m.ordered),
+        "จำนวนการสั่ง (ไม่นิยม)",
+        "10 อันดับเมนูที่ขายได้น้อยที่สุด",
+        "จำนวนการสั่ง (ครั้ง)",
+        "ชื่อเมนู",
+        "rgba(255, 99, 132, 0.5)",
+        "rgba(255, 99, 132, 1)"
+      );
+
+      // 💎 กราฟ 10 อันดับเมนูที่มีราคาสูงที่สุด
+      const top10Expensive = [...data]
+        .sort((a, b) => b.price - a.price)
+        .slice(0, 10);
+      renderChart(
+        "top10ExpensiveMenuChart",
+        top10Expensive.map((m) => m.name),
+        top10Expensive.map((m) => m.price),
+        "ราคา (บาท)",
+        "10 อันดับเมนูที่มีราคาสูงที่สุด",
+        "ราคา (บาท)",
+        "ชื่อเมนู",
+        "rgba(255, 206, 86, 0.5)",
+        "rgba(255, 206, 86, 1)"
+      );
+    });
+
+    // 📊 ฟังก์ชันสร้างกราฟเพื่อความ DRY
+    function renderChart(
+      canvasId,
+      labels,
+      data,
+      datasetLabel,
+      chartTitle,
+      yAxisLabel,
+      xAxisLabel,
+      bgColor,
+      borderColor
+    ) {
+      const ctx = document.getElementById(canvasId).getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: datasetLabel,
+              data: data,
+              backgroundColor: bgColor,
+              borderColor: borderColor,
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: true,
+              text: chartTitle,
+              font: { size: 18 },
+            },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  return `${datasetLabel}: ${context.parsed.y.toLocaleString()} บาท`;
+                },
+              },
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: yAxisLabel },
+            },
+            x: {
+              title: { display: true, text: xAxisLabel },
+            },
+          },
+        },
+      });
+    }
+  });
+</script>
+{% endblock %}

@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin Dashboard</title>
+
   <!-- Bulma CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
   <!-- Font Awesome -->
@@ -12,19 +13,19 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/Admin.css') }}">
   {% block extra_css %}{% endblock %}
 </head>
+
 <body>
+  <!-- Navbar -->
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href="#">
-        <strong>Admin Panel</strong>
-      </a>
+      <a class="navbar-item" href="#"><strong>Admin Panel</strong></a>
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarAdmin">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
       </a>
     </div>
-  
+
     <div id="navbarAdmin" class="navbar-menu">
       <div class="navbar-end">
         <div class="navbar-item has-dropdown is-hoverable">
@@ -44,53 +45,68 @@
     </div>
   </nav>
 
+  <!-- Sidebar + Main Content -->
   <div class="columns is-gapless">
-    <div class="column is-2 sidebar">      
+    <!-- Sidebar -->
+    <div class="column is-2 sidebar">
       <aside class="menu">
         <ul class="menu-list">
           <li>
-            <a class="menu-label" id="dashboard-label">Dashboard</a>
-            <ul class="submenu">
-              <li><a href="{{ url_for('revenue') }}" class="{% if request.endpoint == 'revenue' %}is-active{% endif %}"><i class="fas fa-table"></i> Revenue</a></li>
-              <li><a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'order_count' %}is-active{% endif %}"><i class="fas fa-utensils"></i> Number of Orders</a></li>
-              <li><a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'table_usage' %}is-active{% endif %}"><i class="fas fa-users"></i> Number of Tables Used</a></li>
-            </ul>
+            <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}is-active{% endif %}">
+              Dashboard
+            </a>
           </li>
           <li>
             <a class="menu-label" id="management-label">Management</a>
             <ul class="submenu">
-              <li><a href="{{ url_for('table_list') }}" class="{% if request.endpoint == 'table_list' %}is-active{% endif %}"><i class="fas fa-table"></i> Table Management</a></li>
-              <li><a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'menu_list' %}is-active{% endif %}"><i class="fas fa-utensils"></i> Menu Management</a></li>
-              <li><a href="{{ url_for('em_list') }}" class="{% if request.endpoint == 'em_list' %}is-active{% endif %}"><i class="fas fa-users"></i> Employee Management</a></li>
+              <li>
+                <a href="{{ url_for('table_list') }}" class="{% if request.endpoint == 'table_list' %}is-active{% endif %}">
+                  Table Management
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'menu_list' %}is-active{% endif %}">
+                  Menu Management
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('em_list') }}" class="{% if request.endpoint == 'em_list' %}is-active{% endif %}">
+                  Employee Management
+                </a>
+              </li>
             </ul>
           </li>
-          <li><a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'order' %}is-active{% endif %}">Order</a></li>
-          <li><a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'review' %}is-active{% endif %}">Review</a></li>
+          <li>
+            <a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'order' %}is-active{% endif %}">
+              Order
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'review' %}is-active{% endif %}">
+              Review
+            </a>
+          </li>
         </ul>
       </aside>
     </div>
 
     <!-- Main Content -->
-    <div class="column main-content">
-      <div class="container">
-        <div class="card fade-in">
-          <div class="card-content">
-            {% block content %}{% endblock %}
-          </div>
-        </div>
+    <div class="column main-content is-fullheight is-fullwidth">
+      <div class="card-content">
+        {% block content %}{% endblock %}
       </div>
     </div>
   </div>
 
   <!-- Scripts -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const burger = document.querySelector('.navbar-burger');
       const menu = document.querySelector('#navbarAdmin');
-    
+
+      // Toggle navbar burger
       burger.addEventListener('click', () => {
         burger.classList.toggle('is-active');
         menu.classList.toggle('is-active');
