@@ -12,7 +12,7 @@ from app.models.menu import Menu
 def orders_list():
     db_allOrder = Order.query.all()
     orders = list(map(lambda x: x.to_dict(), db_allOrder))
-    orders.sort(key=(lambda x: int(x['id'])))
+    orders.sort(key=(lambda x: int(x['order_id'])))
     app.logger.debug(f"DB Get tables data: {orders}")
     return jsonify(orders)
 
