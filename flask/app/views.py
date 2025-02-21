@@ -17,12 +17,15 @@ from manage import SECRET_KEY
 
 
 
-
 '''
 หน้า Admin
 '''
 from app.controllers import Admin
 
+'''
+หน้า Cashier
+'''
+from app.controllers import cashier
 
 # @app.route('/test', methods=('GET', 'POST'))
 # def test():

@@ -16,14 +16,6 @@ def orders_list():
     # app.logger.debug(f"DB Get tables data: {orders}")
     return jsonify(orders)
 
-@app.route('/orders/preparing')
-def orders_preparing_list():
-    db_allOrder = Order.query.filter(Order.status == 'Preparing')
-    orders = list(map(lambda x: x.to_dict(), db_allOrder))
-    orders.sort(key=(lambda x: x['order_time']))
-    # app.logger.debug(f"DB Get tables data: {orders[0]['menu_list']}")
-    return jsonify(orders)
-
 @app.route('/orders/create', methods=('GET', 'POST'))
 def order_create():
     app.logger.debug("Order - CREATE")
