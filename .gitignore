@@ -1,5 +1,6 @@
 # database volume
 postgres_data
+flask/app/static/qrcode
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
