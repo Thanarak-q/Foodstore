@@ -1,6 +1,7 @@
 # database volume
 postgres_data
 flask/app/static/qrcode/
+.vscode
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
