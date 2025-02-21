@@ -1,0 +1,97 @@
+{% extends 'cashier_page/base.html' %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="card">
+            <!-- Card Header -->
+            <header class="card-header">
+                <h1 class="card-header-title">Table Availability</h1>
+                <button class="card-header-icon" aria-label="refresh" onclick="refreshTable()">
+                    <span class="icon">
+                        <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                    </span>
+                </button>
+            </header>
+
+            <!-- Card Content (Table) -->
+            <div class="card-content">
+                <table id="table-list" class="table is-fullwidth is-striped is-hoverable" data-toggle="table"
+                    data-search="true" data-pagination="true">
+                    <thead>
+                        <tr>
+                            <th data-field="table_id" data-sortable="true">Table #</th>
+                            <th data-field="status" data-sortable="true" data-formatter="statusFormatter">Status</th>
+                            <th data-field="qrcode" data-sortable="false" data-formatter="qrcodeFormatter">QR Code</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <!-- Card Footer -->
+            <footer class="card-footer">
+                <a href="#" class="card-footer-item" onclick="refreshTable()">Refresh List</a>
+                <a href="#" class="card-footer-item">View All</a>
+            </footer>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    console.log("Script Loaded!");
+
+    $(document).ready(function () {
+        loadTable();
+    });
+
+    function loadTable() {
+        $.getJSON('/table/get_all_table', function (data) {
+            console.log("Data received:", data);
+
+            // Destroy previous table instance to avoid conflicts
+            $('#table-list').bootstrapTable('destroy');
+
+            // Initialize table
+            $('#table-list').bootstrapTable({
+                data: data,
+                columns: [
+                    { field: 'table_id', title: 'Table #', sortable: true },
+                    { field: 'status', title: 'Status', sortable: false, formatter: statusFormatter },
+                    { field: 'qrcode', title: 'QR Code', sortable: false, formatter: qrcodeFormatter }
+                ]
+            });
+        }).fail(function (jqXHR, textStatus, error) {
+            console.error("Request Failed:", textStatus, error);
+        });
+    }
+
+    function refreshTable() {
+        $.getJSON('/table/get_all_table', function (data) {
+            console.log("Refreshing Table:", data);
+            $('#table-list').bootstrapTable('load', data);
+        }).fail(function (jqXHR, textStatus, error) {
+            console.error("Refresh Failed:", textStatus, error);
+        });
+    }
+
+    // Formatter for Status Column
+    function statusFormatter(value) {
+        if (value === "Available") {
+            return '<span class="tag is-success">Available</span>';
+        } else if (value === "Occupied") {
+            return '<span class="tag is-danger">Occupied</span>';
+        } else if (value === "Reserved") {
+            return '<span class="tag is-warning">Paid</span>';
+        }
+        return value;
+    }
+
+    // Formatter for QR Code Column
+    function qrcodeFormatter(value) {
+        value = value.replace("app/", "");
+        return `<img src="${value}" alt="QR Image" style="width: 100px; height: auto;">`;
+    }
+</script>
+{% endblock %}

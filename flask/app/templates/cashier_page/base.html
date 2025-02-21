@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashier</title>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.20.2/bootstrap-table.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.20.2/bootstrap-table.min.css">
+
+</head>
+
+<body>
+    <!-- nav bar -->
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">
+                <strong>Cashier Panel</strong>
+            </a>
+            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarAdmin">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div id="navbarAdmin" class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        <i class="fas fa-user"></i>&nbsp; Cashier
+                    </a>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="/profile">
+                            <i class="fas fa-id-badge"></i>&nbsp; Profile
+                        </a>
+                        <a class="navbar-item" href="/logout">
+                            <i class="fas fa-sign-out-alt"></i>&nbsp; Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script>
+        // Navbar burger toggle for mobile
+        $(document).ready(function () {
+            $('.navbar-burger').click(function () {
+                $(this).toggleClass('is-active');
+                $('#navbarAdmin').toggleClass('is-active');
+            });
+        });
+    </script>
+
+    <!-- javascript for index.html -->
+    {% block extra_js %}
+    {% endblock %}
+</body>
+
+</html>
