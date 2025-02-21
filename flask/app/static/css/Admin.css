@@ -57,8 +57,7 @@ body {
 
 .main-content {
   padding: 30px;
-  background-color: #ffffff;
-  border-radius: 15px;
+  background-color: #f4eeee;
   margin: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
@@ -140,4 +139,13 @@ body {
 
 .dropdown.is-active .dropdown-content {
   display: block;
+}
+
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
 }

@@ -156,16 +156,16 @@ def seed_db():
         menu.update_ordered(amount)
         db.session.commit()
     
-    a = [{1:2, 11:3}, {1:77, 11:9}, {4:2}]
-    for i in a:
-        temp = Order(table_id=12, 
-                         time=datetime.datetime.now(datetime.timezone.utc), 
-                         menu_list=i)
-        temp.change_price(cal_price(i))
+    large_list = [{random.randint(1, 20): random.randint(1, 10) for _ in range(random.randint(1, 5))} for _ in range(700)]
+    for menu_list in large_list:
+        temp = Order(
+            table_id=random.randint(1, 20),
+            time=datetime.datetime.now(datetime.timezone.utc),
+            menu_list=menu_list
+        )
+        temp.change_price(cal_price(menu_list))
         db.session.add(temp)
-        # db.session.commit()
         
-        # db.session.commit()
     db.session.commit()
 
     #?-------------------------------------------------------------------------
@@ -178,23 +178,12 @@ def seed_db():
     for fname, lname, phone, role in sample_employees:
         db.session.add(Employee(firstname=fname, lastname=lname, phone=phone, role=role))
 
-#     db.session.add(AuthUser(email="flask@204212", name='สมชาย ทรงแบด',
-#                             password=generate_password_hash('1234',
-#                                                             method='sha256'),
-#                             avatar_url='https://ui-avatars.com/api/?name=\
-# สมชาย+ทรงแบด&background=83ee03&color=fff'))
-#     db.session.add(AuthUser(email="flask2@204212", name='ทรงแบด สมชาย',
-#                             password=generate_password_hash('1234',
-#                                                             method='sha256'),
-#                             avatar_url='https://ui-avatars.com/api/?name=\
-# ทรงแบด+สมชาย&background=83ee03&color=fff'))
-    
     #?-------------------------------------------------------------------------
     payment_methods = ["cash", "credit_card", "paypal", "bank_transfer"]
-    start_time = datetime.datetime(2015, 1, 1, 0, 0, 0)  # เริ่มตั้งแต่ปี 2015
-    num_payments = 5000  # สุ่ม 5000 records
+    start_time = datetime.datetime(2023, 1, 1, 0, 0, 0)  # เริ่มตั้งแต่ปี 2015
+    num_payments = 700 # สุ่ม 700 records
 
-    years = 10  # กำหนดจำนวนปีที่ต้องการ
+    years = 3  # กำหนดจำนวนปีที่ต้องการ
 
     sample_payments = [
         [

@@ -52,186 +52,318 @@
 </div>
 
 
-<!-- <div class="columns is-multiline">
+{% extends 'Admin_page/base.html' %}
 
-    <div class="column is-full-mobile is-half-desktop">
-        <h1 class="title has-text-black has-text-centered-touch">10 อันดับเมนูยอดนิยม</h1>
-        <div class="box">
-            <canvas id="top10MenuChart" style="height: 400px;"></canvas>
+{% block content %}
+<div class="row">
+  <div class="columns is-vcentered">
+    <div class="column is-half">
+      <div class="field has-addons">
+        <div class="control is-expanded">
+          <input class="input" type="text" placeholder="Search...">
         </div>
-    </div>
-
-
-    <div class="column is-full-mobile is-half-desktop">
-        <h1 class="title has-text-black has-text-centered-touch">10 อันดับเมนูที่สร้างรายได้มากที่สุด</h1>
-        <div class="box">
-            <canvas id="top10RevenueChart" style="height: 400px;"></canvas>
+        <div class="control">
+          <button class="button is-info">
+            <span class="icon">
+              <i class="fas fa-search"></i>
+            </span>
+          </button>
         </div>
+      </div>
     </div>
+    <div class="column has-text-right">
+      <button class="button is-light">
+        <span class="icon">
+          <i class="fas fa-bell"></i>
+        </span>
+        <span class="tag is-danger is-rounded" style="position: absolute; top: -5px; right: -5px;">3</span>
+      </button>
+    </div>
+  </div>
+</div>
 
-   
-    <div class="column is-full-mobile is-half-desktop">
-        <h1 class="title has-text-black has-text-centered-touch">10 อันดับเมนูที่ขายได้น้อยที่สุด</h1>
-        <div class="box">
-            <canvas id="top10WorseMenuChart" style="height: 400px;"></canvas>
+<div class="row mt-5">
+  <div class="column">
+    <h1 class="title is-1 has-text-left">Dashboard</h1>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="columns is-multiline is-centered">
+    <div class="column is-one-quarter">
+      <div class="card has-text-centered">
+        <div class="card-content">
+          <i class="fas fa-dollar-sign fa-3x"></i>
+          <p class="subtitle">Total Sale</p>
+          <p id="totalSale" class="title has-text-weight-bold">กำลังคำนวณ...</p>
         </div>
+      </div>
     </div>
-
-
-    <div class="column is-full-mobile is-half-desktop">
-        <h1 class="title has-text-black has-text-centered-touch">10 อันดับเมนูที่มีราคาสูงที่สุด</h1>
-        <div class="box">
-            <canvas id="top10ExpensiveMenuChart" style="height: 400px;"></canvas>
+    <div class="column is-one-quarter">
+      <div class="card has-text-centered">
+        <div class="card-content">
+          <i class="fas fa-shopping-cart fa-3x"></i>
+          <p class="subtitle">Total Order</p>
+          <p id="totalOrder" class="title has-text-weight-bold">กำลังคำนวณ...</p>
         </div>
+      </div>
     </div>
+    <div class="column is-one-quarter">
+      <div class="card has-text-centered">
+        <div class="card-content">
+          <i class="fas fa-chart-line fa-3x"></i>
+          <p class="subtitle">Average Order Value</p>
+          <p id="avgOrderValue" class="title has-text-weight-bold">กำลังคำนวณ...</p>
+        </div>
+      </div>
+    </div>
+    <div class="column is-one-quarter">
+      <div class="card has-text-centered">
+        <div class="card-content">
+          <i class="fas fa-utensils fa-3x"></i>
+          <p class="subtitle">Total Menu Items</p>
+          <p id="totalMenuItems" class="title has-text-weight-bold">กำลังคำนวณ...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-</div> -->
-{% endblock %} {% block extra_js %}
+<div class="row mt-5">
+  <div class="columns">
+    <div class="column is-half">
+      <div class="card">
+        <div class="card-content">
+          <h2 class="title is-4">Revenue Overview</h2>
+          <canvas id="revenueChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="column is-half">
+      <div class="card">
+        <div class="card-content">
+          <h2 class="title is-4">Sales by Category</h2>
+          <canvas id="categoryChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="column">
+    <div class="card">
+      <div class="card-content">
+        <h2 class="title is-4">เทรนดิ้ง เมนู top 5</h2>
+        <div id="top5Menus" class="content">
+          <!-- ข้อมูลเมนู top 5 -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="column is-full">
+    <div id="notifications">
+      <!-- Notifications -->
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
 <!-- ✅ เรียกใช้งาน Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- total -->
 <script>
   $(document).ready(function () {
+    fetchTotalSaleAndOrder();
+    fetchTop5Menus();
+    fetchRevenueChart();
+    fetchAdditionalMetrics();
+    fetchSalesByCategoryChart();
+  });
+
+  function fetchTotalSaleAndOrder() {
     $.getJSON("/menus/get_all_menus", function (data) {
-      // คำนวณ Total Sale
       const totalSale = data.reduce((acc, menu) => acc + (menu.ordered * menu.price), 0);
       const totalOrder = data.reduce((acc, menu) => acc + menu.ordered, 0);
-  
-      // แสดงผลยอดขายรวม พร้อมอิโมจิ
-      $("#totalSale").text(`💵 ฿ ${totalSale.toLocaleString()}`);
-      $("#totalOrder").text(`🍽️ ${totalOrder.toLocaleString()}`);
+
+      $("#totalSale").text(`฿ ${totalSale.toLocaleString()}`);
+      $("#totalOrder").text(`${totalOrder.toLocaleString()}`);
     });
-  });
-</script>
+  }
 
-
-
-
-<!-- <script>
-  $(document).ready(function () {
+  function fetchTop5Menus() {
     $.getJSON("/menus/get_all_menus", function (data) {
-      // 🎯 กราฟ 10 อันดับเมนูยอดนิยม (ตามจำนวนการสั่ง)
-      const top10Popular = [...data]
-        .sort((a, b) => b.ordered - a.ordered)
-        .slice(0, 10);
-      renderChart(
-        "top10MenuChart",
-        top10Popular.map((m) => m.name),
-        top10Popular.map((m) => m.ordered),
-        "จำนวนการสั่ง",
-        "10 อันดับเมนูยอดนิยม",
-        "จำนวนการสั่ง (ครั้ง)",
-        "ชื่อเมนู",
-        "rgba(75, 192, 192, 0.5)",
-        "rgba(75, 192, 192, 1)"
-      );
+      const sortedMenus = data.sort((a, b) => b.ordered - a.ordered);
+      const top5Menus = sortedMenus.slice(0, 5);
 
-      // 💰 กราฟ 10 อันดับเมนูที่สร้างรายได้มากที่สุด
-      const top10Revenue = [...data]
-        .sort((a, b) => b.ordered * b.price - a.ordered * a.price)
-        .slice(0, 10);
-      renderChart(
-        "top10RevenueChart",
-        top10Revenue.map((m) => m.name),
-        top10Revenue.map((m) => m.ordered * m.price),
-        "รายได้รวม (บาท)",
-        "10 อันดับเมนูที่สร้างรายได้มากที่สุด",
-        "รายได้ (บาท)",
-        "ชื่อเมนู",
-        "rgba(54, 162, 235, 0.5)",
-        "rgba(54, 162, 235, 1)"
-      );
+      let htmlContent = '';
+      top5Menus.forEach((menu, index) => {
+        htmlContent += `
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-128x128">
+                <img src="${menu.image_url}" alt="${menu.name}" style="width: 100%; height: auto;">
+              </figure>
+            </div>
+            <div class="media-content">
+              <p class="title is-4 has-text-weight-bold">${index + 1}. ${menu.name}</p>
+              <p class="subtitle is-6 has-text-grey-dark">จำนวนการสั่ง: <strong>${menu.ordered} ครั้ง</strong></p>
+              <p class="subtitle is-6 has-text-grey-dark">ราคา: <strong>฿${menu.price}</strong></p>
+            </div>
+          </div>
+        `;
+      });
 
-      // ❌ กราฟ 10 อันดับเมนูที่ขายได้น้อยที่สุด
-      const top10Worse = [...data]
-        .sort((a, b) => a.ordered - b.ordered)
-        .slice(0, 10);
-      renderChart(
-        "top10WorseMenuChart",
-        top10Worse.map((m) => m.name),
-        top10Worse.map((m) => m.ordered),
-        "จำนวนการสั่ง (ไม่นิยม)",
-        "10 อันดับเมนูที่ขายได้น้อยที่สุด",
-        "จำนวนการสั่ง (ครั้ง)",
-        "ชื่อเมนู",
-        "rgba(255, 99, 132, 0.5)",
-        "rgba(255, 99, 132, 1)"
-      );
-
-      // 💎 กราฟ 10 อันดับเมนูที่มีราคาสูงที่สุด
-      const top10Expensive = [...data]
-        .sort((a, b) => b.price - a.price)
-        .slice(0, 10);
-      renderChart(
-        "top10ExpensiveMenuChart",
-        top10Expensive.map((m) => m.name),
-        top10Expensive.map((m) => m.price),
-        "ราคา (บาท)",
-        "10 อันดับเมนูที่มีราคาสูงที่สุด",
-        "ราคา (บาท)",
-        "ชื่อเมนู",
-        "rgba(255, 206, 86, 0.5)",
-        "rgba(255, 206, 86, 1)"
-      );
+      $("#top5Menus").html(htmlContent);
     });
+  }
 
-    // 📊 ฟังก์ชันสร้างกราฟเพื่อความ DRY
-    function renderChart(
-      canvasId,
-      labels,
-      data,
-      datasetLabel,
-      chartTitle,
-      yAxisLabel,
-      xAxisLabel,
-      bgColor,
-      borderColor
-    ) {
-      const ctx = document.getElementById(canvasId).getContext("2d");
+  function fetchRevenueChart() {
+    let revenueChart;
+    $.getJSON("/payment/get_all_payment", function (data) {
+      updateChart(data);
+
+      function updateChart(data) {
+        const groupedData = groupDataByTime(data);
+        const labels = Object.keys(groupedData).sort();
+        const revenueData = labels.map(label => groupedData[label]);
+
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+
+        if (revenueChart) {
+          revenueChart.destroy();
+        }
+
+        revenueChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'รายได้รายปี',
+              data: revenueData,
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      }
+
+      function groupDataByTime(data) {
+        const groupedData = {};
+
+        data.forEach(payment => {
+          const date = new Date(payment.payment_time);
+          const key = `${date.getFullYear()}`;
+
+          if (!groupedData[key]) {
+            groupedData[key] = 0;
+          }
+          groupedData[key] += payment.amount;
+        });
+
+        return groupedData;
+      }
+    });
+  }
+
+  function fetchAdditionalMetrics() {
+    $.getJSON("/menus/get_all_menus", function(menuData) {
+      const totalSale = menuData.reduce((acc, menu) => acc + (menu.ordered * menu.price), 0);
+      const totalOrder = menuData.reduce((acc, menu) => acc + menu.ordered, 0);
+      const avgOrderValue = totalSale / totalOrder;
+      const totalMenuItems = menuData.length;
+
+      const categorySales = {};
+      menuData.forEach(menu => {
+        if (!categorySales[menu.category]) {
+          categorySales[menu.category] = 0;
+        }
+        categorySales[menu.category] += menu.ordered * menu.price;
+      });
+      const topCategory = Object.keys(categorySales).reduce((a, b) => 
+        categorySales[a] > categorySales[b] ? a : b
+      );
+
+      $("#avgOrderValue").text(`฿${avgOrderValue.toFixed(2)}`);
+      $("#totalMenuItems").text(totalMenuItems);
+      $("#topCategory").text(topCategory);
+    });
+  }
+
+  function fetchSalesByCategoryChart() {
+    $.getJSON("/menus/get_all_menus", function(menuData) {
+      const categoryData = menuData.reduce((acc, menu) => {
+        if (!acc[menu.category]) {
+          acc[menu.category] = 0;
+        }
+        acc[menu.category] += menu.ordered * menu.price;
+        return acc;
+      }, {});
+
+      const ctx = document.getElementById('categoryChart').getContext('2d');
       new Chart(ctx, {
-        type: "bar",
+        type: 'pie',
         data: {
-          labels: labels,
-          datasets: [
-            {
-              label: datasetLabel,
-              data: data,
-              backgroundColor: bgColor,
-              borderColor: borderColor,
-              borderWidth: 1,
-            },
-          ],
+          labels: Object.keys(categoryData),
+          datasets: [{
+            data: Object.values(categoryData),
+            backgroundColor: [
+              '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+              '#9966FF', '#FF9F40', '#C9CBCF'
+            ]
+          }]
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
           plugins: {
-            title: {
-              display: true,
-              text: chartTitle,
-              font: { size: 18 },
-            },
-            tooltip: {
-              callbacks: {
-                label: function (context) {
-                  return `${datasetLabel}: ${context.parsed.y.toLocaleString()} บาท`;
-                },
-              },
-            },
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              title: { display: true, text: yAxisLabel },
-            },
-            x: {
-              title: { display: true, text: xAxisLabel },
-            },
-          },
-        },
+            legend: {
+              position: 'bottom',
+            }
+          }
+        }
       });
-    }
-  });
-</script> -->
+    });
+  }
+
+  function checkMenuPerformance(menuData) {
+    const averageSales = menuData.reduce((sum, menu) => sum + menu.ordered, 0) / menuData.length;
+    
+    menuData.forEach(menu => {
+      if (menu.ordered > averageSales * 1.5) {
+        showNotification(`${menu.name} is selling fast!`, 'is-success');
+      } else if (menu.ordered < averageSales * 0.5) {
+        showNotification(`${menu.name} is underperforming`, 'is-warning');
+      }
+    });
+  }
+  
+  function showNotification(message, type) {
+    const notification = $(`
+      <div class="notification ${type}">
+        <button class="delete"></button>
+        ${message}
+      </div>
+    `);
+    
+    $('#notifications').append(notification);
+    
+    notification.find('.delete').click(function() {
+      notification.remove();
+    });
+    
+    setTimeout(() => notification.remove(), 5000);
+  }
+</script>
 {% endblock %}
