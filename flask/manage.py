@@ -6,6 +6,7 @@ import jwt
 import datetime 
 import qrcode
 import secrets
+import random
 
 
 #!-------------------------------------------------------------------------
@@ -189,24 +190,27 @@ def seed_db():
 # ทรงแบด+สมชาย&background=83ee03&color=fff'))
     
     #?-------------------------------------------------------------------------
-    # สร้างข้อมูลคำสั่งซื้อ
-    import random
-
     payment_methods = ["cash", "credit_card", "paypal", "bank_transfer"]
-    start_time = datetime.datetime(2024, 2, 12, 10, 0, 0)
+    start_time = datetime.datetime(2015, 1, 1, 0, 0, 0)  # เริ่มตั้งแต่ปี 2015
+    num_payments = 5000  # สุ่ม 5000 records
+
+    years = 10  # กำหนดจำนวนปีที่ต้องการ
 
     sample_payments = [
-    [
-        str(i + 1),  # order_id
-        random.choice(payment_methods),  # payment_method
-        (start_time + datetime.timedelta(minutes=i * 5)).strftime("%Y-%m-%d %H:%M:%S"),  # payment_time
-        str(random.randint(100, 5000))  # amount
-    ]
-    for i in range(100)
+        [
+            str(i + 1),  # order_id
+            random.choice(payment_methods),  # payment_method
+            (start_time + datetime.timedelta(days=random.randint(0, 365 * years),  # สุ่มวันที่ในช่วง 5 ปี
+                                            hours=random.randint(0, 23),
+                                            minutes=random.randint(0, 59))
+            ).strftime("%Y-%m-%d %H:%M:%S"),  # payment_time
+            str(random.randint(100, 5000))  # amount
+        ]
+        for i in range(num_payments)
     ]
 
     for order_id, payment_method, payment_time, amount in sample_payments:
-        db.session.add(Payment(order_id=order_id, payment_method=payment_method, payment_time=payment_time, amount=amount))   
+        db.session.add(Payment(order_id=order_id, payment_method=payment_method, payment_time=payment_time, amount=amount))
 
     #?-------------------------------------------------------------------------
     # เพิ่มเติม Contact 

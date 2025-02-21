@@ -14,7 +14,7 @@ class Tables(db.Model, SerializerMixin):
     status = db.Column(db.String(20), nullable=False, default="Available")  # สถานะโต๊ะ
 
     '''
-    สถานะโต๊ะ ("Available", "Occupied", "Reserved", "Paid")
+    สถานะโต๊ะ ("Available", "Reserved", "Paid")
     '''
 
     def __init__(self, qrcode):

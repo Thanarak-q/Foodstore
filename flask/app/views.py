@@ -148,7 +148,7 @@ def decode_jwt(token):
 
 @app.route('/')
 def home():
-    return "Flask says 'Hello world!'"
+    return render_template('order_page/index.html')
 
 @app.route('/index')
 def index():

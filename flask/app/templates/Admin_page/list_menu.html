@@ -1,45 +1,82 @@
-{% extends 'Admin_page/base.html' %}
-
-{% block content %}
+{% extends 'Admin_page/base.html' %} {% block content %}
 <div id="add-edit" class="container" hidden="hidden">
   <div id="header" class="container">
     <h1 class="title has-text-black">Menu Management</h1>
   </div>
   <div id="add-edit" class="container">
-    <h2 id="add-edit-caption" class="subtitle has-text-black">Add/Edit a Menu:</h2>
+    <h2 id="add-edit-caption" class="subtitle has-text-black">
+      Add/Edit a Menu:
+    </h2>
     <form id="addMenuForm" class="box">
       <div class="field">
         <label class="label has-text-black" for="name">Menu Name</label>
         <div class="control">
-          <input class="input" type="text" id="name" name="name" placeholder="Menu Name.." required />
+          <input
+            class="input"
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Menu Name.."
+            required
+          />
         </div>
       </div>
       <div class="field">
-        <label class="label has-text-black" for="description">Description</label>
+        <label class="label has-text-black" for="description"
+          >Description</label
+        >
         <div class="control">
-          <input class="input" type="text" id="description" name="description" placeholder="Description.." />
+          <input
+            class="input"
+            type="text"
+            id="description"
+            name="description"
+            placeholder="Description.."
+          />
         </div>
       </div>
       <div class="field">
         <label class="label has-text-black" for="price">Price</label>
         <div class="control">
-          <input class="input" type="number" id="price" name="price" placeholder="Price.." required />
+          <input
+            class="input"
+            type="number"
+            id="price"
+            name="price"
+            placeholder="Price.."
+            required
+          />
         </div>
       </div>
       <div class="field">
         <label class="label has-text-black" for="category">Category</label>
         <div class="control">
-          <input class="input" type="text" id="category" name="category" placeholder="Category.." required />
+          <input
+            class="input"
+            type="text"
+            id="category"
+            name="category"
+            placeholder="Category.."
+            required
+          />
         </div>
       </div>
       <div class="field">
         <label class="label has-text-black" for="image_url">Image URL</label>
         <div class="control">
-          <input class="input" type="text" id="image_url" name="image_url" placeholder="Image URL.." />
+          <input
+            class="input"
+            type="text"
+            id="image_url"
+            name="image_url"
+            placeholder="Image URL.."
+          />
         </div>
       </div>
       <div class="field">
-        <label class="label has-text-black" for="availability">Availability</label>
+        <label class="label has-text-black" for="availability"
+          >Availability</label
+        >
         <div class="control">
           <div class="select">
             <select id="availability" name="availability" required>
@@ -50,134 +87,182 @@
         </div>
       </div>
       <div class="field">
-        <label class="label has-text-black" for="menu_id">Menu ID</label>
+        <label class="label has-text-black" for="id">Menu ID</label>
         <div class="control">
-          <input class="input" type="text" id="menu_id" name="id" placeholder="Menu ID.." readonly />
+          <input
+            class="input"
+            type="text"
+            id="id"
+            name="id"
+            placeholder="Menu ID.."
+            readonly
+          />
         </div>
       </div>
-      <input type="hidden" id="menu_id" name="id" />
+      <input type="hidden" id="id" name="id" />
       <div class="field is-grouped">
         <div class="control">
-          <input class="button is-link" type="submit" name="submit" value="Submit" />
+          <input
+            class="button is-link"
+            type="submit"
+            name="submit"
+            value="Submit"
+          />
         </div>
         <div class="control">
-          <button id="clear_form" class="button is-light" type="button">Clear</button>
+          <button id="clear_form" class="button is-light" type="button">
+            Clear
+          </button>
         </div>
         <div class="control">
-          <button id="cancel_form" class="button is-light" type="button">Cancel</button>
+          <button id="cancel_form" class="button is-light" type="button">
+            Cancel
+          </button>
         </div>
       </div>
     </form>
   </div>
 </div>
 <div id="table_display" class="container">
-  <button id="add_menu" class="button is-primary" type="button">Create Menu</button>
-  <p></p><br />
+  <button id="add_menu" class="button is-primary" type="button">
+    Create Menu
+  </button>
+  <p></p>
+  <br />
   <div class="table-container">
-    <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="menu-table" data-sort-name="id"
-      data-search="true">
+    <table
+      class="table is-striped is-bordered is-hoverable is-fullwidth"
+      id="menu-table"
+      data-sort-name="id"
+      data-search="true"
+    >
       <thead>
         <tr>
-          <th data-field="id" data-visible="false"><span class="has-text-black"> ID </span></th>
-          <th data-field="name" data-sortable="true"><span class="has-text-black"> Menu Name </span></th>
-          <th data-field="description" data-sortable="true"><span class="has-text-black"> Description </span></th>
-          <th data-field="price" data-sortable="true"><span class="has-text-black"> Price </span></th>
-          <th data-field="category" data-sortable="true"><span class="has-text-black"> Category </span></th>
-          <th data-field="availability" data-sortable="true"><span class="has-text-black"> Availability </span></th>
-          <th data-field="image_url" data-sortable="true"><span class="has-text-black"> Image URL </span></th>
-          <th data-field="ordered" data-sortable="true"><span class="has-text-black"> ordered </span></th>
-          <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
+          <th data-field="id" data-visible="false">
+            <span class="has-text-black"> ID </span>
+          </th>
+          <th data-field="name" data-sortable="true">
+            <span class="has-text-black"> Menu Name </span>
+          </th>
+          <th data-field="description" data-sortable="true">
+            <span class="has-text-black"> Description </span>
+          </th>
+          <th data-field="price" data-sortable="true">
+            <span class="has-text-black"> Price </span>
+          </th>
+          <th data-field="category" data-sortable="true">
+            <span class="has-text-black"> Category </span>
+          </th>
+          <th data-field="availability" data-sortable="true">
+            <span class="has-text-black"> Availability </span>
+          </th>
+          <th data-field="image_url" data-sortable="true">
+            <span class="has-text-black"> Image URL </span>
+          </th>
+          <th data-field="ordered" data-sortable="true">
+            <span class="has-text-black"> ordered </span>
+          </th>
+          <th
+            data-field="operation"
+            data-formatter="actionFormatter"
+            data-events="operateEvents"
+          >
             <span class="has-text-black"> Edit/Delete </span>
           </th>
         </tr>
       </thead>
-      <tbody>
-      </tbody>
+      <tbody></tbody>
     </table>
   </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <script>
   function populate_table(table_data) {
-    $('#menu-table').bootstrapTable({
+    $("#menu-table").bootstrapTable({
       data: table_data,
       columns: [
         {
-          field: 'id',
-          title: 'id',
-          visible: true
+          field: "id",
+          title: "id",
+          visible: true,
         },
-
         {
-          field: 'name',
-          title: 'Menu Name',
-          sortable: true
-        }, {
-          field: 'description',
-          title: 'Description',
-          sortable: true
-        }, {
-          field: 'price',
-          title: 'Price',
-          sortable: true
-        }, {
-          field: 'category',
-          title: 'Category',
-          sortable: true
-        }, {
-          field: 'availability',
-          title: 'Availability',
-          sortable: true
-        }, {
-          field: 'ordered',
-          title: 'ordered',
-          sortable: true
-        }, 
+          field: "name",
+          title: "Menu Name",
+          sortable: true,
+        },
         {
-          field: 'image_url',
-          title: 'Image URL',
+          field: "description",
+          title: "Description",
+          sortable: true,
+        },
+        {
+          field: "price",
+          title: "Price",
+          sortable: true,
+        },
+        {
+          field: "category",
+          title: "Category",
+          sortable: true,
+        },
+        {
+          field: "availability",
+          title: "Availability",
+          sortable: true,
+        },
+        {
+          field: "ordered",
+          title: "ordered",
+          sortable: true,
+        },
+        {
+          field: "image_url",
+          title: "Image URL",
           sortable: true,
           formatter: function (value, row, index) {
             return `<img src="${value}" alt="Menu Image" style="width: 100px; height: auto;">`;
-          }
-        }, {
-          field: 'operation',
-          title: 'Edit/Delete',
+          },
+        },
+        {
+          field: "operation",
+          title: "Edit/Delete",
           formatter: actionFormatter,
-          events: operateEvents
-        }],
+          events: operateEvents,
+        },
+      ],
       loadingTemplate: function () {
-        return ''
-      }
+        return "";
+      },
     });
   }
 
   $(document).ready(function () {
     (function () {
-      $.getJSON('/menu/menus', populate_table);
+      $.getJSON("/menus/get_all_menus", populate_table).fail(function () {
+        console.error("Failed to load menu data");
+      });
     })();
   });
 
   function refresh_table(table_data) {
-    $('#menu-table').bootstrapTable('load', table_data);
+    $("#menu-table").bootstrapTable("load", table_data);
   }
 
-  $('#addMenuForm').submit(function (event) {
+  $("#addMenuForm").submit(function (event) {
     event.preventDefault();
 
     var formData = {};
-    $(':input').each(function () {
-      var key = $(this).attr('name');
+    $(":input").each(function () {
+      var key = $(this).attr("name");
       var val = $(this).val();
-      if (key != 'submit') {
+      if (key != "submit") {
         formData[key] = val;
       }
     });
 
     var $form = $(this);
-    var url = '/menu';
+    var url = "/menu";
 
     $.post(url, formData, function (table_data) {
       refresh_table(table_data);
@@ -187,75 +272,75 @@
   });
 
   function clearForm() {
-    $('#addMenuForm')[0].reset();
+    $("#addMenuForm")[0].reset();
   }
 
   function toggleView() {
-    if ($('#table_display').attr('hidden')) {
-      $('#table_display').removeAttr('hidden');
-      $('#add-edit').attr('hidden', 'hidden');
+    if ($("#table_display").attr("hidden")) {
+      $("#table_display").removeAttr("hidden");
+      $("#add-edit").attr("hidden", "hidden");
     } else {
-      $('#table_display').attr('hidden', 'hidden');
-      $('#add-edit').removeAttr('hidden');
+      $("#table_display").attr("hidden", "hidden");
+      $("#add-edit").removeAttr("hidden");
     }
   }
 
   function actionFormatter(value, row, index) {
     return [
       '<a class="edit" href="javascript:void(0)" title="Edit">',
-      '✏️',
-      '</a>  ',
+      "✏️",
+      "</a>  ",
       '<a class="remove" href="javascript:void(0)" title="Remove">',
-      '🗑️',
-      '</a>',
-    ].join('');
+      "🗑️",
+      "</a>",
+    ].join("");
   }
 
   window.operateEvents = {
-    'click .edit': function (e, value, row, index) {
+    "click .edit": function (e, value, row, index) {
       prePopulateForm(row);
     },
-    'click .remove': function (e, value, row, index) {
+    "click .remove": function (e, value, row, index) {
       removeItem(row);
     },
   };
 
   function prePopulateForm(row) {
-    $('#addMenuForm')[0].reset();
-    $('#menu_id').val(row.name);
-    $('#name').val(row.name);
-    $('#description').val(row.description);
-    $('#price').val(row.price);
-    $('#category').val(row.category);
-    $('#image_url').val(row.image_url);
-    $('#availability').val(row.availability.toString());
+    $("#addMenuForm")[0].reset();
+    $("#id").val(row.name);
+    $("#name").val(row.name);
+    $("#description").val(row.description);
+    $("#price").val(row.price);
+    $("#category").val(row.category);
+    $("#image_url").val(row.image_url);
+    $("#availability").val(row.availability.toString());
     toggleView();
   }
 
   function removeItem(row) {
-    if (!confirm('Delete menu with ID ' + row.name + '?')) {
+    if (!confirm("Delete menu with ID " + row.name + "?")) {
       return false;
     }
-    var url = '/menu/remove_menu';
-    var formData = { id: row.menu_id };
+    var url = "/menu/remove_menu";
+    var formData = { id: row.id };
     $.post(url, formData, function (table_data) {
       refresh_table(table_data);
-      alert('Menu with ID ' + row.menu_id + ' has been deleted.');
+      alert("Menu with ID " + row.id + " has been deleted.");
     }).fail(function () {
-      alert('Failed to delete menu with ID ' + row.menu_id);
+      alert("Failed to delete menu with ID " + row.id);
     });
   }
 
-  $('#add_menu').click(function () {
+  $("#add_menu").click(function () {
     clearForm();
     toggleView();
   });
 
-  $('#clear_form').click(function () {
+  $("#clear_form").click(function () {
     clearForm();
   });
 
-  $('#cancel_form').click(function () {
+  $("#cancel_form").click(function () {
     clearForm();
     toggleView();
   });
