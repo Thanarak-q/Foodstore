@@ -30,15 +30,20 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
   display: none;
   justify-content: center;
   align-items: center;
   z-index: 999;
+  opacity: 0;
+  transform: scale(0.5);
+  animation: fadeIn 0.5s forwards; /* Animation added here */
 }
 
 .cart-popup-item.show {
   display: flex;
+  opacity: 1;
+  transform: scale(1);
 }
 
 .cart-popup-item .popup-content {
@@ -168,6 +173,48 @@
   margin-right: 10px; /* เพิ่มระยะห่างจากข้อความ */
 }
 
+/* Default grid view for larger screens */
+/* .grid-view-item {
+  width: 30%;
+  margin-bottom: 16px;
+} */
+
+/* List view for mobile (screens smaller than 768px) */
+/* @media (max-width: 768px) {
+  .grid-view-item {
+    width: 100%;
+  }
+} */
+
+/* Additional list view styles */
+.list-view-item {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.list-view-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-right: 16px;
+  border-radius: 8px;
+}
+
+.list-view-item .item-details {
+  flex: 1;
+}
+
+.list-view-item .item-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 @media (max-width: 768px) {
   .toast {
     font-size: 1rem;
@@ -177,4 +224,35 @@
   .toast-body {
     font-size: 1rem;
   }
+}
+/* Animation for the logo */
+.logo-animation {
+  transition: transform 0.3s ease;
+}
+
+.logo-animation:hover {
+  transform: scale(1.1);
+}
+
+/* Fade-in animation for dropdown menu */
+.fade-in-animation {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Animation for buttons on hover */
+.animate-on-hover {
+  transition: transform 0.2s ease;
+}
+
+.animate-on-hover:hover {
+  transform: scale(1.1);
 }

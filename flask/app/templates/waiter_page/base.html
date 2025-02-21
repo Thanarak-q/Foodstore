@@ -8,6 +8,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -89,6 +90,7 @@
     <script>
       $(document).ready(function () {
         let menuMap = {};
+        let previousOrderCount = 0; // Track the previous number of orders
 
         // Function to fetch menu items and build a map
         function fetchMenus(callback) {
@@ -117,6 +119,15 @@
               const preparingOrders = data.filter(
                 (order) => order.status === "Ready"
               );
+
+              // Check if new orders are added
+              if (preparingOrders.length > previousOrderCount) {
+                const alertSound = new Audio("/static/sounds/alert.mp3"); // Replace with your sound file
+                alertSound.play();
+                console.log("New order received!");
+              }
+
+              previousOrderCount = preparingOrders.length; // Update the previous order count
 
               if (preparingOrders.length === 0) {
                 $("#order-list").append(
@@ -184,9 +195,9 @@
           $.ajax({
             url: "/orders/update", // Your API endpoint for confirming the order
             method: "POST",
-            data: { order_id: orderId, status: 'Served'},
+            data: { order_id: orderId, status: "Served" },
             success: function (response) {
-              alert(`Order ID ${orderId} confirmed successfully!`);
+              // alert(`Order ID ${orderId} confirmed successfully!`);
               fetchOrders(); // Refresh the order list after confirmation
             },
             error: function () {

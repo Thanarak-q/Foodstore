@@ -14,197 +14,16 @@
       rel="stylesheet"
     />
 
-    <!-- <link
+    <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/Order_page.css') }}"
-    /> -->
+    />
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </head>
-  <style>
-    /* Minimal custom CSS for specific adjustments */
-    .card {
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .cart-popup {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: white;
-      padding: 30px;
-      display: none;
-      z-index: 999;
-    }
-
-    .cart-popup.show {
-      display: block;
-    }
-
-    .cart-popup-item {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.5);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-    }
-
-    .cart-popup-item.show {
-      display: flex;
-    }
-
-    .cart-popup-item .popup-content {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      width: 80%;
-      max-width: 600px;
-      text-align: center;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .cart-popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90%;
-      max-width: 500px;
-      height: auto;
-      max-height: 80%;
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      overflow-y: auto;
-      z-index: 999;
-      display: none;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .cart-popup.show {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translate(-50%, -60%);
-      }
-      to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-      }
-    }
-
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid #eaeaea;
-    }
-
-    .cart-item:last-child {
-      border-bottom: none;
-    }
-
-    .cart-item span {
-      font-size: 16px;
-      font-weight: 500;
-    }
-
-    .quantity-buttons {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn {
-      border-radius: 8px;
-    }
-
-    .btn-sm {
-      font-size: 14px;
-      padding: 6px 12px;
-    }
-
-    .btn-danger:hover,
-    .btn-warning:hover {
-      opacity: 0.85;
-    }
-
-    #total-price {
-      font-size: 18px;
-      color: #333;
-    }
-
-    .close-button {
-      font-size: 24px;
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      color: #333;
-    }
-
-    .close-button:hover {
-      opacity: 0.7;
-    }
-    .cart-popup-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-      z-index: 900; /* Just below the cart popup */
-      display: none;
-    }
-
-    .toast {
-      font-size: 1.25rem; /* เพิ่มขนาดข้อความ */
-      border-radius: 10px; /* มุมโค้งมน */
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* เงาเพื่อให้เด่น */
-      background-color: #28a745; /* สีเขียวเด่น */
-    }
-
-    .toast-body {
-      background-color: #28a745; /* สีเขียวเด่น */
-      color: white;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-    }
-
-    .toast-body i {
-      font-size: 1.5rem;
-      margin-right: 10px; /* เพิ่มระยะห่างจากข้อความ */
-    }
-
-    @media (max-width: 768px) {
-      .toast {
-        font-size: 1rem;
-        padding: 10px;
-      }
-
-      .toast-body {
-        font-size: 1rem;
-      }
-    }
-  </style>
   <body>
     <!-- Toast Notification -->
     <div
@@ -243,18 +62,43 @@
     <div class="cart-popup-backdrop" id="cart-backdrop"></div>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
-      <a
-        class="navbar-brand"
-        href="#"
-        id="nav-menu"
-        onclick="toggleCategoriesNav()"
-        >ประเภทอาหาร ⬇</a
-      >
+      <img
+        class="mr-2 logo-animation"
+        src="/static/ico/logo.jpg"
+        style="height: 40px; border-radius: 20px"
+        alt="logo"
+      />
+      <div class="navbar-nav">
+        <div class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle text-white"
+            href="#"
+            id="nav-menu"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            ประเภทอาหาร
+          </a>
+          <ul
+            class="dropdown-menu fade-in-animation"
+            aria-labelledby="nav-menu"
+            id="categories-dropdown"
+          ></ul>
+        </div>
+      </div>
+
       <div class="ml-auto">
-        <button class="btn btn-link text-white" onclick="toggleSearchPopup()">
+        <button
+          class="btn btn-link text-white animate-on-hover"
+          onclick="toggleSearchPopup()"
+        >
           🔍
         </button>
-        <button class="btn btn-link text-white" onclick="toggleCartPopup()">
+        <button
+          class="btn btn-link text-white animate-on-hover"
+          onclick="toggleCartPopup()"
+        >
           🛒 <span id="cart-count" class="badge badge-warning">0</span>
         </button>
       </div>
@@ -308,7 +152,7 @@
             min="1"
           />
         </div>
-        <button class="btn btn-warning mt-2" onclick="closeProductPopup()">
+        <button class="btn btn-danger mt-2" onclick="closeProductPopup()">
           ปิด
         </button>
         <button
@@ -369,28 +213,32 @@
         renderCategoriesNav();
       }
 
-      // Render categories dynamically
+      // Render categories dynamically for the dropdown menu
       function renderCategoriesNav() {
-        const categoriesNav = $("#categories-nav");
-        categoriesNav.empty(); // Clear existing categories
+        const categoriesDropdown = $("#categories-dropdown");
+        categoriesDropdown.empty(); // Clear existing categories
 
         // Get unique categories from the menu items
         const categories = [...new Set(menuItems.map((item) => item.category))];
 
-        console.log(categories);
         // Add an "All" category option
-        categoriesNav.append(`
-    <a href="javascript:void(0)" class="d-block text-white mb-2" onclick="filterMenucat('')">ทั้งหมด</a>
+        categoriesDropdown.append(`
+    <li><a class="dropdown-item" href="javascript:void(0)" onclick="filterMenucat('')">ทั้งหมด</a></li>
   `);
 
-        // Loop through the unique categories and add them to the navigation
+        // Loop through the unique categories and add them to the dropdown
         categories.forEach((category) => {
-          categoriesNav.append(`
-      <a href="javascript:void(0)" class="d-block text-white mb-2" onclick="filterMenucat('${category}')">${category}</a>
+          categoriesDropdown.append(`
+      <li><a class="dropdown-item" href="javascript:void(0)" onclick="filterMenucat('${category}')">${category}</a></li>
     `);
         });
       }
+
       function renderMenuByCategory(filteredItems = menuItems) {
+        const isMobile = window.innerWidth <= 768; // Check if it's mobile
+        const viewType = isMobile ? "list" : "grid";
+
+        console.log(viewType);
         const menuContainer = $("#menu-grid-container");
         menuContainer.empty();
 
@@ -400,9 +248,12 @@
           return acc;
         }, {});
 
+        for (const category in groupedByCategory) {
+          groupedByCategory[category].sort((a, b) => a.price - b.price);
+        }
+
         Object.keys(groupedByCategory).forEach((category) => {
           const categoryContainer = $("<div>").addClass("mb-4");
-
           const categoryTitle = $("<h3>")
             .addClass("text-danger font-weight-bold mb-3")
             .text(category);
@@ -410,11 +261,41 @@
 
           const gridContainer = $("<div>").addClass("row");
 
+          const sortedItems = groupedByCategory[category].sort(
+            (a, b) => a.price - b.price
+          );
+
           groupedByCategory[category].forEach((item) => {
-            const cardDiv = $("<div>").addClass(
-              "col-md-4 col-sm-6 col-12 mb-4"
-            );
-            cardDiv.html(`
+            if (viewType === "list") {
+              // List View Item
+              const listItem = $("<div>").addClass("list-view-item");
+              listItem.html(`
+          <img src="${item.image_url}" alt="${item.name}" />
+          <div class="item-details">
+            <h5>${item.name}</h5>
+            <p>ราคา: ${item.price} บาท</p>
+            <label for="quantity-input-${item.id}">จำนวน:</label>
+            <input
+              type="number"
+              id="quantity-input-${item.id}"
+              class="form-control"
+              value="1"
+              min="1"
+              style="max-width: 100px;"
+            />
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-warning" onclick="addToCart(${item.id}, parseInt($('#quantity-input-${item.id}').val(), 10))">เพิ่มลงตะกร้า</button>
+            <button class="btn btn-outline-secondary" onclick="showProductPopup(${item.id})">ดูรายละเอียด</button>
+          </div>
+        `);
+              categoryContainer.append(listItem);
+            } else {
+              // Grid View Item
+              const cardDiv = $("<div>").addClass(
+                "col-md-4 col-sm-6 col-12 mb-4"
+              );
+              cardDiv.html(`
         <div class="card">
           <img src="${item.image_url}" class="card-img-top" alt="${item.name}">
           <div class="card-body">
@@ -435,10 +316,12 @@
           </div>
         </div>
       `);
-            gridContainer.append(cardDiv);
+              gridContainer.append(cardDiv);
+            }
           });
-
-          categoryContainer.append(gridContainer);
+          if (viewType === "grid") {
+            categoryContainer.append(gridContainer);
+          }
           menuContainer.append(categoryContainer);
         });
       }
@@ -552,16 +435,11 @@
         $("#categories-nav").toggle();
       }
 
-      // Filter menu by category
       function filterMenucat(category) {
-        let filteredItems = menuItems;
-        if (category) {
-          filteredItems = menuItems.filter(
-            (item) => item.category === category
-          );
-        }
+        const filteredItems = category
+          ? menuItems.filter((item) => item.category === category)
+          : menuItems; // Show all if "All" is selected
         renderMenuByCategory(filteredItems);
-        toggleCategoriesNav();
       }
 
       // Show product popup function
@@ -610,6 +488,15 @@
       function showRemoveallFromCartToast() {
         $("#remove-all-toast").toast("show");
       }
+      $(window).resize(() => {
+        renderMenuByCategory(menuItems);
+      });
+
+      // Initial render
+      // renderMenuByCategory(menuItems);
     </script>
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
   </body>
 </html>
