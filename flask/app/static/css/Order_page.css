@@ -34,7 +34,7 @@
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 999;
 }
 
 .cart-popup-item.show {
@@ -144,6 +144,37 @@
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-  z-index: 998; /* Just below the cart popup */
+  z-index: 900; /* Just below the cart popup */
   display: none;
+}
+
+.toast {
+  font-size: 1.25rem; /* เพิ่มขนาดข้อความ */
+  border-radius: 10px; /* มุมโค้งมน */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* เงาเพื่อให้เด่น */
+  background-color: #28a745; /* สีเขียวเด่น */
+}
+
+.toast-body {
+  background-color: #28a745; /* สีเขียวเด่น */
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.toast-body i {
+  font-size: 1.5rem;
+  margin-right: 10px; /* เพิ่มระยะห่างจากข้อความ */
+}
+
+@media (max-width: 768px) {
+  .toast {
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  .toast-body {
+    font-size: 1rem;
+  }
 }
