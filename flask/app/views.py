@@ -158,6 +158,10 @@ def index():
 def crash():
     return 1/0
 
+@app.route('/review')
+def review():
+    return render_template('review_page.html')
+
 @app.route('/db')
 def db_connection():
     try:
