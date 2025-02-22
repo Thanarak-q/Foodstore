@@ -10,7 +10,7 @@ def reviews_list():
     db_allreview = Review.query.all()
     reviews = list(map(lambda x: x.to_dict(), db_allreview))
     reviews.sort(key=(lambda x: int(x['review_id'])))
-    return jsonify(reviews)
+    return jsonify({"reviews": reviews})
 
 @app.route('/reviews/create', methods=('GET', 'POST'))
 def review_create():
@@ -40,7 +40,7 @@ def review_create():
                 temp = Review(
                     name=validated_dict['name'],
                     star=validated_dict['star'],
-                    review=validated_dict['view']
+                    review=validated_dict['review']
                 )
                 db.session.add(temp)
                 

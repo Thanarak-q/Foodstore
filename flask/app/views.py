@@ -22,6 +22,7 @@ from manage import SECRET_KEY
 '''
 from app.controllers import Admin
 
+from app.controllers import review_manage
 '''
 หน้า Cashier
 '''
