@@ -1,76 +1,49 @@
-{% extends 'Admin_page/base.html' %} {% block content %}
+{% extends 'Admin_page/base.html' %} 
+{% block content %}
 <div class="row">
-  <div class="columns is-vcentered">
-    <div class="column is-half">
-      <div class="field has-addons">
-        <div class="control is-expanded">
-          <input class="input" type="text" placeholder="Search..." />
-        </div>
+  <div class="columns is-vcentered is-justify-content-space-between mt-5">
+    <div class="column is-3">
+      <h1 class="title">Dashboard</h1>
+    </div>
+    <div class="column">
+      <div class="field is-grouped is-grouped-right">
         <div class="control">
-          <button class="button is-info">
-            <span class="icon">
-              <i class="fas fa-search"></i>
-            </span>
+          <button class="button is-info" id="toggleFilterButton">
+            <span id="filterPeriodLabel">Day</span> <!-- แสดงช่วงเวลาที่เลือก -->
           </button>
         </div>
       </div>
-    </div>
-    <div class="column has-text-right">
-      <button class="button is-light">
-        <span class="icon">
-          <i class="fas fa-bell"></i>
-        </span>
-        <span
-          class="tag is-danger is-rounded"
-          style="position: absolute; top: -5px; right: -5px"
-          >3</span
-        >
-      </button>
-    </div>
-  </div>
-</div>
-
-<div class="columns is-vcentered is-justify-content-space-between mt-5">
-  <div class="column is-3">
-    <h1 class="title">Dashboard</h1>
-  </div>
-  <div class="column">
-    <div class="field is-grouped is-grouped-right">
-      <div class="control">
-        <button class="button is-info" id="toggleFilterButton">
-          Filter Period
-        </button>
-      </div>
-    </div>
-    <div id="filterContainer" class="is-hidden">
-      <div class="field is-grouped is-grouped-right mt-3">
-        <div class="control">
-          <input type="date" id="startDate" class="input" />
-        </div>
-        <div class="control">
-          <input type="date" id="endDate" class="input" />
-        </div>
-        <div class="control">
-          <div class="select">
-            <select id="timeRange">
-              <option value="custom">All time</option>
-              <option value="day">Day</option>
-              <option value="week">Week</option>
-              <option value="month">Month</option>
-              <option value="year">Year</option>
-            </select>
+      <div id="filterContainer" class="is-hidden">
+        <div class="field is-grouped is-grouped-right mt-3">
+          <div class="control">
+            <div class="select">
+              <select id="timeRange">
+                <option value="day" selected>Day</option>
+                <option value="week">Week</option>
+                <option value="month">Month</option>
+                <option value="year">Year</option>
+                <option value="custom">Custom</option> <!-- เพิ่มตัวเลือก Custom -->
+              </select>
+            </div>
+          </div>
+          <!-- ส่วนของ input วันที่ซ่อนเมื่อไม่ได้เลือก Custom -->
+          <div class="control" id="startDateContainer" style="display: none;">
+            <input type="date" id="startDate" class="input" />
+          </div>
+          <div class="control" id="endDateContainer" style="display: none;">
+            <input type="date" id="endDate" class="input" />
+          </div>
+          <div class="control">
+            <button class="button is-info" id="filterButton">Filter</button>
           </div>
         </div>
-        <div class="control">
-          <button class="button is-info" id="filterButton">Filter</button>
-        </div>
-        <div class="control">
-          <button class="button is-light" id="resetButton">Reset</button>
-        </div>
       </div>
     </div>
   </div>
+  
+  
 </div>
+
 
 <div class="row mt-5">
   <div class="columns is-multiline is-centered">
@@ -153,8 +126,6 @@
   </div>
 </div>
 
-
-
 <div class="row mt-5">
   <div class="column is-full">
     <div id="notifications">
@@ -162,7 +133,9 @@
     </div>
   </div>
 </div>
-{% endblock %} {% block extra_js %}
+{% endblock %} 
+
+{% block extra_js %}
 <!-- ✅ เรียกใช้งาน Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link
@@ -173,101 +146,55 @@
 
 <script>
   $(document).ready(function () {
-    // แก้ไข: เพิ่มการสลับแสดง Filter Container
-    $("#toggleFilterButton").click(function () {
-      $("#filterContainer").toggleClass("is-hidden");
-    });
-
-    // ฟังก์ชันที่มีอยู่แล้ว
+    // ตั้งค่า default เป็นวันนี้
+    const today = new Date();
+    const startDate = new Date(today);
+    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(today);
+    endDate.setHours(23, 59, 59, 999);
+  
+    $("#startDate").val(startDate.toISOString().split("T")[0]);
+    $("#endDate").val(endDate.toISOString().split("T")[0]);
+  
+    // เรียกฟังก์ชันเพื่อดึงข้อมูลเริ่มต้น
     fetchTotalSale();
     fetchTotalOrder();
     fetchtotalMenuItems();
     fetchTop5Menus();
-  });
-</script>
-
-<!-- ฟังก์ชันอื่นๆ คงเดิม -->
-<script>
-  $(document).ready(function () {
+    fetchAndDrawRevenueChart();
+  
+    // แก้ไข: เพิ่มการสลับแสดง Filter Container
+    $("#toggleFilterButton").click(function () {
+      $("#filterContainer").toggleClass("is-hidden");
+    });
+  
+    // ฟังก์ชันที่มีอยู่แล้ว
     $("#filterButton").click(function () {
       fetchTotalSale();
       fetchTotalOrder();
     });
-
+  
     $("#resetButton").click(function () {
       $("#startDate").val("");
       $("#endDate").val("");
       fetchTotalSale();
       fetchTotalOrder();
     });
-  });
-</script>
-
-<script>
-  function fetchTotalSale() {
-    const startDate = $("#startDate").val();
-    const endDate = $("#endDate").val();
-
-    $.getJSON("/payment/get_all_payment", function (data) {
-      let filteredData = data;
-
-      if (startDate && endDate) {
-        filteredData = data.filter((payment) => {
-          const paymentTime = new Date(payment.payment_time);
-          const start = new Date(startDate);
-          const end = new Date(endDate);
-          return paymentTime >= start && paymentTime <= end;
-        });
-      }
-
-      const totalSale = filteredData.reduce(
-        (acc, pay) => acc + (Number(pay.amount) || 0),
-        0
-      );
-      $("#totalSale").text(`฿ ${totalSale.toLocaleString()}`);
-    });
-  }
-</script>
-
-<script>
-  function fetchTotalOrder() {
-    const startDate = $("#startDate").val();
-    const endDate = $("#endDate").val();
-
-    $.getJSON("/orders/get_all_orders", function (data) {
-      let filteredData = data;
-
-      if (startDate && endDate) {
-        filteredData = data.filter((order) => {
-          const orderTime = new Date(order.order_time);
-          const start = new Date(startDate);
-          const end = new Date(endDate);
-          return orderTime >= start && orderTime <= end;
-        });
-      }
-
-      const totalOrder = filteredData.length; // นับจำนวนออเดอร์ทั้งหมด
-      $("#totalOrder").text(`${totalOrder.toLocaleString()}`);
-    });
-  }
-</script>
-
-<script>
-  function fetchtotalMenuItems() {
-    $.getJSON("/menus/get_all_menus", function (menuData) {
-      const totalMenuItems = menuData.length;
-      $("#totalMenuItems").text(totalMenuItems);
-    });
-  }
-</script>
-
-<script>
-  $(document).ready(function () {
+  
     $("#timeRange").change(function () {
       const selectedRange = $(this).val();
       const today = new Date();
       let startDate, endDate;
-
+  
+      // ซ่อน/แสดง input วันที่
+      if (selectedRange === "custom") {
+        $("#startDateContainer").show();
+        $("#endDateContainer").show();
+      } else {
+        $("#startDateContainer").hide();
+        $("#endDateContainer").hide();
+      }
+  
       switch (selectedRange) {
         case "day":
           startDate = new Date(today);
@@ -293,24 +220,115 @@
           endDate = new Date(today.getFullYear(), 11, 31);
           endDate.setHours(23, 59, 59, 999);
           break;
+        case "custom":
+          // เมื่อเลือก custom จะให้แสดงวันที่ที่เลือก
+          const customStartDate = $("#startDate").val();
+          const customEndDate = $("#endDate").val();
+          startDate = new Date(customStartDate);
+          endDate = new Date(customEndDate);
+          break;
         default:
           startDate = null;
           endDate = null;
           break;
       }
-
+  
       if (startDate && endDate) {
         $("#startDate").val(startDate.toISOString().split("T")[0]);
         $("#endDate").val(endDate.toISOString().split("T")[0]);
+        // แสดงช่วงเวลาที่เลือกในปุ่ม Filter
+        $("#filterPeriodLabel").text(`${selectedRange.charAt(0).toUpperCase() + selectedRange.slice(1)}`);
       } else {
         $("#startDate").val("");
         $("#endDate").val("");
+        $("#filterPeriodLabel").text("Select Range");
       }
+  
+      // เรียกฟังก์ชันเพื่ออัปเดตข้อมูล
+      fetchTotalSale();
+      fetchTotalOrder();
     });
   });
-</script>
+  
+  function fetchTotalSale() {
+    const startDate = $("#startDate").val() || new Date().toISOString().split("T")[0];
+    const endDate = $("#endDate").val() || new Date().toISOString().split("T")[0];
 
-<script>
+    $.getJSON("/payment/get_all_payment", function (data) {
+      let filteredData = data;
+
+      if (startDate && endDate) {
+        filteredData = data.filter((payment) => {
+          const paymentTime = new Date(payment.payment_time);
+          const start = new Date(startDate);
+          const end = new Date(endDate);
+          return paymentTime >= start && paymentTime <= end;
+        });
+      }
+
+      const totalSale = filteredData.reduce(
+        (acc, pay) => acc + (Number(pay.amount) || 0),
+        0
+      );
+      $("#totalSale").text(`฿ ${totalSale.toLocaleString()}`);
+    });
+  }
+
+  function fetchTotalOrder() {
+    const startDate = $("#startDate").val() || new Date().toISOString().split("T")[0];
+    const endDate = $("#endDate").val() || new Date().toISOString().split("T")[0];
+
+    $.getJSON("/orders/get_all_orders", function (data) {
+      let filteredData = data;
+
+      if (startDate && endDate) {
+        filteredData = data.filter((order) => {
+          const orderTime = new Date(order.order_time);
+          const start = new Date(startDate);
+          const end = new Date(endDate);
+          return orderTime >= start && orderTime <= end;
+        });
+      }
+
+      const totalOrder = filteredData.length;
+      $("#totalOrder").text(`${totalOrder.toLocaleString()}`);
+    });
+  }
+
+  function fetchtotalMenuItems() {
+    $.getJSON("/menus/get_all_menus", function (menuData) {
+      const totalMenuItems = menuData.length;
+      $("#totalMenuItems").text(totalMenuItems);
+    });
+  }
+
+  function fetchTop5Menus() {
+    $.getJSON("/menus/get_all_menus", function (data) {
+      const sortedMenus = data.sort((a, b) => b.ordered - a.ordered);
+      const top5Menus = sortedMenus.slice(0, 5);
+
+      let htmlContent = '';
+      top5Menus.forEach((menu, index) => {
+        htmlContent += `
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-128x128">
+                <img src="${menu.image_url}" alt="${menu.name}" style="width: 100%; height: auto;">
+              </figure>
+            </div>
+            <div class="media-content">
+              <p class="title is-4 has-text-weight-bold">${index + 1}. ${menu.name}</p>
+              <p class="subtitle is-6 has-text-grey-dark">จำนวนการสั่ง: <strong>${menu.ordered} ครั้ง</strong></p>
+              <p class="subtitle is-6 has-text-grey-dark">ราคา: <strong>฿${menu.price}</strong></p>
+            </div>
+          </div>
+        `;
+      });
+
+      $("#top5Menus").html(htmlContent);
+    });
+  }
+
   function checkMenuPerformance(menuData) {
     const averageSales =
       menuData.reduce((sum, menu) => sum + menu.ordered, 0) / menuData.length;
@@ -323,9 +341,7 @@
       }
     });
   }
-</script>
 
-<script>
   function showNotification(message, type) {
     const notification = $(
       `<div class="notification ${type}">
@@ -342,8 +358,7 @@
 
     setTimeout(() => notification.remove(), 5000);
   }
-</script>
-<script>
+
   let revenueChart;
 
   function populateYearSelector(data) {
@@ -504,33 +519,7 @@
       fetchAndDrawRevenueChart();
     });
   });
-</script>
-<script>
-  function fetchTop5Menus() {
-    $.getJSON("/menus/get_all_menus", function (data) {
-      const sortedMenus = data.sort((a, b) => b.ordered - a.ordered);
-      const top5Menus = sortedMenus.slice(0, 5);
 
-      let htmlContent = '';
-      top5Menus.forEach((menu, index) => {
-        htmlContent += `
-          <div class="media">
-            <div class="media-left">
-              <figure class="image is-128x128">
-                <img src="${menu.image_url}" alt="${menu.name}" style="width: 100%; height: auto;">
-              </figure>
-            </div>
-            <div class="media-content">
-              <p class="title is-4 has-text-weight-bold">${index + 1}. ${menu.name}</p>
-              <p class="subtitle is-6 has-text-grey-dark">จำนวนการสั่ง: <strong>${menu.ordered} ครั้ง</strong></p>
-              <p class="subtitle is-6 has-text-grey-dark">ราคา: <strong>฿${menu.price}</strong></p>
-            </div>
-          </div>
-        `;
-      });
-
-      $("#top5Menus").html(htmlContent);
-    });
-  }
+  
 </script>
 {% endblock %}
