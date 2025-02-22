@@ -1,34 +1,43 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash
-from werkzeug.utils import secure_filename
 from app import app
+from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = os.path.join(app.root_path, 'static/sounds')
-ALLOWED_EXTENSIONS = {'mp3', 'wav'}
+# Define the paths for sounds and logos
+SOUNDS_FOLDER = os.path.join(app.static_folder, 'sounds')
+LOGO_FOLDER = os.path.join(app.static_folder, 'ico')
 
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+# Ensure the directories exist
+os.makedirs(SOUNDS_FOLDER, exist_ok=True)
+os.makedirs(LOGO_FOLDER, exist_ok=True)
 
 @app.route('/setting', methods=['GET', 'POST'])
 def setting():
     if request.method == 'POST':
-        if 'sound_file' not in request.files:
-            flash('No file part', 'error')
-            return redirect(request.url)
+        # Handle sound file upload for cooking room
+        if 'cooking_sound' in request.files:
+            cooking_sound = request.files['cooking_sound']
+            if cooking_sound.filename != '':
+                filename = "cooking_room.mp3"  # Fixed filename for cooking sound
+                cooking_sound.save(os.path.join(SOUNDS_FOLDER, filename))
+                flash('Cooking room sound uploaded successfully!', 'success')
 
-        file = request.files['sound_file']
+        # Handle sound file upload for waiter
+        if 'waiter_sound' in request.files:
+            waiter_sound = request.files['waiter_sound']
+            if waiter_sound.filename != '':
+                filename = "waiter.mp3"  # Fixed filename for waiter sound
+                waiter_sound.save(os.path.join(SOUNDS_FOLDER, filename))
+                flash('Waiter sound uploaded successfully!', 'success')
 
-        if file.filename == '':
-            flash('No selected file', 'error')
-            return redirect(request.url)
+        # Handle logo file upload
+        if 'logo_file' in request.files:
+            logo_file = request.files['logo_file']
+            if logo_file.filename != '':
+                filename = "logo.jpg"  # Fixed filename for logo
+                logo_file.save(os.path.join(LOGO_FOLDER, filename))
+                flash('Logo uploaded successfully!', 'success')
 
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            save_path = os.path.join(app.config['UPLOAD_FOLDER'], 'alert.mp3')  # แทนที่ไฟล์เดิม
-            file.save(save_path)
-            flash('Sound updated successfully!', 'success')
-            return redirect(url_for('setting'))
+        return redirect(url_for('setting'))
 
     return render_template('Admin_page/setting.html')
