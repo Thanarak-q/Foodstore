@@ -13,7 +13,6 @@ def orders_list():
     db_allOrder = Order.query.all()
     orders = list(map(lambda x: x.to_dict(), db_allOrder))
     orders.sort(key=(lambda x: int(x['order_id'])))
-    # app.logger.debug(f"DB Get tables data: {orders}")
     return jsonify(orders)
 
 @app.route('/orders/create', methods=('GET', 'POST'))
@@ -22,37 +21,35 @@ def order_create():
     if request.method == 'POST':
         
         result = request.form.to_dict()
-
         app.logger.debug(result)
+        valid_keys = ['table_id', 'time']
         validated = True
-        valid_keys = ['table_id', 'time', 'menu_list']
         validated_dict = dict()
+        validated_dict['menu_list'] = dict()
         for key in result:
             app.logger.debug(f"{key}: {result[key]}")
             # screen of unrelated inputs
             if key not in valid_keys:
+                validated_dict['menu_list'][key] = int(result[key])
                 continue
-
 
             value = result[key].strip()
             if not value or value == 'undefined':
                 validated = False
                 break
-            if key == 'is_employee' and result[key].lower() != "true":
-                validated = False    
-                break
+
             validated_dict[key] = value
-            
+        app.logger.debug(validated_dict)
         if validated:
             try:
                 temp = Order(
-                    table_id=validated_dict['table_id'],
+                    table_id=int(validated_dict['table_id']),
                     time=validated_dict['time'],
-                    status="Preparing",
-                    menu_list=validated_dict['menu_list'])
-                temp.change_price(cal_price[validated_dict['menu_list']])
+                    status='Preparing',
+                    menu_list=validated_dict['menu_list']
+                )
+                temp.change_price(cal_price(validated_dict['menu_list']))
                 db.session.add(temp)
-                # db.session.commit()
                 
                 db.session.commit()
                 
@@ -71,8 +68,9 @@ def cal_price(menu_list):
         total = 0
         # note menu_list key start at 0 but menus start at 1
         for key in menu_list:
-            app.logger.debug(f"{key} : {int(menus[key - 1]['price']) * menu_list[key]}")
-            total += int(menus[key - 1]['price']) * menu_list[key]
+            app.logger.debug(type(menus[int(key) - 1]['price']))
+            app.logger.debug(f"{key} : {int(menus[int(key) - 1]['price']) * menu_list[key]}")
+            total += int(menus[int(key) - 1]['price']) * menu_list[key]
             # plus_menu_ordered(key, menu_list[key])
             
         return total
@@ -89,26 +87,8 @@ def order_update():
     if request.method == 'POST':
         app.logger.debug("Order - UPDATE")
         result = request.form.to_dict()
-        
-        validated = True
-        validated_dict = dict()
-        valid_keys = ['order_id', 'status']
 
-        for key in result:
-            app.logger.debug(f"{key}: {result[key]}")
-            # screen of unrelated inputs
-            if key not in valid_keys is True:
-                continue
-            
-
-            value = result[key].strip()
-            if not value or value == 'undefined':
-                validated = False
-                break
-            if key == 'is_employee' and result[key].lower() != "true":
-                validated = False    
-                break
-            validated_dict[key] = value
+        validated_dict, validated = validate_data(result, ['order_id', 'status'])
 
         app.logger.debug(validated_dict)
         if validated:
@@ -128,24 +108,7 @@ def order_delete():
         app.logger.debug("Orders - DELETE")
         result = request.form.to_dict()
 
-        validated = True
-        validated_dict = dict()
-        valid_keys = ['order_id']
-        for key in result:
-            app.logger.debug(f"{key}: {result[key]}")
-            # screen of unrelated inputs
-            if key not in valid_keys:
-                continue
-
-
-            value = result[key].strip()
-            if not value or value == 'undefined':
-                validated = False
-                break
-            if key == 'is_employee' and result[key].lower() != "true":
-                validated = False    
-                break
-            validated_dict[key] = value
+        validated_dict, validated = validate_data(result, ['order_id'])
             
         if validated:
             try:
@@ -157,3 +120,20 @@ def order_delete():
                 raise
 
     return orders_list()
+
+def validate_data(result, valid_keys=[]):
+    validated = True
+    validated_dict = dict()
+    for key in result:
+        app.logger.debug(f"{key}: {result[key]}")
+        # screen of unrelated inputs
+        if key not in valid_keys:
+            continue
+
+        value = result[key].strip()
+        if not value or value == 'undefined':
+            validated = False
+            break
+
+        validated_dict[key] = value
+    return validated_dict, validated

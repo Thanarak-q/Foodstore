@@ -80,7 +80,7 @@ def menu(token):
     if request.method == 'GET':
         # selected_items = request.form.getlist('item')  # List of selected items' ids
         # return render_template('order_summary.html', table_number=table_number, selected_items=selected_items, menu_items=menu_items)
-        return render_template('test.html', table_id=table_number)
+        return render_template('order_page/index.html', table_id=table_number)
 
     # return render_template('menu.html', menu_items=menu_items, table_number=table_number)
     return render_template('test.html', table_id='Something wrong with your QRcode')
