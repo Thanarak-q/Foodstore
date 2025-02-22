@@ -8,6 +8,12 @@ from sqlalchemy.sql import text
 from app.models.order import Order
 from app.models.menu import Menu
 
+
+
+@app.route('/orders')
+def orders():
+    return render_template('Admin_page/order_list.html')
+
 @app.route('/orders/get_all_orders')
 def orders_list():
     db_allOrder = Order.query.all()

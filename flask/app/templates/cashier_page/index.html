@@ -1,5 +1,6 @@
 {% extends 'cashier_page/base.html' %}
 
+
 {% block extra_css %}
 <style>
     .bootstrap-table .pagination {
@@ -7,6 +8,7 @@
         display: flex;
         justify-content: center;
         gap: 0.5rem;
+
     }
 
     .bootstrap-table .page-item {
@@ -53,39 +55,23 @@
     .bootstrap-table .pagination-detail {
         display: none;
     }
-
-    .fixed-table-toolbar .search-input {
-        border: 2px solid #dbdbdb;
-        border-radius: 25px;
-        padding: 0.5rem 1rem;
-        font-size: 1rem;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        width: 100%;
-        max-width: 300px;
-    }
-
-    .fixed-table-toolbar .search-input:focus {
-        border-color: #3273dc;
-        box-shadow: 0 0 5px rgba(50, 115, 220, 0.3);
-        outline: none;
-    }
-
-    .fixed-table-toolbar {
-        margin: 1.5rem 0;
-        display: flex;
-        justify-content: right;
-    }
 </style>
 
 {% endblock %}
+
+
 
 {% block content %}
 <div class="section">
     <div class="container">
         <div class="card is-size-5">
+
+            <!-- Card Header -->
             <header class="card-header">
                 <h1 class="card-header-title is-size-3">Table Availability</h1>
             </header>
+
+            <!-- Card Content (Table) -->
             <div class="card-content">
                 <table id="table-list" class="table is-fullwidth is-hoverable" data-toggle="table"
                     data-pagination="true" data-search="true" paginationDetailHAlign="hidden">
@@ -97,14 +83,16 @@
                         </tr>
                     </thead>
                 </table>
+
+                <!-- Card Footer -->
+                <footer class="card-footer">
+                    <a href="#" id="refresh" class="card-footer-item" onclick="refreshTable()">Refresh List</a>
+                    <a href="#" id="view-all" class="card-footer-item" style="border-right: 0px;"
+                        onclick="showAllTables()">View All</a>
+                    <a href="#" id="view-less" class="card-footer-item" style="display: none;"
+                        onclick="showLessTables()">View less</a>
+                </footer>
             </div>
-            <footer class="card-footer">
-                <a href="#" id="refresh" class="card-footer-item" onclick="refreshTable()">Refresh List</a>
-                <a href="#" id="view-all" class="card-footer-item" style="border-right: 0px;"
-                    onclick="showAllTables()">View All</a>
-                <a href="#" id="view-less" class="card-footer-item" style="display: none;"
-                    onclick="showLessTables()">View less</a>
-            </footer>
         </div>
     </div>
 </div>
@@ -118,16 +106,18 @@
 
     function loadTable() {
         $.getJSON('/table/get_all_table', function (data) {
-            console.log("Receiving Data:", data);
+            // Destroy previous table instance to avoid conflicts
             $('#table-list').bootstrapTable('destroy');
+
+            // Initialize table with pagination enabled
             $('#table-list').bootstrapTable({
                 data: data,
                 customSearch: customTableSearch,
-                pagination: true,
-                pageSize: 5,
-                paginationDetailHAlign: "hidden",
-                showPaginationSwitch: false,
-                showPageList: false,
+                pagination: true, // Keep pagination enabled
+                pageSize: 5, // Set default page size
+                paginationDetailHAlign: "hidden", // Hide pagination detail (info)
+                showPaginationSwitch: false, // Hide the toggle for pagination
+                showPageList: false, // Hide the page size selector (e.g., "5 rows per page")
                 columns: [
                     { field: 'table_id', sortable: true },
                     { field: 'status', sortable: false, formatter: statusFormatter },
@@ -143,7 +133,7 @@
         $.getJSON('/table/get_all_table', function (data) {
             console.log("Refreshing Table:", data);
             $('#table-list').bootstrapTable('load', data);
-        });
+        })
     }
 
     function statusFormatter(value) {
@@ -157,6 +147,7 @@
         return value;
     }
 
+    // Formatter for QR Code Column
     function qrcodeFormatter(value) {
         value = value.replace("app/", "");
         return `<img src="${value}" alt="QR Image" style="width: 100px; height: auto;">`;
@@ -168,7 +159,7 @@
             $('#view-less').show();
             $('#table-list').bootstrapTable('refreshOptions', { pageSize: data.length });
             $('#table-list').bootstrapTable('load', data);
-        });
+        })
     }
 
     function showLessTables() {
@@ -177,7 +168,7 @@
             $('#view-less').hide();
             $('#table-list').bootstrapTable('refreshOptions', { pageSize: 5 });
             $('#table-list').bootstrapTable('load', data);
-        });
+        })
     }
 
     function customTableSearch(data, searchText) {

@@ -1,113 +1,144 @@
-{% extends 'Admin_page/base.html' %} {% block content %}
+{% extends 'Admin_page/base.html' %}
+
+{% block extra_css %}
+<style>
+  .bootstrap-table .pagination {
+    margin: 5rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .bootstrap-table .page-item {
+    display: inline-block;
+  }
+
+  .bootstrap-table .page-link {
+    padding: 0.5rem 1rem;
+    border: 1px solid #dbdbdb;
+    background-color: #ffffff;
+    color: #363636;
+    border-radius: 4px;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .bootstrap-table .page-item.active .page-link {
+    background-color: #3273dc;
+    border-color: #3273dc;
+    color: #ffffff;
+  }
+
+  .bootstrap-table .page-item.disabled .page-link {
+    background-color: #f5f5f5;
+    color: #7a7a7a;
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+
+  .bootstrap-table .page-link:hover:not(.active) {
+    background-color: #f5f5f5;
+    color: #3273dc;
+  }
+
+  .bootstrap-table .btn-page-size {
+    padding: 0.5rem 1rem;
+    border: 1px solid #dbdbdb;
+    background-color: #ffffff;
+    color: #363636;
+    border-radius: 4px;
+  }
+
+  .bootstrap-table .pagination-detail {
+    display: none;
+  }
+
+  .fixed-table-toolbar .search-input {
+    border: 2px solid #dbdbdb;
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .fixed-table-toolbar .search-input:focus {
+    border-color: #3273dc;
+    box-shadow: 0 0 5px rgba(50, 115, 220, 0.3);
+    outline: none;
+  }
+
+  .fixed-table-toolbar {
+    margin: 1.5rem 0;
+    display: flex;
+    justify-content: right;
+  }
+
+  /* Center table items */
+  .table td,
+  .table th {
+    text-align: center;
+    vertical-align: middle;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<br>
+<div id="header" class="container">
+  <h1 class="title has-text-black">Order Management</h1>
+</div>
+<br>
+
 <div id="add-edit" class="container" hidden="hidden">
-  <div id="header" class="container">
-    <h1 class="title has-text-black">Menu Management</h1>
-  </div>
   <div id="add-edit" class="container">
     <h2 id="add-edit-caption" class="subtitle has-text-black">
-      Add/Edit a Menu:
+      Add/Edit an Order:
     </h2>
-    <form id="addMenuForm" class="box">
+    <form id="addOrderForm" class="box">
       <div class="field">
-        <label class="label has-text-black" for="name">Menu Name</label>
+        <label class="label has-text-black" for="order_id">Order ID</label>
         <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Menu Name.."
-            required
-          />
+          <input class="input" type="text" id="order_id" name="order_id" placeholder="Order ID.." required />
         </div>
       </div>
       <div class="field">
-        <label class="label has-text-black" for="description"
-          >Description</label
-        >
+        <label class="label has-text-black" for="table_id">Table ID</label>
         <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="description"
-            name="description"
-            placeholder="Description.."
-          />
+          <input class="input" type="number" id="table_id" name="table_id" placeholder="Table ID.." required />
         </div>
       </div>
       <div class="field">
-        <label class="label has-text-black" for="price">Price</label>
-        <div class="control">
-          <input
-            class="input"
-            type="number"
-            id="price"
-            name="price"
-            placeholder="Price.."
-            required
-          />
-        </div>
-      </div>
-      <div class="field">
-        <label class="label has-text-black" for="category">Category</label>
-        <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="category"
-            name="category"
-            placeholder="Category.."
-            required
-          />
-        </div>
-      </div>
-      <div class="field">
-        <label class="label has-text-black" for="image_url">Image URL</label>
-        <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="image_url"
-            name="image_url"
-            placeholder="Image URL.."
-          />
-        </div>
-      </div>
-      <div class="field">
-        <label class="label has-text-black" for="availability"
-          >Availability</label
-        >
+        <label class="label has-text-black" for="status">Status</label>
         <div class="control">
           <div class="select">
-            <select id="availability" name="availability" required>
-              <option value="true">Available</option>
-              <option value="false">Not Available</option>
+            <select id="status" name="status" required>
+              <option value="Ready">Ready</option>
+              <option value="Pending">Pending</option>
+              <option value="Completed">Completed</option>
             </select>
           </div>
         </div>
       </div>
       <div class="field">
-        <label class="label has-text-black" for="id">Menu ID</label>
+        <label class="label has-text-black" for="total_price">Total Price</label>
         <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="id"
-            name="id"
-            placeholder="Menu ID.."
-            readonly
-          />
+          <input class="input" type="number" id="total_price" name="total_price" placeholder="Total Price.." required
+            step="0.01" />
         </div>
       </div>
-      <input type="hidden" id="id" name="id" />
+      <div class="field">
+        <label class="label has-text-black" for="menu_list">Menu List (JSON)</label>
+        <div class="control">
+          <textarea class="textarea" id="menu_list" name="menu_list" placeholder='{"menu_id": quantity, ...}'
+            required></textarea>
+        </div>
+      </div>
       <div class="field is-grouped">
         <div class="control">
-          <input
-            class="button is-link"
-            type="submit"
-            name="submit"
-            value="Submit"
-          />
+          <input class="button is-link" type="submit" name="submit" value="Submit" />
         </div>
         <div class="control">
           <button id="clear_form" class="button is-light" type="button">
@@ -123,50 +154,35 @@
     </form>
   </div>
 </div>
+
 <div id="table_display" class="container">
-  <button id="add_menu" class="button is-primary" type="button">
-    Create Menu
+  <button id="add_order" class="button is-primary is-size-4" type="button">
+    <p class="has-text-weight-bold">Create Order</p>
   </button>
-  <p></p>
-  <br />
+  <br>
+  <br>
+
   <div class="table-container">
-    <table
-      class="table is-striped is-bordered is-hoverable is-fullwidth"
-      id="menu-table"
-      data-sort-name="id"
-    >
+    <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="order-table" data-sort-name="order_id">
       <thead>
         <tr>
-          <th data-field="id" data-visible="false">
-            <span class="has-text-black"> ID </span>
+          <th data-field="order_id" data-sortable="true">
+            <span class="has-text-black">Order ID</span>
           </th>
-          <th data-field="name" data-sortable="true">
-            <span class="has-text-black"> Menu Name </span>
+          <th data-field="table_id" data-sortable="true">
+            <span class="has-text-black">Table ID</span>
           </th>
-          <th data-field="description" data-sortable="true">
-            <span class="has-text-black"> Description </span>
+          <th data-field="status" data-sortable="true">
+            <span class="has-text-black">Status</span>
           </th>
-          <th data-field="price" data-sortable="true">
-            <span class="has-text-black"> Price </span>
+          <th data-field="total_price" data-sortable="true">
+            <span class="has-text-black">Total Price</span>
           </th>
-          <th data-field="category" data-sortable="true">
-            <span class="has-text-black"> Category </span>
+          <th data-field="menu_list" data-sortable="false">
+            <span class="has-text-black">Menu List</span>
           </th>
-          <th data-field="availability" data-sortable="true">
-            <span class="has-text-black"> Availability </span>
-          </th>
-          <th data-field="image_url" data-sortable="true">
-            <span class="has-text-black"> Image URL </span>
-          </th>
-          <th data-field="ordered" data-sortable="true">
-            <span class="has-text-black"> ordered </span>
-          </th>
-          <th
-            data-field="operation"
-            data-formatter="actionFormatter"
-            data-events="operateEvents"
-          >
-            <span class="has-text-black"> Edit/Delete </span>
+          <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
+            <span class="has-text-black">Edit/Delete</span>
           </th>
         </tr>
       </thead>
@@ -174,104 +190,77 @@
     </table>
   </div>
 </div>
-{% endblock %} {% block extra_js %}
+{% endblock %}
+
+{% block extra_js %}
 <script>
   function populate_table(table_data) {
-    $("#menu-table").bootstrapTable({
+    $("#order-table").bootstrapTable({
       data: table_data,
       columns: [
-        {
-          field: "id",
-          title: "id",
-          visible: true,
-        },
-        {
-          field: "name",
-          title: "Menu Name",
-          sortable: true,
-        },
-        {
-          field: "description",
-          title: "Description",
-          sortable: true,
-        },
-        {
-          field: "price",
-          title: "Price",
-          sortable: true,
-        },
-        {
-          field: "category",
-          title: "Category",
-          sortable: true,
-        },
-        {
-          field: "availability",
-          title: "Availability",
-          sortable: true,
-        },
-        {
-          field: "ordered",
-          title: "ordered",
-          sortable: true,
-        },
-        {
-          field: "image_url",
-          title: "Image URL",
-          sortable: true,
-          formatter: function (value, row, index) {
-            return `<img src="${value}" alt="Menu Image" style="width: 100px; height: auto;">`;
-          },
-        },
-        {
-          field: "operation",
-          title: "Edit/Delete",
-          formatter: actionFormatter,
-          events: operateEvents,
-        },
+        { field: 'order_id', title: 'Order ID', sortable: true },
+        { field: 'table_id', title: 'Table ID', sortable: true },
+        { field: 'status', title: 'Status', sortable: true },
+        { field: 'total_price', title: 'Total Price', sortable: true },
+        { field: 'menu_list', title: 'Menu List', sortable: false, formatter: menuListFormatter },
+        { field: 'operation', title: 'Edit/Delete', formatter: actionFormatter, events: operateEvents }
       ],
       loadingTemplate: function () {
         return "";
       },
+      pagination: true,
+      pageSize: 5,
+      paginationDetailHAlign: "hidden",
+      showPaginationSwitch: false,
+      showPageList: false,
+      paginationFirstText: '<i class="fas fa-angle-double-left"></i>',
+      paginationLastText: '<i class="fas fa-angle-double-right"></i>'
     });
   }
 
   $(document).ready(function () {
-    (function () {
-      $.getJSON("/menus/get_all_menus", populate_table).fail(function () {
-        console.error("Failed to load menu data");
-      });
-    })();
+    $.getJSON("/orders/get_all_orders", populate_table).fail(function () {
+      console.error("Failed to load order data");
+    });
   });
 
   function refresh_table(table_data) {
-    $("#menu-table").bootstrapTable("load", table_data);
+    $("#order-table").bootstrapTable("load", table_data);
   }
 
-  $("#addMenuForm").submit(function (event) {
+  function menuListFormatter(value) {
+    let menuList = '';
+    for (let menuId in value) {
+      menuList += `Menu ${menuId}: ${value[menuId]}<br>`;
+    }
+    return menuList || 'No menus';
+  }
+
+  $("#addOrderForm").submit(function (event) {
     event.preventDefault();
 
-    var formData = {};
-    $(":input").each(function () {
-      var key = $(this).attr("name");
-      var val = $(this).val();
-      if (key != "submit") {
-        formData[key] = val;
-      }
-    });
+    var formData = {
+      order_id: $("#order_id").val(),
+      table_id: $("#table_id").val(),
+      status: $("#status").val(),
+      total_price: $("#total_price").val(),
+      menu_list: JSON.parse($("#menu_list").val())
+    };
 
     var $form = $(this);
-    var url = "/menu";
+    var url = "/orders";
 
     $.post(url, formData, function (table_data) {
       refresh_table(table_data);
       clearForm();
       toggleView();
+    }).fail(function (jqXHR, textStatus, error) {
+      console.error("Failed to submit order:", textStatus, error);
     });
   });
 
   function clearForm() {
-    $("#addMenuForm")[0].reset();
+    $("#addOrderForm")[0].reset();
   }
 
   function toggleView() {
@@ -305,32 +294,30 @@
   };
 
   function prePopulateForm(row) {
-    $("#addMenuForm")[0].reset();
-    $("#id").val(row.name);
-    $("#name").val(row.name);
-    $("#description").val(row.description);
-    $("#price").val(row.price);
-    $("#category").val(row.category);
-    $("#image_url").val(row.image_url);
-    $("#availability").val(row.availability.toString());
+    $("#addOrderForm")[0].reset();
+    $("#order_id").val(row.order_id);
+    $("#table_id").val(row.table_id);
+    $("#status").val(row.status);
+    $("#total_price").val(row.total_price);
+    $("#menu_list").val(JSON.stringify(row.menu_list));
     toggleView();
   }
 
   function removeItem(row) {
-    if (!confirm("Delete menu with ID " + row.name + "?")) {
+    if (!confirm("Delete order with ID " + row.order_id + "?")) {
       return false;
     }
-    var url = "/menu/remove_menu";
-    var formData = { id: row.id };
+    var url = "/orders/remove_order";
+    var formData = { order_id: row.order_id };
     $.post(url, formData, function (table_data) {
       refresh_table(table_data);
-      alert("Menu with ID " + row.id + " has been deleted.");
+      alert("Order with ID " + row.order_id + " has been deleted.");
     }).fail(function () {
-      alert("Failed to delete menu with ID " + row.id);
+      alert("Failed to delete order with ID " + row.order_id);
     });
   }
 
-  $("#add_menu").click(function () {
+  $("#add_order").click(function () {
     clearForm();
     toggleView();
   });
