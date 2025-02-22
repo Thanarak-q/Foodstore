@@ -1,19 +1,83 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="cupcake">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Reviews</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.23/dist/full.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      type="text/css"
+      integrity="sha384-KyZXEJv3iS0p/WeT7vJ8+d9dZhZy1YZAgE+zkFg3cVd/F0oA3ePsbX1TYF12InQU"
+      crossorigin="anonymous"
     />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Index</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>
-    <div class="navbar bg-red-500">
-      <button></button>
+    <div class="container mt-5">
+      <h2>Customer Review</h2>
+
+      <!-- Review Form -->
+      <form id="reviewForm">
+        <div class="mb-3">
+          <label for="name" class="form-label">Your Name</label>
+          <input type="text" class="form-control" id="name" required />
+        </div>
+        <div class="mb-3">
+          <label for="review" class="form-label">Your Review</label>
+          <textarea
+            class="form-control"
+            id="review"
+            rows="4"
+            required
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+      </form>
+
+      <!-- Display Reviews -->
+      <h3 class="mt-5">Customer Reviews</h3>
+      <div id="reviewsSection">
+        <!-- Reviews will be appended here dynamically -->
+      </div>
     </div>
+
+    <script>
+      $(document).ready(function () {
+        // Fetch and display reviews when the page loads
+        function fetchReviews() {
+          $.get("/get_reviews", function (data) {
+            let reviewsHtml = "";
+            data.reviews.forEach(function (review) {
+              reviewsHtml += `<div class="review mt-3">
+                                            <h5>${review.name}</h5>
+                                            <p>${review.review}</p>
+                                          </div>`;
+            });
+            $("#reviewsSection").html(reviewsHtml);
+          });
+        }
+
+        fetchReviews(); // Call the function to fetch reviews initially
+
+        // Handle form submission
+        $("#reviewForm").submit(function (event) {
+          event.preventDefault();
+          const name = $("#name").val();
+          const review = $("#review").val();
+
+          // Send the review data to the backend
+          $.post(
+            "/submit_review",
+            { name: name, review: review },
+            function (response) {
+              if (response.status === "success") {
+                fetchReviews(); // Refresh reviews
+                $("#reviewForm")[0].reset(); // Reset the form
+              }
+            }
+          );
+        });
+      });
+    </script>
   </body>
 </html>

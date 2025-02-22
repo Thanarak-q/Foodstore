@@ -6,5 +6,6 @@ from app.controllers import dasboard
 from app.controllers import order_manage
 from app.controllers import payment_menage
 from app.controllers import setting
+from app.controllers import report
 
 from app import app

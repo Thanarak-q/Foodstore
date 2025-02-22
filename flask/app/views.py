@@ -22,10 +22,12 @@ from manage import SECRET_KEY
 '''
 from app.controllers import Admin
 
+from app.controllers import review_manage
 '''
 หน้า Cashier
 '''
 from app.controllers import cashier
+from app.models.table import Tables
 
 # @app.route('/test', methods=('GET', 'POST'))
 # def test():
@@ -70,9 +72,19 @@ def table_test():
 def order():
     return render_template('order_page/index.html')
 
+@app.route('/table/create_new')
+def table_creates():
+    return render_template('Admin_page/list_table.html')
+
+
 @app.route('/menu/table/<token>', methods=['GET', 'POST'])
 def menu(token):
-    table_number = decode_jwt(token)
+    table_number, count = decode_jwt(token)
+    db_allTable = Tables.query.get(table_number)
+    table = db_allTable.to_dict()
+    if table['count'] != count:
+        return render_template('test.html', table_id='Something wrong with your QRcode')
+    
     app.logger.debug(not table_number)
     if not table_number:
         return "Invalid or expired token", 400
@@ -88,7 +100,7 @@ def menu(token):
 def decode_jwt(token):
     try:
         decoded = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-        return decoded['table_number']
+        return decoded['table_number'], decoded['count']
     except jwt.ExpiredSignatureError:
         return None
     except jwt.InvalidTokenError:
@@ -157,6 +169,10 @@ def index():
 @app.route('/crash')
 def crash():
     return 1/0
+
+@app.route('/review')
+def review():
+    return render_template('review_page.html')
 
 @app.route('/db')
 def db_connection():

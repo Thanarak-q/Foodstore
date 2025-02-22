@@ -9,12 +9,6 @@
     <h2 id="add-edit-caption" class="subtitle has-text-black">Add/Edit a Table:</h2>
     <form id="addTableForm" class="box">
       <div class="field">
-        <label class="label has-text-black" for="qr_code">QR Code</label>
-        <div class="control">
-          <input class="input" type="text" id="qr_code" name="qr_code" placeholder="QR Code.." />
-        </div>
-      </div>
-      <div class="field">
         <label class="label has-text-black" for="status">Status</label>
         <div class="control">
           <div class="select">
@@ -48,8 +42,8 @@
     <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="table-table" data-search="true" data-sort-name="CT_id" data-sort-order="asc">
       <thead>
         <tr>
-          <th data-field="CT_id" data-sortable="true"><span class="has-text-black"> Table ID </span></th>
-          <th data-field="qr_code" data-sortable="true"><span class="has-text-black"> QR Code </span></th>
+          <th data-field="table_id" data-sortable="true"><span class="has-text-black"> Table ID </span></th>
+          <th data-field="qrcode" data-sortable="true"><span class="has-text-black"> QR Code </span></th>
           <th data-field="status" data-sortable="true"><span class="has-text-black"> Status </span></th>
           <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
             <span class="has-text-black"> Edit/Delete </span>
@@ -69,15 +63,42 @@
   function populate_table(table_data) {
     $('#table-table').bootstrapTable({
       data: table_data,
+      columns : [
+      {
+        field: "table_id",
+        title: "Table ID",
+        sortable: true,
+      },
+      {
+        field: "qrcode",
+        title: "QR Code",
+        sortable: true,
+        formatter: function (value) {
+          const imagePath = value.replace("app/", "/");
+          return `<img src="${imagePath}" alt="QR Code" style="width: 80px; height: 80px;">`;
+        },
+      },
+      {
+        field: "status",
+        title: "Status",
+        sortable: true,
+      },
+      {
+        field: "operation",
+        title: "Edit/Delete",
+        formatter: actionFormatter,
+        events: operateEvents,
+      },
+    ],
       loadingTemplate: function () {
-        return '' // เอาข้อความ "Loading, please wait" ออก
+        return ''
       }
     });
   }
 
   $(document).ready(function () {
     (function () {
-      $.getJSON('/table/tables', populate_table);
+      $.getJSON('/table/get_all_table', populate_table);
     })();
   });
 

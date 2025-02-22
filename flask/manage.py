@@ -21,6 +21,7 @@ from app.models.menu import Menu
 from app.models.employee import Employee
 from app.models.table import Tables
 from app.models.order import Order
+from app.models.review import Review
 # from app.models.employee import AuthUser
 
 '''
@@ -67,25 +68,27 @@ def seed_db():
     # db.session.add(CTable(ctable_name="t1", status='Occupied'))
     # db.session.add(CTable(ctable_name="t2", status='Occupied'))
 
-    def gennerate_qrcode(id):
-        token = generate_jwt(id)
+    def gennerate_qrcode(id, count):
+        token = generate_jwt(id, count)
         img = qrcode.make(f'http://localhost:56733/menu/table/{token}') # Must to change to menu select url
         type(img)  # qrcode.image.pil.PilImage
         img.save(f"app/static/qrcode/{id}.png")
         return f"app/static/qrcode/{id}.png"
 
-    def generate_jwt(table_number):
+    def generate_jwt(table_number, count):
         expiration_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=48)
         payload = {
             'table_number': table_number,
-            'exp': expiration_time
+            'exp': expiration_time,
+            'count' : count
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
         return token
 
 
     for i in range(1, 21):
-        db.session.add(Tables(qrcode=gennerate_qrcode(i)))
+        qrCode = gennerate_qrcode(i, count=0)
+        db.session.add(Tables(qrcode=qrCode))
     # db.session.add(Tables(table_id=1, qrcode='/static/qrcode/1.png'))
     # db.session.add(Tables(table_id=2, qrcode='/static/qrcode/2.png'))
     db.session.commit()
@@ -94,41 +97,45 @@ def seed_db():
     # สร้างข้อมูลเมนู
     sample_menus = [
     # อาหารคาว
-    ('ข้าวผัด', 'ข้าวผัดหมู', 50, 'อาหารคาว', '/static/food_image/test0.jpg'),
-    ('ไก่ย่าง', 'ไก่ย่างสูตรพิเศษ', 100, 'อาหารคาว', '/static/food_image/test0.jpg'),
-    ('ต้มยำกุ้ง', 'ต้มยำกุ้งรสแซ่บ', 150, 'อาหารคาว', '/static/food_image/test0.jpg'),
-    ('แกงเขียวหวานไก่', 'แกงเขียวหวานไก่รสเข้มข้น', 120, 'อาหารคาว', '/static/food_image/test0.jpg'),
-    ('ผัดกะเพรา', 'ผัดกะเพราหมูสับไข่ดาว', 70, 'อาหารคาว', '/static/food_image/test0.jpg'),
-    ('หมูทอดกระเทียม', 'หมูทอดกระเทียมพริกไทย', 90, 'อาหารคาว', '/static/food_image/test0.jpg'),
-    ('ปลาทอดน้ำปลา', 'ปลากะพงทอดน้ำปลา', 180, 'อาหารคาว', '/static/food_image/test0.jpg'),
-    ('ไข่พะโล้', 'ไข่พะโล้ใส่หมูสามชั้น', 80, 'อาหารคาว', '/static/food_image/test0.jpg'),
-    ('ข้าวมันไก่', 'ข้าวมันไก่สูตรต้นตำรับ', 75, 'อาหารคาว', '/static/food_image/test0.jpg'),
-    ('ข้าวหมูแดง', 'ข้าวหมูแดงราดน้ำซอสหวาน', 70, 'อาหารคาว', '/static/food_image/test0.jpg'),
+    ('ข้าวผัด', 'ข้าวผัดหมู', 50, 'อาหารคาว', '/static/food_image/ข้าวผัด.jpg'),
+    ('ไก่ย่าง', 'ไก่ย่างสูตรพิเศษ', 100, 'อาหารคาว', '/static/food_image/ไก่ย่าง.jpg'),
+    ('ต้มยำกุ้ง', 'ต้มยำกุ้งรสแซ่บ', 150, 'อาหารคาว', '/static/food_image/ต้มยำกุ้ง.jpg'),
+    ('แกงเขียวหวานไก่', 'แกงเขียวหวานไก่รสเข้มข้น', 120, 'อาหารคาว', '/static/food_image/แกงเขียวหวานไก่.jpg'),
+    ('ผัดกะเพรา', 'ผัดกะเพราหมูสับไข่ดาว', 70, 'อาหารคาว', '/static/food_image/ผัดกะเพรา.jpg'),
+    ('หมูทอดกระเทียม', 'หมูทอดกระเทียมพริกไทย', 90, 'อาหารคาว', '/static/food_image/หมูทอดกระเทียม.jpg'),
+    ('ปลาทอดน้ำปลา', 'ปลากะพงทอดน้ำปลา', 180, 'อาหารคาว', '/static/food_image/ปลาทอดน้ำปลา.jpg'),
+    ('ไข่พะโล้', 'ไข่พะโล้ใส่หมูสามชั้น', 80, 'อาหารคาว', '/static/food_image/ไข่พะโล้.jpg'),
+    ('ข้าวมันไก่', 'ข้าวมันไก่สูตรต้นตำรับ', 75, 'อาหารคาว', '/static/food_image/ข้าวมันไก่.jpg'),
+    ('ข้าวหมูแดง', 'ข้าวหมูแดงราดน้ำซอสหวาน', 70, 'อาหารคาว', '/static/food_image/ข้าวหมูแดง.jpg'),
 
     # อาหารไทย
-    ('ส้มตำ', 'ส้มตำไทย', 60, 'อาหารไทย', '/static/food_image/test0.jpg'),
-    ('ลาบหมู', 'ลาบหมูรสเด็ด', 80, 'อาหารไทย', '/static/food_image/test0.jpg'),
-    ('น้ำตกเนื้อ', 'น้ำตกเนื้อย่างจิ้มแจ่ว', 120, 'อาหารไทย', '/static/food_image/test0.jpg'),
-    ('ต้มแซ่บกระดูกหมู', 'ต้มแซ่บกระดูกอ่อน', 130, 'อาหารไทย', '/static/food_image/test0.jpg'),
-    ('ข้าวเหนียวไก่ทอด', 'ข้าวเหนียวไก่ทอดสูตรเด็ด', 75, 'อาหารไทย', '/static/food_image/test0.jpg'),
-    ('ข้าวซอยไก่', 'ข้าวซอยไก่สูตรเชียงใหม่', 100, 'อาหารไทย', '/static/food_image/test0.jpg'),
-    ('แกงส้มชะอมไข่', 'แกงส้มชะอมไข่กุ้งสด', 120, 'อาหารไทย', '/static/food_image/test0.jpg'),
-    ('ห่อหมกทะเล', 'ห่อหมกทะเลเครื่องแน่น', 150, 'อาหารไทย', '/static/food_image/test0.jpg'),
-    ('ขนมจีนน้ำยา', 'ขนมจีนน้ำยาใต้รสเข้มข้น', 90, 'อาหารไทย', '/static/food_image/test0.jpg'),
-    ('หมูปิ้ง', 'หมูปิ้งไม้ละ 10 บาท', 10, 'อาหารไทย', '/static/food_image/test0.jpg'),
+    ('ส้มตำ', 'ส้มตำไทย', 60, 'อาหารไทย', '/static/food_image/ส้มตำ.jpg'),
+    ('ลาบหมู', 'ลาบหมูรสเด็ด', 80, 'อาหารไทย', '/static/food_image/ลาบหมู.jpg'),
+    ('น้ำตกเนื้อ', 'น้ำตกเนื้อย่างจิ้มแจ่ว', 120, 'อาหารไทย', '/static/food_image/น้ำตกเนื้อ.jpg'),
+    ('ต้มแซ่บกระดูกหมู', 'ต้มแซ่บกระดูกอ่อน', 130, 'อาหารไทย', '/static/food_image/ต้มแซ่บกระดูกหมู.jpg'),
+    ('ข้าวเหนียวไก่ทอด', 'ข้าวเหนียวไก่ทอดสูตรเด็ด', 75, 'อาหารไทย', '/static/food_image/ข้าวเหนียวไก่ทอด.jpg'),
+    ('ข้าวซอยไก่', 'ข้าวซอยไก่สูตรเชียงใหม่', 100, 'อาหารไทย', '/static/food_image/ข้าวซอยไก่.jpg'),
+    ('แกงส้มชะอมไข่', 'แกงส้มชะอมไข่กุ้งสด', 120, 'อาหารไทย', '/static/food_image/แกงส้มชะอมไข่.jpg'),
+    ('ห่อหมกทะเล', 'ห่อหมกทะเลเครื่องแน่น', 150, 'อาหารไทย', '/static/food_image/ห่อหมกทะเล.jpg'),
+    ('ขนมจีนน้ำยา', 'ขนมจีนน้ำยาใต้รสเข้มข้น', 90, 'อาหารไทย', '/static/food_image/ขนมจีนน้ำยา.jpg'),
+    ('หมูปิ้ง', 'หมูปิ้งไม้ละ 10 บาท', 10, 'อาหารไทย', '/static/food_image/หมูปิ้ง.jpg'),
 
     # อาหารฝรั่ง
-    ('Pizza', 'Pizza อิตาลี', 200, 'อาหารฝรั่ง', '/static/food_image/test0.jpg'),
-    ('สเต็กหมู', 'สเต็กหมูซอสพริกไทยดำ', 180, 'อาหารฝรั่ง', '/static/food_image/test0.jpg'),
-    ('สเต็กเนื้อ', 'สเต็กเนื้อริบอายซอสเกรวี่', 350, 'อาหารฝรั่ง', '/static/food_image/test0.jpg'),
-    ('พาสต้า', 'พาสต้าคาโบนาร่า', 160, 'อาหารฝรั่ง', '/static/food_image/test0.jpg'),
-    ('เบอร์เกอร์เนื้อ', 'เบอร์เกอร์เนื้อชีส', 140, 'อาหารฝรั่ง', '/static/food_image/test0.jpg'),
-    ('ซุปเห็ด', 'ซุปครีมเห็ดทรัฟเฟิล', 120, 'อาหารฝรั่ง', '/static/food_image/test0.jpg'),
-    ('สปาเก็ตตี้โบโลเนส', 'สปาเก็ตตี้ซอสโบโลเนส', 150, 'อาหารฝรั่ง', '/static/food_image/test0.jpg'),
-    ('แซนด์วิชแฮมชีส', 'แซนด์วิชแฮมชีสกรอบ', 100, 'อาหารฝรั่ง', '/static/food_image/test0.jpg'),
-    ('ซีซาร์สลัด', 'ซีซาร์สลัดไก่กรอบ', 130, 'อาหารฝรั่ง', '/static/food_image/test0.jpg'),
-    ('Fish and Chips', 'ปลาทอดกรอบเสิร์ฟพร้อมมันฝรั่งทอด', 190, 'อาหารฝรั่ง', '/static/food_image/test0.jpg')
+    ('Pizza', 'Pizza อิตาลี', 200, 'อาหารฝรั่ง', '/static/food_image/Pizza.jpg'),
+    ('สเต็กหมู', 'สเต็กหมูซอสพริกไทยดำ', 180, 'อาหารฝรั่ง', '/static/food_image/สเต็กหมู.jpg'),
+    ('สเต็กเนื้อ', 'สเต็กเนื้อริบอายซอสเกรวี่', 350, 'อาหารฝรั่ง', '/static/food_image/สเต็กเนื้อ.jpg'),
+    ('พาสต้า', 'พาสต้าคาโบนาร่า', 160, 'อาหารฝรั่ง', '/static/food_image/พาสต้า.jpg'),
+    ('เบอร์เกอร์เนื้อ', 'เบอร์เกอร์เนื้อชีส', 140, 'อาหารฝรั่ง', '/static/food_image/เบอร์เกอร์เนื้อ.jpg'),
+    ('ซุปเห็ด', 'ซุปครีมเห็ดทรัฟเฟิล', 120, 'อาหารฝรั่ง', '/static/food_image/ซุปเห็ด.jpg'),
+    ('สปาเก็ตตี้โบโลเนส', 'สปาเก็ตตี้ซอสโบโลเนส', 150, 'อาหารฝรั่ง', '/static/food_image/สปาเก็ตตี้โบโลเนส.jpg'),
+    ('แซนด์วิชแฮมชีส', 'แซนด์วิชแฮมชีสกรอบ', 100, 'อาหารฝรั่ง', '/static/food_image/แซนด์วิชแฮมชีส.jpg'),
+    ('ซีซาร์สลัด', 'ซีซาร์สลัดไก่กรอบ', 130, 'อาหารฝรั่ง', '/static/food_image/ซีซาร์สลัด.jpg'),
+    ('Fish and Chips', 'ปลาทอดกรอบเสิร์ฟพร้อมมันฝรั่งทอด', 190, 'อาหารฝรั่ง', '/static/food_image/Fish_and_Chips.jpg'),
+
+    #mk
+    ('Michael_jackson', 'ตายแล้ว', 17, 'hehe annie are u ok ', '/static/food_image/Michael_jackson.jpg')
     ]
+
 
     for name, desc, price, cat, image_url in sample_menus:
         db.session.add(Menu(name=name, description=desc, price=price, category=cat, image_url=image_url))
@@ -204,6 +211,9 @@ def seed_db():
     #?-------------------------------------------------------------------------
     # เพิ่มเติม Contact 
     
+    db.session.commit()
+
+    db.session.add(Review(name='uiia', star=5, review='uiiauiiia'))
     db.session.commit()
 
 @cli.command("secret_key")

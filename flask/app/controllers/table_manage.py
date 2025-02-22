@@ -62,18 +62,19 @@ def table_create():
             
     return table_list()
 
-def gennerate_qrcode(id):
-    token = generate_jwt(id)
+def gennerate_qrcode(id, count):
+    token = generate_jwt(id, count)
     img = qrcode.make(f'http://localhost:56733/menu/table/{token}') # Must to change to menu select url
     type(img)  # qrcode.image.pil.PilImage
     img.save(f"app/static/qrcode/{id}.png")
     return f"app/static/qrcode/{id}.png"
 
-def generate_jwt(table_number):
+def generate_jwt(table_number, count):
     expiration_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=48)
     payload = {
         'table_number': table_number,
-        'exp': expiration_time
+        'exp': expiration_time,
+        'count' : count
     }
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
     return token
@@ -86,8 +87,7 @@ def table_update():
         
         validated = True
         validated_dict = dict()
-        valid_keys = ['is_employee', 'table_id', 'status']
-        is_employee = result.get('is_employee', '')
+        valid_keys = ['table_id', 'status']
 
         for key in result:
             app.logger.debug(f"{key}: {result[key]}")
@@ -100,17 +100,20 @@ def table_update():
             if not value or value == 'undefined':
                 validated = False
                 break
-            if key == 'is_employee' and result[key].lower() != "true":
-                validated = False    
-                break
             validated_dict[key] = value
 
-        app.logger.debug(validated_dict)
+        # app.logger.debug(validated_dict)
+        
+
         if validated:
             try:
                 table = Tables.query.get(validated_dict['table_id'])
                 table.update_status(validated_dict['status'])
                 db.session.commit()
+                if validated_dict['status'] == 'Available':
+                    table = Tables.query.get(validated_dict['table_id'])
+                    qrcode = gennerate_qrcode(table.table_id, table.count)
+                    table.change_qrcode(qrcode)
             except Exception as ex:
                 app.logger.error(f"Error update status: {ex}")
                 raise

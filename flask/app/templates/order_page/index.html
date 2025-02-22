@@ -104,8 +104,6 @@
       </div>
     </nav>
 
-    
-
     <!-- Search Bar -->
     <div
       class="search-bar-bottom bg-danger p-3 justify-content-center"
@@ -190,7 +188,7 @@
         (function () {
           $.getJSON("/menu/menus", populate_table);
         })();
-        console.log("{{ table_id }}")
+        console.log("{{ table_id }}");
         updateCart(); // Update the cart count
 
         // Add event listener for search input
@@ -201,7 +199,6 @@
           );
           renderMenuByCategory(filteredItems);
         });
-        
       });
 
       // Fetch menu data from the API
@@ -221,14 +218,14 @@
 
         // Add an "All" category option
         categoriesDropdown.append(`
-    <li><a class="dropdown-item" href="javascript:void(0)" onclick="filterMenucat('')">ทั้งหมด</a></li>
-  `);
+        <li><a class="dropdown-item" href="javascript:void(0)" onclick="filterMenucat('')">ทั้งหมด</a></li>
+      `);
 
         // Loop through the unique categories and add them to the dropdown
         categories.forEach((category) => {
           categoriesDropdown.append(`
-      <li><a class="dropdown-item" href="javascript:void(0)" onclick="filterMenucat('${category}')">${category}</a></li>
-    `);
+          <li><a class="dropdown-item" href="javascript:void(0)" onclick="filterMenucat('${category}')">${category}</a></li>
+        `);
         });
       }
 
@@ -268,25 +265,25 @@
               // List View Item
               const listItem = $("<div>").addClass("list-view-item");
               listItem.html(`
-          <img src="${item.image_url}" alt="${item.name}" />
-          <div class="item-details">
-            <h5>${item.name}</h5>
-            <p>ราคา: ${item.price} บาท</p>
-            <label for="quantity-input-${item.id}">จำนวน:</label>
-            <input
-              type="number"
-              id="quantity-input-${item.id}"
-              class="form-control"
-              value="1"
-              min="1"
-              style="max-width: 100px;"
-            />
-          </div>
-          <div class="item-actions">
-            <button class="btn btn-warning" onclick="addToCart(${item.id}, parseInt($('#quantity-input-${item.id}').val(), 10))">เพิ่มลงตะกร้า</button>
-            <button class="btn btn-outline-secondary" onclick="showProductPopup(${item.id})">ดูรายละเอียด</button>
-          </div>
-        `);
+              <img src="${item.image_url}" alt="${item.name}" />
+              <div class="item-details">
+                <h5>${item.name}</h5>
+                <p>ราคา: ${item.price} บาท</p>
+                <label for="quantity-input-${item.id}">จำนวน:</label>
+                <input
+                  type="number"
+                  id="quantity-input-${item.id}"
+                  class="form-control"
+                  value="1"
+                  min="1"
+                  style="max-width: 100px;"
+                />
+              </div>
+              <div class="item-actions">
+                <button class="btn btn-warning" onclick="addToCart(${item.id}, parseInt($('#quantity-input-${item.id}').val(), 10))">เพิ่มลงตะกร้า</button>
+                <button class="btn btn-outline-secondary" onclick="showProductPopup(${item.id})">ดูรายละเอียด</button>
+              </div>
+            `);
               categoryContainer.append(listItem);
             } else {
               // Grid View Item
@@ -294,26 +291,26 @@
                 "col-md-4 col-sm-6 col-12 mb-4"
               );
               cardDiv.html(`
-        <div class="card">
-          <img src="${item.image_url}" class="card-img-top" alt="${item.name}">
-          <div class="card-body">
-            <h5 class="card-title">${item.name}</h5>
-            <p class="card-text">ราคา: ${item.price} บาท</p>
-            <div class="form-group">
-              <label for="quantity-input-${item.id}">จำนวน:</label>
-              <input
-                type="number"
-                id="quantity-input-${item.id}"
-                class="form-control"
-                value="1"
-                min="1"
-              />
+            <div class="card">
+              <img src="${item.image_url}" class="card-img-top" alt="${item.name}">
+              <div class="card-body">
+                <h5 class="card-title">${item.name}</h5>
+                <p class="card-text">ราคา: ${item.price} บาท</p>
+                <div class="form-group">
+                  <label for="quantity-input-${item.id}">จำนวน:</label>
+                  <input
+                    type="number"
+                    id="quantity-input-${item.id}"
+                    class="form-control"
+                    value="1"
+                    min="1"
+                  />
+                </div>
+                <button class="btn btn-warning btn-block" onclick="addToCart(${item.id}, parseInt($('#quantity-input-${item.id}').val(), 10))">เพิ่มลงตะกร้า</button>
+                <button class="btn btn-outline-secondary btn-block" onclick="showProductPopup(${item.id})">ดูรายละเอียด</button>
+              </div>
             </div>
-            <button class="btn btn-warning btn-block" onclick="addToCart(${item.id}, parseInt($('#quantity-input-${item.id}').val(), 10))">เพิ่มลงตะกร้า</button>
-            <button class="btn btn-outline-secondary btn-block" onclick="showProductPopup(${item.id})">ดูรายละเอียด</button>
-          </div>
-        </div>
-      `);
+          `);
               gridContainer.append(cardDiv);
             }
           });
@@ -365,14 +362,14 @@
         cart.forEach((item) => {
           const cartItemDiv = $("<div>").addClass("cart-item");
           cartItemDiv.html(`
-            <span>${item.name}</span>
-            <div class="quantity-buttons">
-              <button class="btn btn-sm btn-danger" onclick="changeQuantity(${item.id}, -1)">-</button>
-              <span>${item.quantity}</span>
-              <button class="btn btn-sm btn-success" onclick="changeQuantity(${item.id}, 1)">+</button>
-              <button class="btn btn-sm btn-danger" onclick="removeItem(${item.id})">🗑️</button>
-            </div>
-          `);
+                <span>${item.name}</span>
+                <div class="quantity-buttons">
+                  <button class="btn btn-sm btn-danger" onclick="changeQuantity(${item.id}, -1)">-</button>
+                  <span>${item.quantity}</span>
+                  <button class="btn btn-sm btn-success" onclick="changeQuantity(${item.id}, 1)">+</button>
+                  <button class="btn btn-sm btn-danger" onclick="removeItem(${item.id})">🗑️</button>
+                </div>
+              `);
           cartItemsDiv.append(cartItemDiv);
           totalPrice += item.price * item.quantity;
         });
@@ -402,31 +399,29 @@
       // Checkout function
       function checkout() {
         // console.log(cart_send);
-        if (cart.length === 0){
-          alert('คุณยังสั่งอะไรเลย')
+        if (cart.length === 0) {
+          alert("คุณยังไม่ได้สั่งอะไรเลย");
           toggleCartPopup();
-        } else{
+        } else {
           alert("ทำการสั่งซื้อแล้ว!");
-        console.log(cart);
-        var time_ = new Date().toISOString();
-        
-        let cart_send = {
-          table_id: "{{ table_id }}",
-          time: time_,
-        };
-        for( menu of cart){
-          cart_send[menu['id']] = menu['quantity']
-        }
+          console.log(cart);
+          var time_ = new Date().toISOString();
 
-        
-        $.post("/orders/create", cart_send, function (data) {
-          cart = [];
-          updateCart();
-        }); 
-        
-        toggleCartPopup();
+          let cart_send = {
+            table_id: "{{ table_id }}",
+            time: time_,
+          };
+          for (menu of cart) {
+            cart_send[menu["id"]] = menu["quantity"];
+          }
+
+          $.post("/orders/create", cart_send, function (data) {
+            cart = [];
+            updateCart();
+          });
+
+          toggleCartPopup();
         }
-        
       }
 
       // Clear cart function

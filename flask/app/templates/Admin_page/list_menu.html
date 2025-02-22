@@ -62,14 +62,14 @@
         </div>
       </div>
       <div class="field">
-        <label class="label has-text-black" for="image_url">Image URL</label>
+        <label class="label has-text-black" for="image_file">Image File</label>
         <div class="control">
           <input
             class="input"
-            type="text"
-            id="image_url"
-            name="image_url"
-            placeholder="Image URL.."
+            type="file"
+            id="image_file"
+            name="image_file"
+            accept="image/*"
           />
         </div>
       </div>
@@ -84,19 +84,6 @@
               <option value="false">Not Available</option>
             </select>
           </div>
-        </div>
-      </div>
-      <div class="field">
-        <label class="label has-text-black" for="id">Menu ID</label>
-        <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="id"
-            name="id"
-            placeholder="Menu ID.."
-            readonly
-          />
         </div>
       </div>
       <input type="hidden" id="id" name="id" />
@@ -250,23 +237,25 @@
 
   $("#addMenuForm").submit(function (event) {
     event.preventDefault();
-
-    var formData = {};
-    $(":input").each(function () {
-      var key = $(this).attr("name");
-      var val = $(this).val();
-      if (key != "submit") {
-        formData[key] = val;
-      }
-    });
-
-    var $form = $(this);
+  
+    var formData = new FormData(this);
+  
     var url = "/menu";
-
-    $.post(url, formData, function (table_data) {
-      refresh_table(table_data);
-      clearForm();
-      toggleView();
+  
+    $.ajax({
+      url: url,
+      type: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (table_data) {
+        refresh_table(table_data);
+        clearForm();
+        toggleView();
+      },
+      error: function (xhr, status, error) {
+        console.error("Error:", error);
+      },
     });
   });
 
