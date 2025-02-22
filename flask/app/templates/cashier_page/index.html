@@ -148,11 +148,11 @@
 
     function statusFormatter(value) {
         if (value === "Available") {
-            return '<span class="tag is-success is-size-5">Available</span>';
+            return '<span class="tag is-success is-size-5 has-text-weight-bold">Available</span>';
         } else if (value === "Occupied") {
-            return '<span class="tag is-danger is-size-5">Occupied</span>';
+            return '<span class="tag is-danger is-size-5 has-text-weight-bold">Occupied</span>';
         } else if (value === "Paid") {
-            return '<span class="tag is-warning is-size-5">Paid</span>';
+            return '<span class="tag is-warning is-size-5 has-text-weight-bold">Paid</span>';
         }
         return value;
     }
