@@ -12,6 +12,7 @@ class Tables(db.Model, SerializerMixin):
     # qrcode = db.Column(db.LargeBinary, nullable=True)  # for qrcode image
     qrcode = db.Column(db.String(100))
     status = db.Column(db.String(20), nullable=False, default="Available")  # สถานะโต๊ะ
+    count = db.Column(db.Integer, nullable=False)
 
     '''
     สถานะโต๊ะ ("Available", "Reserved", "Paid")
@@ -19,15 +20,13 @@ class Tables(db.Model, SerializerMixin):
 
     def __init__(self, qrcode):
         self.qrcode = qrcode
+        self.count = 0
         self.status = "Available"
-
-    def update(self, table_id, qrcode, status):
-        self.qrcode = qrcode
-        self.status = status
-        self.table_id = table_id
 
     def update_status(self, status):
         self.status = status
+        if status == "Available":
+            self.count += 1
 
     def change_qrcode(self, qrcode):
         self.qrcode_url = qrcode

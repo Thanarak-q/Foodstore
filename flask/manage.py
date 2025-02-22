@@ -67,25 +67,27 @@ def seed_db():
     # db.session.add(CTable(ctable_name="t1", status='Occupied'))
     # db.session.add(CTable(ctable_name="t2", status='Occupied'))
 
-    def gennerate_qrcode(id):
-        token = generate_jwt(id)
+    def gennerate_qrcode(id, count):
+        token = generate_jwt(id, count)
         img = qrcode.make(f'http://localhost:56733/menu/table/{token}') # Must to change to menu select url
         type(img)  # qrcode.image.pil.PilImage
         img.save(f"app/static/qrcode/{id}.png")
         return f"app/static/qrcode/{id}.png"
 
-    def generate_jwt(table_number):
+    def generate_jwt(table_number, count):
         expiration_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=48)
         payload = {
             'table_number': table_number,
-            'exp': expiration_time
+            'exp': expiration_time,
+            'count' : count
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
         return token
 
 
     for i in range(1, 21):
-        db.session.add(Tables(qrcode=gennerate_qrcode(i)))
+        qrCode = gennerate_qrcode(i, count=0)
+        db.session.add(Tables(qrcode=qrCode))
     # db.session.add(Tables(table_id=1, qrcode='/static/qrcode/1.png'))
     # db.session.add(Tables(table_id=2, qrcode='/static/qrcode/2.png'))
     db.session.commit()

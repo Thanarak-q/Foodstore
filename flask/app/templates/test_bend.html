@@ -155,8 +155,8 @@
                         <th data-field="menu_list">
                             <span class="text-success"> menu_list </span>
                         </th>
-                        <th data-field="status">
-                            <span class="text-success"> status </span>
+                        <th data-field="count">
+                            <span class="text-success"> count </span>
                         </th>
                         <th data-field="status">
                             <span class="text-success"> status </span>
@@ -186,7 +186,7 @@
 
             $(document).ready(function () {
                 (function () {
-                    $.getJSON("/orders/preparing", populate_table);
+                    $.getJSON("/table/get_all_table", populate_table);
                 })();
             });
 
