@@ -61,7 +61,7 @@
 
     <div class="cart-popup-backdrop" id="cart-backdrop"></div>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+    <nav class="navbar navbar-expand navbar-dark bg-danger">
       <img
         class="mr-2 logo-animation"
         src="/static/ico/logo.jpg"
@@ -104,12 +104,7 @@
       </div>
     </nav>
 
-    <!-- Categories Navigation -->
-    <div
-      class="categories-nav bg-danger p-3"
-      id="categories-nav"
-      style="display: none"
-    ></div>
+    
 
     <!-- Search Bar -->
     <div
@@ -187,6 +182,7 @@
     </div>
 
     <script>
+      // window.history.replaceState({}, document.title, '/order_food')
       let menuItems = []; // Array to store menu items
       let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -194,6 +190,7 @@
         (function () {
           $.getJSON("/menu/menus", populate_table);
         })();
+        console.log("{{ table_id }}")
         updateCart(); // Update the cart count
 
         // Add event listener for search input
@@ -204,6 +201,7 @@
           );
           renderMenuByCategory(filteredItems);
         });
+        
       });
 
       // Fetch menu data from the API
@@ -403,21 +401,32 @@
 
       // Checkout function
       function checkout() {
-        alert("ทำการสั่งซื้อแล้ว!");
+        // console.log(cart_send);
+        if (cart.length === 0){
+          alert('คุณยังสั่งอะไรเลย')
+          toggleCartPopup();
+        } else{
+          alert("ทำการสั่งซื้อแล้ว!");
         console.log(cart);
         var time_ = new Date().toISOString();
-        const cart_send = {
-          table_id: 1,
+        
+        let cart_send = {
+          table_id: "{{ table_id }}",
           time: time_,
-          menu_list: cart,
         };
-        console.log(cart_send);
+        for( menu of cart){
+          cart_send[menu['id']] = menu['quantity']
+        }
+
+        
         $.post("/orders/create", cart_send, function (data) {
           cart = [];
-        });
-
-        updateCart();
+          updateCart();
+        }); 
+        
         toggleCartPopup();
+        }
+        
       }
 
       // Clear cart function
