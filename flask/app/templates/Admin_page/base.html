@@ -63,7 +63,7 @@
             </a>
             <ul class="submenu">
               <li>
-                <a href="{{ url_for('table_list') }}" class="{% if request.endpoint == 'table_list' %}is-active{% endif %}">
+                <a href="{{ url_for('table_creates') }}" class="{% if request.endpoint == 'table_list' %}is-active{% endif %}">
                   <i class="fas fa-table"></i>&nbsp; Table Management
                 </a>
               </li>
@@ -100,7 +100,7 @@
             </a>
           </li>
           <li>
-            <a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'reports' %}is-active{% endif %}">
+            <a href="{{ url_for('report') }}" class="{% if request.endpoint == 'reports' %}is-active{% endif %}">
               <i class="fas fa-chart-line"></i>&nbsp; Reports
             </a>
           </li>

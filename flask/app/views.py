@@ -70,6 +70,11 @@ def table_test():
 def order():
     return render_template('order_page/index.html')
 
+@app.route('/table/create_new')
+def table_creates():
+    return render_template('Admin_page/list_table.html')
+
+
 @app.route('/menu/table/<token>', methods=['GET', 'POST'])
 def menu(token):
     table_number = decode_jwt(token)
