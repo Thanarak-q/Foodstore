@@ -1,7 +1,7 @@
 from app import db
 from sqlalchemy_serializer import SerializerMixin
 
-class Review:
+class Review(db.Model, SerializerMixin):
     __tablename__ = 'review'
 
     review_id = db.Column(db.Integer, primary_key=True)  

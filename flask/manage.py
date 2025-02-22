@@ -21,6 +21,7 @@ from app.models.menu import Menu
 from app.models.employee import Employee
 from app.models.table import Tables
 from app.models.order import Order
+from app.models.review import Review
 # from app.models.employee import AuthUser
 
 '''
@@ -206,6 +207,9 @@ def seed_db():
     #?-------------------------------------------------------------------------
     # เพิ่มเติม Contact 
     
+    db.session.commit()
+
+    db.session.add(Review(name='uiia', star=5, review='uiiauiiia'))
     db.session.commit()
 
 @cli.command("secret_key")
