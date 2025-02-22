@@ -404,7 +404,18 @@
       // Checkout function
       function checkout() {
         alert("ทำการสั่งซื้อแล้ว!");
-        cart = [];
+        console.log(cart);
+        var time_ = new Date().toISOString();
+        const cart_send = {
+          table_id: 1,
+          time: time_,
+          menu_list: cart,
+        };
+        console.log(cart_send);
+        $.post("/orders/create", cart_send, function (data) {
+          cart = [];
+        });
+
         updateCart();
         toggleCartPopup();
       }

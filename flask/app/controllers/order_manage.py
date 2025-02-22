@@ -23,8 +23,9 @@ def order_create():
         
         result = request.form.to_dict()
 
+        app.logger.debug(result)
         validated = True
-        valid_keys = ['table_id', 'time', 'status', 'menu_list']
+        valid_keys = ['table_id', 'time', 'menu_list']
         validated_dict = dict()
         for key in result:
             app.logger.debug(f"{key}: {result[key]}")
@@ -47,7 +48,7 @@ def order_create():
                 temp = Order(
                     table_id=validated_dict['table_id'],
                     time=validated_dict['time'],
-                    status=validated_dict['status'],
+                    status="Preparing",
                     menu_list=validated_dict['menu_list'])
                 temp.change_price(cal_price[validated_dict['menu_list']])
                 db.session.add(temp)
