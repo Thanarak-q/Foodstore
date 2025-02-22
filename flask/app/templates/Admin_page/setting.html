@@ -1,8 +1,50 @@
 {% extends 'Admin_page/base.html' %}
 {% block content %}
-<h1>hello</h1>
+<div class="row">
+  <div class="columns is-vcentered is-justify-content-space-between mt-5">
+    <div class="column is-3">
+      <h1 class="title">Sound Settings</h1>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="column is-half">
+    <div class="card">
+      <div class="card-content">
+        <h2 class="subtitle">Upload New Alert Sound</h2>
+        <form action="{{ url_for('setting') }}" method="post" enctype="multipart/form-data">
+          <div class="field">
+            <label class="label" for="sound_file">Select MP3 or WAV file:</label>
+            <div class="control">
+              <input class="input" type="file" name="sound_file" accept=".mp3, .wav" required>
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <button class="button is-info" type="submit">Upload</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="row mt-5">
+      <div class="column is-full">
+        {% for category, message in messages %}
+          <div class="notification is-{{ category }} fade-in">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+{% endwith %}
+
 {% endblock %}
+
 {% block extra_js %}
-<script>
-</script>
 {% endblock %}
