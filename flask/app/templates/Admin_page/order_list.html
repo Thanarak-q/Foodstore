@@ -118,7 +118,12 @@
       <div class="field">
         <label class="label has-text-black" for="table_id">Table ID</label>
         <div class="control">
-          <input class="input" type="number" id="table_id" name="table_id" placeholder="Table ID.." required />
+          <div class="select">
+            <select id="table_id_" name="table_id_" required>
+            </select>
+
+          </div>
+          <!-- <input class="input" type="number" id="table_id" name="table_id" placeholder="Table ID.." required /> -->
         </div>
       </div>
       <div class="field">
@@ -127,25 +132,34 @@
           <div class="select">
             <select id="status" name="status" required>
               <option value="Ready">Ready</option>
-              <option value="Pending">Pending</option>
-              <option value="Completed">Completed</option>
+              <option value="Paid">Paid</option>
+              <option value="Served">Served</option>
               <option value="Preparing">Preparing</option>
             </select>
           </div>
         </div>
       </div>
-      <div class="field">
-        <label class="label has-text-black" for="total_price">Total Price</label>
-        <div class="control">
-          <input class="input" type="number" id="total_price" name="total_price" placeholder="Total Price.." required
-            step="0.01" />
-        </div>
-      </div>
-      <div class="field">
-        <label class="label has-text-black" for="menu_list">Menu List (JSON)</label>
+      <!-- <div class="field">
+          <label class="label has-text-black" for="total_price">Total Price</label>
+          <div class="control">
+            <input class="input" type="number" id="total_price" name="total_price" placeholder="Total Price.." required
+              step="0.01" />
+          </div>
+        </div> -->
+      <!-- <div class="field">
+        <label class="label has-text-black" for="menu_list">Menu List</label>
         <div class="control">
           <textarea class="textarea" id="menu_list" name="menu_list" placeholder='{"menu_id": quantity, ...}'
             required></textarea>
+        </div>
+      </div> -->
+      <div class="field">
+        <label class="label has-text-black" for="menu_id">Menu ID</label>
+        <div class="control" id="menu_id_">
+          <!-- <div class="select" id="select_menu">
+
+          </div> -->
+          <!-- <input class="input" type="number" id="table_id" name="table_id" placeholder="Table ID.." required /> -->
         </div>
       </div>
       <div class="field is-grouped">
@@ -221,7 +235,7 @@
         return "";
       },
       pagination: true,
-      pageSize: 5,
+      pageSize: 10,
       paginationDetailHAlign: "hidden",
       showPaginationSwitch: false,
       showPageList: false,
@@ -230,16 +244,23 @@
     });
   }
 
+  var orderlast = 0
+  var table_list = []
+  var menuMap = {};
+
   $(document).ready(function () {
-    let menuMap = {};
+
 
     // Load menu data from 2nd DB first
     $.getJSON("/menus/get_all_menus", function (menus) {
       menus.forEach((menu) => {
-        menuMap[menu.id] = menu.name; // Map menu.id to menu.name
+        menuMap[menu.id] = menu.name; // Map menu.id to menu.name 
       });
       // Load order data after menu data is loaded
       $.getJSON("/orders/get_all_orders", function (orderData) {
+        orderlast = orderData[orderData.length - 1].order_id
+        // console.log(orderlast)
+
         populate_table(orderData, menuMap); // Pass menuMap to populate_table
       }).fail(function (jqXHR, textStatus, error) {
         console.error("Failed to load order data:", textStatus, error);
@@ -255,8 +276,20 @@
         populate_table([], {}); // Load empty table if both fail
       });
     });
-  });
 
+    $.getJSON("/table/get_all_table", function (data) {
+      for (i of data) {
+        table_list.push(i.table_id)
+        // console.log(i.table_id)
+      }
+    })
+
+
+
+
+    // console.log(orderlast)
+  });
+  // console.log(orderlast)
   function refresh_table(table_data) {
     $("#order-table").bootstrapTable("load", table_data);
   }
@@ -275,89 +308,63 @@
       return '<span class="tag is-success is-size-5">Ready</span>';
     } else if (value === "Preparing") {
       return '<span class="tag is-warning is-size-5">Preparing</span>';
-    } else if (value === "Pending") {
-      return '<span class="tag is-info is-size-5">Pending</span>';
-    } else if (value === "Completed") {
-      return '<span class="tag is-primary is-size-5">Completed</span>';
+    } else if (value === "Paid") {
+      return '<span class="tag is-info is-size-5">Paid</span>';
+    } else if (value === "Served") {
+      return '<span class="tag is-primary is-size-5">Served</span>';
     }
     return '<span class="tag is-danger is-size-5">' + value + '</span>';
   }
 
   $("#addOrderForm").submit(function (event) {
     event.preventDefault();
-
+    // var form_ = new FormData(this);
+    // console.log(form_)
+    var time_ = new Date().toISOString();
     var formData = {
-      order_id: $("#order_id").val().trim(),
-      table_id: parseInt($("#table_id").val().trim()),
-      status: $("#status").val(),
-      total_price: parseFloat($("#total_price").val().trim()),
-      menu_list: JSON.parse($("#menu_list").val().trim())
+      table_id: $('#table_id_').val(),
+      time: time_,
     };
-
-    // Validate form data
-    if (!formData.order_id || !formData.table_id || !formData.status || !formData.total_price || !formData.menu_list) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-
-    if (typeof formData.menu_list !== 'object' || Array.isArray(formData.menu_list)) {
-      alert("Invalid menu list format. Please enter a valid JSON object (e.g., {\"10\": 4, \"13\": 4}).");
-      return;
-    }
-
-    var $form = $(this);
-    var url = "/orders";
-    var method = "POST"; // Default to POST for adding new orders
-
-    // Check if editing an existing order
-    if ($("#is_edit").length && $("#is_edit").val() === "true") {
-      url = `/orders/update`;
-      method = "PUT"; // Use PUT for updating existing orders
-    }
-
-    $.ajax({
-      url: url,
-      method: method,
-      data: JSON.stringify(formData),
-      contentType: "application/json",
-      success: function (table_data) {
-        try {
-          if (!Array.isArray(table_data) && typeof table_data !== "object") {
-            throw new Error("Invalid response format from server");
-          }
-          refresh_table(table_data);
-          clearForm();
-          toggleView();
-          alert((method === "POST" ? "Order created" : "Order updated") + " successfully!");
-        } catch (error) {
-          console.error("Error processing response:", error);
-          alert("An error occurred while processing the response. Please try again or contact support.");
-        }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        let errorMessage = `Failed to ${method === "POST" ? "create" : "update"} order: ${textStatus}`;
-        if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
-          errorMessage += ` - ${jqXHR.responseJSON.message}`;
-        } else if (jqXHR.status === 401) {
-          errorMessage += " - Unauthorized. Please log in again.";
-        } else if (jqXHR.status === 403) {
-          errorMessage += " - Forbidden. You don't have permission.";
-        } else if (jqXHR.status === 500) {
-          errorMessage += " - Server error. Please try again later.";
-        } else {
-          errorMessage += ` - ${errorThrown || "Unknown error"}`;
-        }
-        console.error(errorMessage, jqXHR);
-        alert(errorMessage);
+    for (let i = 1; i <= 5; i++) {
+      let menu_id_send = $(`#menu_id_${i}`).val();
+      let quantity_send = $(`#quatity_id_${i}`).val();
+      if (menu_id_send == "") {
+        continue
       }
+      formData[`${menu_id_send}`] = `${quantity_send}`;
+    }
+
+
+    console.log(formData)
+    $.post("/orders/create", formData, function (data) {
+      console.log("Receieving Data: ", data);
+      refresh_table(data);
+      clearForm();
+      toggleView();
     });
+    // var url = "/orders/create";
+
+    // $.ajax({
+    //   url: url,
+    //   type: "POST",
+    //   data: formData,
+    //   processData: false,
+    //   contentType: false,
+    //   success: function (table_data) {
+    //     console.log("Receieving Data: ", table_data);
+    //     refresh_table(table_data);
+    //     clearForm();
+    //     toggleView();
+    //   },
+    //   error: function (xhr, status, error) {
+    //     console.error("Error:", error);
+    //   },
+    // });
+
   });
 
   function clearForm() {
     $("#addOrderForm")[0].reset();
-    if ($("#is_edit").length) {
-      $("#is_edit").val("false"); // Reset to add mode
-    }
   }
 
   function toggleView() {
@@ -391,16 +398,53 @@
   };
 
   function prePopulateForm(row) {
+    // console.log(row.table_id)
+    console.log(row.menu_list)
+
     $("#addOrderForm")[0].reset();
     $("#order_id").val(row.order_id);
-    $("#table_id").val(row.table_id);
-    $("#status").val(row.status);
-    $("#total_price").val(row.total_price);
-    $("#menu_list").val(JSON.stringify(row.menu_list));
-    if ($("#is_edit").length) {
-      $("#is_edit").val("true"); // Set to edit mode
+    let table_ = ""
+    for (i of table_list) {
+      if (i == row.table_id) {
+        table_ += `<option value="${i}" id="table_${i}" selected>${i}</option>`
+        continue
+      }
+      table_ += `<option value="${i}" id="table_${i}">${i}</option>`
     }
-    toggleView();
+    $('#table_id_').html(table_);
+
+    $("#status").val(row.status);
+    // $("#total_price").val(row.total_price);
+    let menu = ""
+    for (let num = 1; num <= 5; num++) {
+      let state = true
+      menu += '<div style="margin-bottom : 10px; display : flex; gap: 20px;">'
+      menu += `<div class="select">`
+      if (num == 1) {
+        menu += `<select id='menu_id_${num}' name='menu_id_${num}' required>`
+      } else {
+        menu += `<select id='menu_id_${num}' name='menu_id_${num}'>`
+      }
+      menu += `<option value="">ไม่เลือก</option>`
+      for (i in menuMap) {
+        if (i in row.menu_list && state) {
+          menu += `<option value="${i}" selected>${menuMap[i]}</option>`
+          var quantity__ = row.menu_list[i]
+          // console.log("qua", quantity__)
+          delete row.menu_list[i]
+          state = false
+        }
+        // console.log(row.menu_list)
+        menu += `<option value="${i}">${menuMap[i]}</option>`
+      }
+      menu += `</select> </div> 
+      <input class="input" style="max-width : 100px;"type = "number" id = "quatity_id_${num}" name = "quatity_id_${num}" placeholder = "quatity_id_${num}" min="1" value="${quantity__}" required />
+      </div>`
+
+      quantity__ = 1
+      $('#menu_id_').html(menu)
+      toggleView();
+    }
   }
 
   function removeItem(row) {
@@ -413,24 +457,45 @@
       refresh_table(table_data);
       alert("Order with ID " + row.order_id + " has been deleted.");
     }).fail(function (jqXHR, textStatus, error) {
-      let errorMessage = `Failed to delete order: ${textStatus}`;
-      if (jqXHR.status === 401) {
-        errorMessage += " - Unauthorized. Please log in again.";
-      } else if (jqXHR.status === 403) {
-        errorMessage += " - Forbidden. You don't have permission.";
-      } else if (jqXHR.status === 500) {
-        errorMessage += " - Server error. Please try again later.";
-      } else {
-        errorMessage += ` - ${error || "Unknown error"}`;
-      }
-      console.error(errorMessage, jqXHR);
-      alert(errorMessage);
+      console.error("Failed to delete order:", textStatus, error);
     });
   }
 
   $("#add_order").click(function () {
     clearForm();
     toggleView();
+    $('#order_id').val(orderlast + 1);
+    let table_ = ""
+    for (i of table_list) {
+      table_ += `<option value="${i}" id="table_${i}">${i}</option>`
+    }
+    $('#table_id_').html(table_);
+    // let list_food = {}
+    // for (i in menuMap) {
+    //   list_food[menuMap[i]] = i
+    // }
+    // console.log(list_food)
+    let menu = ""
+    for (let num = 1; num <= 5; num++) {
+      menu += '<div style="margin-bottom : 10px; display : flex; gap: 20px;">'
+      menu += `<div class="select">`
+      if (num == 1) {
+        menu += `<select id='menu_id_${num}' name='menu_id_${num}' required>`
+      } else {
+        menu += `<select id='menu_id_${num}' name='menu_id_${num}'>`
+      }
+      menu += `<option value="">ไม่เลือก</option>`
+      for (i in menuMap) {
+        menu += `<option value="${i}">${menuMap[i]}</option>`
+      }
+      menu += `</select> </div> 
+      <input class="input" style="max-width : 100px;"type = "number" id = "quatity_id_${num}" name = "quatity_id_${num}" placeholder = "quatity_id_${num}" min="1" value="1" required />
+      </div>`
+
+      $('#menu_id_').html(menu)
+
+    }
+
   });
 
   $("#clear_form").click(function () {
