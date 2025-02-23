@@ -201,6 +201,13 @@
         });
       });
 
+      $(document).on("scroll", function () {
+        if ($(document).scrollTop() > 50) {
+          $(".navbar").addClass("scrolled");
+        } else {
+          $(".navbar").removeClass("scrolled");
+        }
+      });
       // Fetch menu data from the API
       function populate_table(data) {
         menuItems = data;
@@ -292,7 +299,7 @@
               );
               cardDiv.html(`
             <div class="card">
-              <img src="${item.image_url}" class="card-img-top" alt="${item.name}">
+              <img src="${item.image_url}" class="card-img-top" alt="${item.name}" style="height: 232px; width: 348; object-fit: cover" />
               <div class="card-body">
                 <h5 class="card-title">${item.name}</h5>
                 <p class="card-text">ราคา: ${item.price} บาท</p>

@@ -256,3 +256,17 @@
 .animate-on-hover:hover {
   transform: scale(1.1);
 }
+
+.navbar {
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

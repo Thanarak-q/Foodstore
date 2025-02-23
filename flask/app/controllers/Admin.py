@@ -7,5 +7,7 @@ from app.controllers import order_manage
 from app.controllers import payment_menage
 from app.controllers import setting
 from app.controllers import report
+from app.controllers import login
+
 
 from app import app

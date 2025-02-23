@@ -2,7 +2,7 @@
 body {
   background-color: #f8f9fa;
   color: #333333;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 16px;
   line-height: 1.6;
   margin: 0;
@@ -116,8 +116,12 @@ body {
 
 /* Animation */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .fade-in {
@@ -140,7 +144,6 @@ body {
 .dropdown.is-active .dropdown-content {
   display: block;
 }
-
 
 .notification-badge {
   position: absolute;
