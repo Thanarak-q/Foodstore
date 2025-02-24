@@ -65,6 +65,61 @@ def order_create():
             
     return orders_list()
 
+@app.route('/orders/admin', methods=('GET', 'POST'))
+def order_admin():
+    app.logger.debug("Order - CREATE")
+    if request.method == 'POST':
+        
+        result = request.form.to_dict()
+        app.logger.debug(result)
+        valid_keys = ['table_id', 'time', 'status']
+        id_ = result['order_id']
+        validated = True
+        validated_dict = dict()
+        validated_dict['menu_list'] = dict()
+        for key in result:
+            app.logger.debug(f"{key}: {result[key]}")
+            # screen of unrelated inputs
+            if key == 'order_id':
+                continue
+
+            if key not in valid_keys:
+                validated_dict['menu_list'][key] = int(result[key])
+                continue
+
+            value = result[key].strip()
+            if not value or value == 'undefined':
+                validated = False
+                break
+
+            validated_dict[key] = value
+        app.logger.debug(validated_dict)
+        if validated:
+            try:
+                orders = Order.query.filter_by(order_id=int(id_)).first()
+                if orders == None:
+                    temp = Order(
+                    table_id=int(validated_dict['table_id']),
+                    time=validated_dict['time'],
+                    status=validated_dict['status'],
+                    menu_list=validated_dict['menu_list']
+                )
+                    temp.change_price(cal_price(validated_dict['menu_list']))
+                    db.session.add(temp)
+                else:
+                    orders.table_id = int(validated_dict['table_id'])
+                    orders.time = validated_dict['time']
+                    orders.status = validated_dict['status']
+                    orders.menu_list = validated_dict['menu_list']
+                    orders.change_price(cal_price(validated_dict['menu_list']))
+                db.session.commit()
+                
+            except Exception as ex:
+                app.logger.error(f"Error create new order: {ex}")
+                raise
+            
+    return orders_list()
+
 def cal_price(menu_list):
         db_allmenus = Menu.query.all()
         menus = list(map(lambda x: x.to_dict(), db_allmenus))
