@@ -108,6 +108,8 @@ def order_update():
 
     return orders_list()
 
+
+
 @app.route('/orders/delete', methods=('GET', 'POST'))
 def order_delete():
     if request.method == 'POST':
