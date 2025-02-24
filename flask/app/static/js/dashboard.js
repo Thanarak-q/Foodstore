@@ -1,102 +1,374 @@
 $(document).ready(function () {
-    const today = new Date();
-    const startDate = new Date(today);
-    startDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(today);
-    endDate.setHours(23, 59, 59, 999);
+  // ตั้งค่า default เป็นวันนี้
+  const today = new Date();
+  const startDate = new Date(today);
+  startDate.setHours(0, 0, 0, 0);
+  const endDate = new Date(today);
+  endDate.setHours(23, 59, 59, 999);
 
-    $("#startDate").val(startDate.toISOString().split("T")[0]);
-    $("#endDate").val(endDate.toISOString().split("T")[0]);
+  $("#startDate").val(startDate.toISOString().split("T")[0]);
+  $("#endDate").val(endDate.toISOString().split("T")[0]);
 
-    fetchTotalSale();
-    fetchTotalOrder();
-    fetchtotalMenuItems();
+  // เรียกฟังก์ชันเพื่อดึงข้อมูลเริ่มต้น
+  fetchTotalSale();
+  fetchTotalOrder();
+  fetchtotalMenuItems();
+  fetchTop5Menus();
+  fetchAndDrawRevenueChart();
 
-    $("#toggleFilterButton").click(function () {
-      $("#filterContainer").toggleClass("is-hidden");
-    });
-
-    $("#filterButton").click(function () {
-      fetchTotalSale();
-      fetchTotalOrder();
-    });
-
-    $("#timeRange").change(function () {
-      const selectedRange = $(this).val();
-      const today = new Date();
-      let startDate, endDate;
-
-      if (selectedRange === "custom") {
-        $("#startDateContainer").show();
-        $("#endDateContainer").show();
-      } else {
-        $("#startDateContainer").hide();
-        $("#endDateContainer").hide();
-      }
-
-      switch (selectedRange) {
-        case "day":
-          startDate = new Date(today);
-          startDate.setHours(0, 0, 0, 0);
-          endDate = new Date(today);
-          endDate.setHours(23, 59, 59, 999);
-          break;
-        case "week":
-          startDate = new Date(today);
-          startDate.setDate(today.getDate() - today.getDay());
-          startDate.setHours(0, 0, 0, 0);
-          endDate = new Date(today);
-          endDate.setDate(today.getDate() + (6 - today.getDay()));
-          endDate.setHours(23, 59, 59, 999);
-          break;
-        case "month":
-          startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-          endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-          endDate.setHours(23, 59, 59, 999);
-          break;
-        case "year":
-          startDate = new Date(today.getFullYear(), 0, 1);
-          endDate = new Date(today.getFullYear(), 11, 31);
-          endDate.setHours(23, 59, 59, 999);
-          break;
-        case "custom":
-          const customStartDate = $("#startDate").val();
-          const customEndDate = $("#endDate").val();
-          startDate = new Date(customStartDate);
-          endDate = new Date(customEndDate);
-          break;
-      }
-
-      if (startDate && endDate) {
-        $("#startDate").val(startDate.toISOString().split("T")[0]);
-        $("#endDate").val(endDate.toISOString().split("T")[0]);
-        $("#filterPeriodLabel").text(`${selectedRange.charAt(0).toUpperCase() + selectedRange.slice(1)}`);
-      } else {
-        $("#startDate").val("");
-        $("#endDate").val("");
-        $("#filterPeriodLabel").text("Select Range");
-      }
-
-      fetchTotalSale();
-      fetchTotalOrder();
-    });
+  // แก้ไข: เพิ่มการสลับแสดง Filter Container
+  $("#toggleFilterButton").click(function () {
+    $("#filterContainer").toggleClass("is-hidden");
   });
 
-  function fetchTotalSale() {
-    $.getJSON("/payment/get_all_payment", function (data) {
-      const totalSale = data.reduce((acc, pay) => acc + (Number(pay.amount) || 0), 0);
-      $("#totalSale").text(`฿ ${totalSale.toLocaleString()}`);
+  // ฟังก์ชันที่มีอยู่แล้ว
+  $("#filterButton").click(function () {
+    fetchTotalSale();
+    fetchTotalOrder();
+  });
+
+  $("#resetButton").click(function () {
+    $("#startDate").val("");
+    $("#endDate").val("");
+    fetchTotalSale();
+    fetchTotalOrder();
+  });
+
+  $("#timeRange").change(function () {
+    const selectedRange = $(this).val();
+    const today = new Date();
+    let startDate, endDate;
+
+    // ซ่อน/แสดง input วันที่
+    if (selectedRange === "custom") {
+      $("#startDateContainer").show();
+      $("#endDateContainer").show();
+    } else {
+      $("#startDateContainer").hide();
+      $("#endDateContainer").hide();
+    }
+
+    switch (selectedRange) {
+      case "day":
+        startDate = new Date(today);
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date(today);
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case "week":
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - today.getDay());
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date(today);
+        endDate.setDate(today.getDate() + (6 - today.getDay()));
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case "month":
+        startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case "year":
+        startDate = new Date(today.getFullYear(), 0, 1);
+        endDate = new Date(today.getFullYear(), 11, 31);
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case "custom":
+        // เมื่อเลือก custom จะให้แสดงวันที่ที่เลือก
+        const customStartDate = $("#startDate").val();
+        const customEndDate = $("#endDate").val();
+        startDate = new Date(customStartDate);
+        endDate = new Date(customEndDate);
+        break;
+      default:
+        startDate = null;
+        endDate = null;
+        break;
+    }
+
+    if (startDate && endDate) {
+      $("#startDate").val(startDate.toISOString().split("T")[0]);
+      $("#endDate").val(endDate.toISOString().split("T")[0]);
+      // แสดงช่วงเวลาที่เลือกในปุ่ม Filter
+      $("#filterPeriodLabel").text(`${selectedRange.charAt(0).toUpperCase() + selectedRange.slice(1)}`);
+    } else {
+      $("#startDate").val("");
+      $("#endDate").val("");
+      $("#filterPeriodLabel").text("Select Range");
+    }
+
+    // เรียกฟังก์ชันเพื่ออัปเดตข้อมูล
+    fetchTotalSale();
+    fetchTotalOrder();
+  });
+});
+
+function fetchTotalSale() {
+  const startDate = $("#startDate").val() || new Date().toISOString().split("T")[0];
+  const endDate = $("#endDate").val() || new Date().toISOString().split("T")[0];
+
+  $.getJSON("/payment/get_all_payment", function (data) {
+    let filteredData = data;
+
+    if (startDate && endDate) {
+      filteredData = data.filter((payment) => {
+        const paymentTime = new Date(payment.payment_time);
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        return paymentTime >= start && paymentTime <= end;
+      });
+    }
+
+    const totalSale = filteredData.reduce(
+      (acc, pay) => acc + (Number(pay.amount) || 0),
+      0
+    );
+    $("#totalSale").text(`฿ ${totalSale.toLocaleString()}`);
+  });
+}
+
+function fetchTotalOrder() {
+  const startDate = $("#startDate").val() || new Date().toISOString().split("T")[0];
+  const endDate = $("#endDate").val() || new Date().toISOString().split("T")[0];
+
+  $.getJSON("/orders/get_all_orders", function (data) {
+    let filteredData = data;
+
+    if (startDate && endDate) {
+      filteredData = data.filter((order) => {
+        const orderTime = new Date(order.order_time);
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        return orderTime >= start && orderTime <= end;
+      });
+    }
+
+    const totalOrder = filteredData.length;
+    $("#totalOrder").text(`${totalOrder.toLocaleString()}`);
+  });
+}
+
+function fetchtotalMenuItems() {
+  $.getJSON("/menus/get_all_menus", function (menuData) {
+    const totalMenuItems = menuData.length;
+    $("#totalMenuItems").text(totalMenuItems);
+  });
+}
+
+function fetchTop5Menus() {
+  $.getJSON("/menus/get_all_menus", function (data) {
+    const sortedMenus = data.sort((a, b) => b.ordered - a.ordered);
+    const top5Menus = sortedMenus.slice(0, 5);
+
+    let htmlContent = '';
+    top5Menus.forEach((menu, index) => {
+      htmlContent += `
+        <div class="media">
+          <div class="media-left">
+            <figure class="image is-128x128">
+              <img src="${menu.image_url}" alt="${menu.name}" style="width: 100%; height: auto;">
+            </figure>
+          </div>
+          <div class="media-content">
+            <p class="title is-4 has-text-weight-bold">${index + 1}. ${menu.name}</p>
+            <p class="subtitle is-6 has-text-grey-dark">จำนวนการสั่ง: <strong>${menu.ordered} ครั้ง</strong></p>
+            <p class="subtitle is-6 has-text-grey-dark">ราคา: <strong>฿${menu.price}</strong></p>
+          </div>
+        </div>
+      `;
     });
+
+    $("#top5Menus").html(htmlContent);
+  });
+}
+
+function checkMenuPerformance(menuData) {
+  const averageSales =
+    menuData.reduce((sum, menu) => sum + menu.ordered, 0) / menuData.length;
+
+  menuData.forEach((menu) => {
+    if (menu.ordered > averageSales * 1.5) {
+      showNotification(`${menu.name} is selling fast!`, "is-success");
+    } else if (menu.ordered < averageSales * 0.5) {
+      showNotification(`${menu.name} is underperforming`, "is-warning");
+    }
+  });
+}
+
+function showNotification(message, type) {
+  const notification = $(
+    `<div class="notification ${type}">
+      <button class="delete"></button>
+      ${message}
+    </div>`
+  );
+
+  $("#notifications").append(notification);
+
+  notification.find(".delete").click(function () {
+    notification.remove();
+  });
+
+  setTimeout(() => notification.remove(), 5000);
+}
+
+let revenueChart;
+
+function populateYearSelector(data) {
+  const years = [
+    ...new Set(
+      data.map((payment) => new Date(payment.payment_time).getFullYear())
+    ),
+  ]
+    .sort()
+    .reverse();
+
+  const $yearSelector = $("#yearSelector");
+  const currentYear = new Date().getFullYear();
+
+  years.forEach((year) => {
+    const isSelected = year === currentYear ? "selected" : "";
+    $yearSelector.append(
+      `<option value="${year}" ${isSelected}>${year}</option>`
+    );
+  });
+
+  $yearSelector.select2({
+    placeholder: "Select years to compare",
+    allowClear: true,
+    width: "100%",
+  });
+
+  // Trigger change เพื่อให้กราฟแสดงผลทันทีหลังจาก populate
+  $yearSelector.trigger("change");
+}
+
+function fetchAndDrawRevenueChart() {
+  const selectedYears = $("#yearSelector").val() || [];
+
+  $.getJSON("/payment/get_all_payment", function (data) {
+    // Populate year selector on first load
+    if ($("#yearSelector").children().length === 1) {
+      populateYearSelector(data);
+    }
+
+    // Prepare monthly revenue data
+    const monthlyRevenue = {};
+    data.forEach((payment) => {
+      const date = new Date(payment.payment_time);
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const amount = Number(payment.amount) || 0;
+
+      if (!monthlyRevenue[year]) {
+        monthlyRevenue[year] = Array(12).fill(0);
+      }
+      monthlyRevenue[year][month] += amount;
+    });
+
+    const ctx = document.getElementById("revenueChart").getContext("2d");
+    if (revenueChart) {
+      revenueChart.destroy();
+    }
+
+    const colors = [
+      "rgb(75, 192, 192)",
+      "rgb(255, 99, 132)",
+      "rgb(54, 162, 235)",
+      "rgb(255, 206, 86)",
+      "rgb(153, 102, 255)",
+      "rgb(255, 159, 64)",
+      "rgb(199, 199, 199)",
+      "rgb(83, 83, 83)",
+    ];
+
+    const datasets = selectedYears.map((year, index) => ({
+      label: `Revenue ${year}`,
+      data: monthlyRevenue[year] || Array(12).fill(0),
+      borderColor: colors[index % colors.length],
+      tension: 0.1,
+    }));
+
+    revenueChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ],
+        datasets: datasets,
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: "Revenue (฿)",
+            },
+            ticks: {
+              callback: function (value) {
+                return "฿" + value.toLocaleString();
+              },
+            },
+          },
+          x: {
+            title: {
+              display: true,
+              text: "Month",
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            position: "top",
+          },
+          title: {
+            display: true,
+            text: "Monthly Revenue Comparison",
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                let label = context.dataset.label || "";
+                if (label) {
+                  label += ": ";
+                }
+                label += "฿" + context.parsed.y.toLocaleString();
+                return label;
+              },
+            },
+          },
+        },
+      },
+    });
+  }).fail(function (jqXHR, textStatus, errorThrown) {
+    console.error("Error fetching data:", textStatus, errorThrown);
+  });
+}
+
+$(document).ready(function () {
+  // ตรวจสอบว่า canvas พร้อมใช้งานก่อนเรียก
+  if (document.getElementById("revenueChart")) {
+    fetchAndDrawRevenueChart();
   }
 
-  function fetchTotalOrder() {
-    $.getJSON("/orders/get_all_orders", function (data) {
-      $("#totalOrder").text(`${data.length.toLocaleString()}`);
-    });
-  }
+  $("#yearSelector").on("change", function () {
+    fetchAndDrawRevenueChart();
+  });
 
-  function fetchtotalMenuItems() {
-    $.getJSON("/menus/get_all_menus", function (menuData) {
-      $("#totalMenuItems").text(menuData.length);
-    });
-  }
+  $("#updateChart").click(function () {
+    fetchAndDrawRevenueChart();
+  });
+});

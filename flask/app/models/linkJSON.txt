@@ -164,3 +164,12 @@ payment_id	4
 payment_method	"cash"
 payment_time	"2023-04-30 18:57:00"
 '''
+
+
+'''
+menu traing
+'''
+http://localhost:56733/orders/all_time_trending
+http://localhost:56733/orders/daily_trending
+http://localhost:56733/orders/weekly_trending
+http://localhost:56733/orders/yearly_trending
