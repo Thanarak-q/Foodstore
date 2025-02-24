@@ -1,6 +1,4 @@
-{% extends 'Admin_page/base.html' %}
-
-{% block extra_css %}
+{% extends 'Admin_page/base.html' %} {% block extra_css %}
 <style>
   .bootstrap-table .pagination {
     margin: 5rem;
@@ -94,14 +92,12 @@
     vertical-align: middle;
   }
 </style>
-{% endblock %}
-
-{% block content %}
-<br>
+{% endblock %} {% block content %}
+<br />
 <div id="header" class="container">
   <h1 class="title has-text-black">Order Management</h1>
 </div>
-<br>
+<br />
 
 <div id="add-edit" class="container" hidden="hidden">
   <div id="add-edit" class="container">
@@ -112,16 +108,21 @@
       <div class="field">
         <label class="label has-text-black" for="order_id">Order ID</label>
         <div class="control">
-          <input class="input" type="text" id="order_id" name="order_id" placeholder="Order ID.." required />
+          <input
+            class="input"
+            type="text"
+            id="order_id"
+            name="order_id"
+            placeholder="Order ID.."
+            required
+          />
         </div>
       </div>
       <div class="field">
         <label class="label has-text-black" for="table_id">Table ID</label>
         <div class="control">
           <div class="select">
-            <select id="table_id_" name="table_id_" required>
-            </select>
-
+            <select id="table_id_" name="table_id_" required></select>
           </div>
           <!-- <input class="input" type="number" id="table_id" name="table_id" placeholder="Table ID.." required /> -->
         </div>
@@ -164,7 +165,12 @@
       </div>
       <div class="field is-grouped">
         <div class="control">
-          <input class="button is-link" type="submit" name="submit" value="Submit" />
+          <input
+            class="button is-link"
+            type="submit"
+            name="submit"
+            value="Submit"
+          />
         </div>
         <div class="control">
           <button id="clear_form" class="button is-light" type="button">
@@ -185,11 +191,15 @@
   <button id="add_order" class="button is-primary is-size-4" type="button">
     <p class="has-text-weight-bold">Create Order</p>
   </button>
-  <br>
-  <br>
+  <br />
+  <br />
 
   <div class="table-container">
-    <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="order-table" data-sort-name="order_id">
+    <table
+      class="table is-striped is-bordered is-hoverable is-fullwidth"
+      id="order-table"
+      data-sort-name="order_id"
+    >
       <thead>
         <tr>
           <th data-field="order_id" data-sortable="true">
@@ -207,7 +217,11 @@
           <th data-field="menu_list" data-sortable="false">
             <span class="has-text-black">Menu List</span>
           </th>
-          <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
+          <th
+            data-field="operation"
+            data-formatter="actionFormatter"
+            data-events="operateEvents"
+          >
             <span class="has-text-black">Edit/Delete</span>
           </th>
         </tr>
@@ -216,20 +230,35 @@
     </table>
   </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <script>
   function populate_table(table_data, menuMap) {
     $("#order-table").bootstrapTable({
       data: table_data,
       columns: [
-        { field: 'order_id', title: 'Order ID', sortable: true },
-        { field: 'table_id', title: 'Table ID', sortable: true },
-        { field: 'status', title: 'Status', sortable: true, formatter: statusFormatter },
-        { field: 'total_price', title: 'Total Price', sortable: true },
-        { field: 'menu_list', title: 'Menu List', sortable: false, formatter: function (value) { return menuListFormatter(value, menuMap); } },
-        { field: 'operation', title: 'Edit/Delete', formatter: actionFormatter, events: operateEvents }
+        { field: "order_id", title: "Order ID", sortable: true },
+        { field: "table_id", title: "Table ID", sortable: true },
+        {
+          field: "status",
+          title: "Status",
+          sortable: true,
+          formatter: statusFormatter,
+        },
+        { field: "total_price", title: "Total Price", sortable: true },
+        {
+          field: "menu_list",
+          title: "Menu List",
+          sortable: false,
+          formatter: function (value) {
+            return menuListFormatter(value, menuMap);
+          },
+        },
+        {
+          field: "operation",
+          title: "Edit/Delete",
+          formatter: actionFormatter,
+          events: operateEvents,
+        },
       ],
       loadingTemplate: function () {
         return "";
@@ -240,25 +269,23 @@
       showPaginationSwitch: false,
       showPageList: false,
       paginationFirstText: '<i class="fas fa-angle-double-left"></i>',
-      paginationLastText: '<i class="fas fa-angle-double-right"></i>'
+      paginationLastText: '<i class="fas fa-angle-double-right"></i>',
     });
   }
 
-  var orderlast = 0
-  var table_list = []
+  var orderlast = 0;
+  var table_list = [];
   var menuMap = {};
 
   $(document).ready(function () {
-
-
     // Load menu data from 2nd DB first
     $.getJSON("/menus/get_all_menus", function (menus) {
       menus.forEach((menu) => {
-        menuMap[menu.id] = menu.name; // Map menu.id to menu.name 
+        menuMap[menu.id] = menu.name; // Map menu.id to menu.name
       });
       // Load order data after menu data is loaded
       $.getJSON("/orders/get_all_orders", function (orderData) {
-        orderlast = orderData[orderData.length - 1].order_id
+        orderlast = orderData[orderData.length - 1].order_id;
         // console.log(orderlast)
 
         populate_table(orderData, menuMap); // Pass menuMap to populate_table
@@ -279,13 +306,10 @@
 
     $.getJSON("/table/get_all_table", function (data) {
       for (i of data) {
-        table_list.push(i.table_id)
+        table_list.push(i.table_id);
         // console.log(i.table_id)
       }
-    })
-
-
-
+    });
 
     // console.log(orderlast)
   });
@@ -295,12 +319,12 @@
   }
 
   function menuListFormatter(value, menuMap) {
-    let menuList = '';
+    let menuList = "";
     for (let menuId in value) {
       const menuName = menuMap[menuId] || `Menu ${menuId} (Unknown)`; // Use menu name or menuId if not found
       menuList += `${menuName}: ${value[menuId]}<br>`;
     }
-    return menuList || 'No menus';
+    return menuList || "No menus";
   }
 
   function statusFormatter(value) {
@@ -313,7 +337,7 @@
     } else if (value === "Served") {
       return '<span class="tag is-primary is-size-5">Served</span>';
     }
-    return '<span class="tag is-danger is-size-5">' + value + '</span>';
+    return '<span class="tag is-danger is-size-5">' + value + "</span>";
   }
 
   $("#addOrderForm").submit(function (event) {
@@ -322,21 +346,22 @@
     // console.log(form_)
     var time_ = new Date().toISOString();
     var formData = {
-      table_id: $('#table_id_').val(),
+      order_id: $("#order_id").val(),
+      status: $("#status").val(),
+      table_id: $("#table_id_").val(),
       time: time_,
     };
     for (let i = 1; i <= 5; i++) {
       let menu_id_send = $(`#menu_id_${i}`).val();
       let quantity_send = $(`#quatity_id_${i}`).val();
       if (menu_id_send == "") {
-        continue
+        continue;
       }
       formData[`${menu_id_send}`] = `${quantity_send}`;
     }
 
-
-    console.log(formData)
-    $.post("/orders/create", formData, function (data) {
+    console.log(formData);
+    $.post("/orders/admin", formData, function (data) {
       console.log("Receieving Data: ", data);
       refresh_table(data);
       clearForm();
@@ -360,7 +385,6 @@
     //     console.error("Error:", error);
     //   },
     // });
-
   });
 
   function clearForm() {
@@ -399,50 +423,50 @@
 
   function prePopulateForm(row) {
     // console.log(row.table_id)
-    console.log(row.menu_list)
+    console.log(row.menu_list);
 
     $("#addOrderForm")[0].reset();
     $("#order_id").val(row.order_id);
-    let table_ = ""
+    let table_ = "";
     for (i of table_list) {
       if (i == row.table_id) {
-        table_ += `<option value="${i}" id="table_${i}" selected>${i}</option>`
-        continue
+        table_ += `<option value="${i}" id="table_${i}" selected>${i}</option>`;
+        continue;
       }
-      table_ += `<option value="${i}" id="table_${i}">${i}</option>`
+      table_ += `<option value="${i}" id="table_${i}">${i}</option>`;
     }
-    $('#table_id_').html(table_);
+    $("#table_id_").html(table_);
 
     $("#status").val(row.status);
     // $("#total_price").val(row.total_price);
-    let menu = ""
+    let menu = "";
     for (let num = 1; num <= 5; num++) {
-      let state = true
-      menu += '<div style="margin-bottom : 10px; display : flex; gap: 20px;">'
-      menu += `<div class="select">`
+      let state = true;
+      menu += '<div style="margin-bottom : 10px; display : flex; gap: 20px;">';
+      menu += `<div class="select">`;
       if (num == 1) {
-        menu += `<select id='menu_id_${num}' name='menu_id_${num}' required>`
+        menu += `<select id='menu_id_${num}' name='menu_id_${num}' required>`;
       } else {
-        menu += `<select id='menu_id_${num}' name='menu_id_${num}'>`
+        menu += `<select id='menu_id_${num}' name='menu_id_${num}'>`;
       }
-      menu += `<option value="">ไม่เลือก</option>`
+      menu += `<option value="">ไม่เลือก</option>`;
       for (i in menuMap) {
         if (i in row.menu_list && state) {
-          menu += `<option value="${i}" selected>${menuMap[i]}</option>`
-          var quantity__ = row.menu_list[i]
+          menu += `<option value="${i}" selected>${menuMap[i]}</option>`;
+          var quantity__ = row.menu_list[i];
           // console.log("qua", quantity__)
-          delete row.menu_list[i]
-          state = false
+          delete row.menu_list[i];
+          state = false;
         }
         // console.log(row.menu_list)
-        menu += `<option value="${i}">${menuMap[i]}</option>`
+        menu += `<option value="${i}">${menuMap[i]}</option>`;
       }
       menu += `</select> </div> 
       <input class="input" style="max-width : 100px;"type = "number" id = "quatity_id_${num}" name = "quatity_id_${num}" placeholder = "quatity_id_${num}" min="1" value="${quantity__}" required />
-      </div>`
+      </div>`;
 
-      quantity__ = 1
-      $('#menu_id_').html(menu)
+      quantity__ = 1;
+      $("#menu_id_").html(menu);
       toggleView();
     }
   }
@@ -464,38 +488,36 @@
   $("#add_order").click(function () {
     clearForm();
     toggleView();
-    $('#order_id').val(orderlast + 1);
-    let table_ = ""
+    $("#order_id").val(orderlast + 1);
+    let table_ = "";
     for (i of table_list) {
-      table_ += `<option value="${i}" id="table_${i}">${i}</option>`
+      table_ += `<option value="${i}" id="table_${i}">${i}</option>`;
     }
-    $('#table_id_').html(table_);
+    $("#table_id_").html(table_);
     // let list_food = {}
     // for (i in menuMap) {
     //   list_food[menuMap[i]] = i
     // }
     // console.log(list_food)
-    let menu = ""
+    let menu = "";
     for (let num = 1; num <= 5; num++) {
-      menu += '<div style="margin-bottom : 10px; display : flex; gap: 20px;">'
-      menu += `<div class="select">`
+      menu += '<div style="margin-bottom : 10px; display : flex; gap: 20px;">';
+      menu += `<div class="select">`;
       if (num == 1) {
-        menu += `<select id='menu_id_${num}' name='menu_id_${num}' required>`
+        menu += `<select id='menu_id_${num}' name='menu_id_${num}' required>`;
       } else {
-        menu += `<select id='menu_id_${num}' name='menu_id_${num}'>`
+        menu += `<select id='menu_id_${num}' name='menu_id_${num}'>`;
       }
-      menu += `<option value="">ไม่เลือก</option>`
+      menu += `<option value="">ไม่เลือก</option>`;
       for (i in menuMap) {
-        menu += `<option value="${i}">${menuMap[i]}</option>`
+        menu += `<option value="${i}">${menuMap[i]}</option>`;
       }
       menu += `</select> </div> 
       <input class="input" style="max-width : 100px;"type = "number" id = "quatity_id_${num}" name = "quatity_id_${num}" placeholder = "quatity_id_${num}" min="1" value="1" required />
-      </div>`
+      </div>`;
 
-      $('#menu_id_').html(menu)
-
+      $("#menu_id_").html(menu);
     }
-
   });
 
   $("#clear_form").click(function () {
