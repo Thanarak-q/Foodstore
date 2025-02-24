@@ -79,3 +79,5 @@ def get_all_time_trending():
     All-time trending menus.
     """
     return jsonify(get_trending_menu())
+
+#!-------------------------------------------------------------------------------------------------
