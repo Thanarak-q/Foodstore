@@ -133,7 +133,7 @@ payment_manage
     func name: payment_create()
     input : none for GET/ 'table_id', 'payment_method', 'payment_time', 'amount' for POST
     return :  all payment
-    note: create payment
+    note: create payment, shange table status to Available
 
     route : /payment/update, methods=('GET', 'POST')
     func name: payment_update()
@@ -150,7 +150,11 @@ payment_manage
     route : /payment/create_slip, methods=('GET', 'POST')
     func name: slip_create()
     input : none for GET/ 'table_id' for POST
-    return :  none for GET/ {'total': total, 'subtotal' : subtotal, 'menu_list': menu_list} for POST
+    return :  none for GET/ {'vat_7%': ราคา vat 7%, 
+                            'total' : ราคาไม่รวม vat, 
+                            'sum_price': { ชื่อสินค้า: {'price' : ราคารวม,
+                                                    'price_per_unit': ราคาสินค้า,
+                                                    'amount': จำนวนที่สั่ง}}} for POST
 
 employee_manage
     route : /em, methods=('GET', 'POST')

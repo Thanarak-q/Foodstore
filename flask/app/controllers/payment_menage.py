@@ -28,7 +28,8 @@ def payment_create():
         result = request.form.to_dict()
 
         validated = True
-        valid_keys = ['table_id', 'payment_method', 'payment_time', 'amount']
+        valid_keys = ['payment_method', 'payment_time', 'amount']
+        table_id = result.get('table_id', '')
         validated_dict = dict()
         for key in result:
             app.logger.debug(f"{key}: {result[key]}")
@@ -47,6 +48,8 @@ def payment_create():
             try:
                 temp = Payment(**validated_dict)
                 db.session.add(temp)
+                table = Tables.query.get(table_id)
+                table.update_status('Available')
                 
                 db.session.commit()
                 
@@ -148,10 +151,12 @@ def slip_create():
 
         for menu_id in menu_list:
             menu = get_menu_dict(menu_id)
-            sum_list[menu['name']] = menu_list[menu_id] * menu['price']
-        
+            sum_list[menu['name']] = {'price' : menu_list[menu_id] * menu['price'],
+                                      'price_per_unit': menu['price'],
+                                      'amount': menu_list[menu_id]}
+    
         total = subtotal * 7 / 100
-        temp = {'vat_7%': total, 'total' : subtotal, 'menu_list': menu_list, 'sum_price': sum_list}
+        temp = {'vat_7%': total, 'total' : subtotal, 'sum_price': sum_list}
         return temp
 
 def merge_dict(A, B):
