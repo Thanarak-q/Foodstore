@@ -3,19 +3,29 @@
 
 {% block extra_css %}
 <style>
-    .bootstrap-table .pagination {
-        margin: 5rem;
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-
+    /* Base styling for Bootstrap Table pagination using Bulma */
+    .bootstrap-table .fixed-table-pagination {
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+        padding: 0 1rem;
     }
 
-    .bootstrap-table .page-item {
+
+    .bootstrap-table .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        /* Allows wrapping for responsiveness */
+        gap: 0.5rem;
+    }
+
+    /* Mimic Bulma's pagination styles */
+    .bootstrap-table .pagination .page-item {
         display: inline-block;
     }
 
-    .bootstrap-table .page-link {
+    .bootstrap-table .pagination .page-link {
         padding: 0.5rem 1rem;
         border: 1px solid #dbdbdb;
         background-color: #ffffff;
@@ -23,42 +33,121 @@
         border-radius: 4px;
         font-size: 1rem;
         text-decoration: none;
-        transition: all 0.2s;
+        transition: background-color 0.2s, color 0.2s, border-color 0.2s;
     }
 
-    .bootstrap-table .page-item.active .page-link {
+    /* Active state (Bulma primary color) */
+    .bootstrap-table .pagination .page-item.active .page-link {
         background-color: #3273dc;
+        /* Bulma's primary */
         border-color: #3273dc;
         color: #ffffff;
     }
 
-    .bootstrap-table .page-item.disabled .page-link {
+    /* Disabled state (Bulma's greyed-out style) */
+    .bootstrap-table .pagination .page-item.disabled .page-link {
         background-color: #f5f5f5;
+        border-color: #dbdbdb;
         color: #7a7a7a;
         cursor: not-allowed;
         opacity: 0.65;
     }
 
-    .bootstrap-table .page-link:hover:not(.active) {
-        background-color: #f5f5f5;
+    /* Hover state */
+    .bootstrap-table .pagination .page-link:hover:not(.active) {
+        background-color: #fafafa;
+        /* Bulma's light hover */
         color: #3273dc;
     }
 
-    .bootstrap-table .btn-page-size {
-        padding: 0.5rem 1rem;
-        border: 1px solid #dbdbdb;
-        background-color: #ffffff;
-        color: #363636;
-        border-radius: 4px;
-    }
-
+    /* Hide Bootstrap's pagination detail */
     .bootstrap-table .pagination-detail {
         display: none;
     }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .bootstrap-table .pagination {
+            gap: 0.25rem;
+            /* Tighter spacing for tablets */
+            margin: 1rem 0.5rem;
+        }
+
+        .bootstrap-table .pagination .page-link {
+            padding: 0.375rem 0.75rem;
+            /* Smaller buttons */
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .bootstrap-table .pagination {
+            margin: 0.5rem 0;
+            gap: 0.2rem;
+            /* Minimal gap for mobile */
+            flex-wrap: wrap;
+            /* Wraps horizontally */
+        }
+
+        .bootstrap-table .pagination .page-link {
+            padding: 0.25rem 0.5rem;
+            /* Compact buttons */
+            font-size: 0.85rem;
+            min-width: 2rem;
+            /* Ensures tappability */
+            text-align: center;
+        }
+
+        .bootstrap-table .fixed-table-pagination {
+            padding: 0 0.25rem;
+        }
+    }
+
+    /* ปรับแต่งช่องค้นหาของ Bootstrap Table */
+    .bootstrap-table input[type="search"] {
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+        /* เปลี่ยนมุมให้กลม */
+        /* border: 1px solid #dbdbdb; */
+        /* กรอบสีเทาอ่อน */
+        /* background-color: #ffffff; */
+        /* พื้นหลังสีขาว */
+        color: #363636;
+        /* สีตัวอักษร */
+        font-size: 1rem;
+        /* ขนาดตัวอักษร */
+        outline: none;
+        /* ไม่แสดงกรอบเมื่อเลือก */
+        width: 250px;
+        /* ความกว้างของช่องค้นหา */
+        transition: all 0.3s ease;
+        /* เพิ่มเอฟเฟกต์ในการเปลี่ยนแปลง */
+    }
+
+    /* ปรับแต่งปุ่มค้นหา */
+    .bootstrap-table .search {
+        padding: 0.5rem 1rem;
+        border: none;
+        /* background-color: #3273dc; */
+        /* ปุ่มค้นหาสีฟ้าตามธีมของ Bulma */
+        color: white;
+        border-radius: 30px;
+        /* มุมกลม */
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .width-tag {
+        min-width: 130px;
+    }
+
+    .is-reserve {
+        background-color: #ffe08a !important;
+        color: rgba(0, 0, 0, .7) !important;
+
+    }
 </style>
-
 {% endblock %}
-
 
 
 {% block content %}
@@ -77,20 +166,22 @@
                     data-pagination="true" data-search="true" paginationDetailHAlign="hidden">
                     <thead>
                         <tr>
-                            <th data-field="table_id" data-sortable="true">Table No.</th>
-                            <th data-field="status" data-sortable="false">Status</th>
-                            <th data-field="qrcode" data-sortable="false">QR Code</th>
+                            <th data-field="table_id" data-sortable="false">หมายเลขโต๊ะ</th>
+                            <th data-field="status" data-sortable="false">สถานะปัจจุบัน</th>
+                            <th data-field="reserve" data-sortable="false">การจอง</th>
+                            <th data-field="occupy" data-sortable="false">การใช้งาน/ชำระเงิน</th>
+                            <th data-field="print" data-sortable="false">QR Code</th>
                         </tr>
                     </thead>
                 </table>
 
                 <!-- Card Footer -->
                 <footer class="card-footer">
-                    <a href="#" id="refresh" class="card-footer-item" onclick="refreshTable()">Refresh List</a>
+                    <a href="#" id="refresh" class="card-footer-item" onclick="loadTable()">รีเฟรช</a>
                     <a href="#" id="view-all" class="card-footer-item" style="border-right: 0px;"
-                        onclick="showAllTables()">View All</a>
+                        onclick="showAllTables()">แสดงรายการทั้งหมด</a>
                     <a href="#" id="view-less" class="card-footer-item" style="display: none;"
-                        onclick="showLessTables()">View less</a>
+                        onclick="showLessTables()">แสดงน้อยลง</a>
                 </footer>
             </div>
         </div>
@@ -102,56 +193,105 @@
 <script>
     $(document).ready(function () {
         loadTable();
+        // statusUpdater();
+        $(window).on('resize', function () {
+            $('#table-list').bootstrapTable('resetView');
+        });
     });
+
 
     function loadTable() {
         $.getJSON('/table/get_all_table', function (data) {
-            // Destroy previous table instance to avoid conflicts
             $('#table-list').bootstrapTable('destroy');
-
-            // Initialize table with pagination enabled
             $('#table-list').bootstrapTable({
                 data: data,
                 customSearch: customTableSearch,
-                pagination: true, // Keep pagination enabled
-                pageSize: 5, // Set default page size
-                paginationDetailHAlign: "hidden", // Hide pagination detail (info)
-                showPaginationSwitch: false, // Hide the toggle for pagination
-                showPageList: false, // Hide the page size selector (e.g., "5 rows per page")
+                pagination: true,
+                pageSize: 8,
+                paginationDetailHAlign: "hidden",
+                showPaginationSwitch: false,
+                showPageList: false,
                 columns: [
-                    { field: 'table_id', sortable: true },
-                    { field: 'status', sortable: false, formatter: statusFormatter },
-                    { field: 'qrcode', sortable: false, formatter: qrcodeFormatter }
+                    { field: 'table_id', sortable: false, align: "center" },
+                    { field: 'status', sortable: false, formatter: statusFormatter, align: "center" },
+                    { field: 'reserve', sortable: false, formatter: reserveButton, align: "center" },
+                    { field: 'occupy', sortable: false, formatter: stateButton, align: "center" },
+                    { field: 'print', sortable: false, formatter: printButton, align: "center" }
                 ]
             });
+            showLessTables()
         }).fail(function (jqXHR, textStatus, error) {
             console.error("Request Failed:", textStatus, error);
         });
     }
 
-    function refreshTable() {
-        $.getJSON('/table/get_all_table', function (data) {
-            console.log("Refreshing Table:", data);
-            $('#table-list').bootstrapTable('load', data);
-        })
+    function stateButton(value, row, index) {
+        text = "ชำระเงิน"
+        color = "is-info"
+        id = "pay"
+
+        if (row.status !== "Occupied") {
+            text = "เริ่มใช้งาน"
+            color = "is-link"
+            id = "occupy"
+
+        }
+        return `
+            <button id="${id}" class="button width-tag is-medium is-respondsive ${color}">
+                <p class="has-text-weight-bold">${text}</p>
+            </button>
+        `;
     }
+
+    function reserveButton(value, row, index) {
+        text = "ยกเลิก"
+        color = "is-danger"
+        state = ""
+
+        if (row.status === "Available") {
+            text = "จองโต๊ะ";
+            color = "is-reserve";
+            state = ""
+
+        } else if (row.status === "Occupied") {
+            text = "จองโต๊ะ"
+            color = "is-reserve";
+            state = "disabled"
+
+        }
+        return `
+                <button id="reserve" class="button ${color} width-tag is-medium is-respondsive" ${state}>
+                    <p class="has-text-weight-bold">${text}</p>
+                </button >
+            `
+
+    }
+
+    function printButton(value, row, index) {
+        state = "disabled"
+        if (row.status === "Occupied") { state = "" }
+        return `
+            <button id="print" class="button width-tag is-medium is-respondsive is-link" ${state}>
+                <p class="has-text-weight-bold">Print</p>
+            </button >
+        `
+
+    } $("#print").attr("disabled", "")
 
     function statusFormatter(value) {
         if (value === "Available") {
-            return '<span class="tag is-success is-size-5 has-text-weight-bold">Available</span>';
-        } else if (value === "Occupied") {
-            return '<span class="tag is-danger is-size-5 has-text-weight-bold">Occupied</span>';
+            return '<span class="tag is-success width-tag is-large has-text-weight-bold">พร้อมใช้งาน</span>';
+        } else if (value === "Reserved") {
+            return '<span class="tag is-warning width-tag is-large has-text-weight-bold">มีผู้จองแล้ว</span>';
         } else if (value === "Paid") {
-            return '<span class="tag is-warning is-size-5 has-text-weight-bold">Paid</span>';
+            return '<span class="tag is-info width-tag is-large has-text-weight-bold">ชำระเงินแล้ว</span>';
+        } else if (value === "Occupied") {
+            return '<span class="tag is-danger width-tag is-large has-text-weight-bold">มีผู้ใช้งาน</span>';
         }
+
         return value;
     }
 
-    // Formatter for QR Code Column
-    function qrcodeFormatter(value) {
-        value = value.replace("app/", "");
-        return `<img src="${value}" alt="QR Image" style="width: 100px; height: auto;">`;
-    }
 
     function showAllTables() {
         $.getJSON('/table/get_all_table', function (data) {
@@ -159,16 +299,16 @@
             $('#view-less').show();
             $('#table-list').bootstrapTable('refreshOptions', { pageSize: data.length });
             $('#table-list').bootstrapTable('load', data);
-        })
+        });
     }
 
     function showLessTables() {
         $.getJSON('/table/get_all_table', function (data) {
             $('#view-all').show();
             $('#view-less').hide();
-            $('#table-list').bootstrapTable('refreshOptions', { pageSize: 5 });
+            $('#table-list').bootstrapTable('refreshOptions', { pageSize: 8 });
             $('#table-list').bootstrapTable('load', data);
-        })
+        });
     }
 
     function customTableSearch(data, searchText) {
@@ -176,11 +316,149 @@
         return data.filter(row => {
             return Object.values(row).some(value => {
                 if (value !== null) {
-                    return value.toString().toLowerCase().includes(searchText);
+                    var value_;
+
+                    if (value === "Available") {
+                        value_ = "พร้อมใช้งาน"
+
+                    } else if (value === "Reserved") {
+                        value_ = "มีผู้จองแล้ว"
+
+                    } else if (value === "Occupied") {
+                        value_ = "มีผู้ใช้งาน"
+
+                    } else {
+                        value_ = "ชำระเงินแล้ว"
+
+                    }
+
+                    return value_.toString().toLowerCase().includes(searchText);
                 }
+
                 return false;
             });
         });
     }
+
+    $("#table-list").on("click", "#reserve", function () {
+        var rowIndex = $(this).closest("tr").data("index");
+        var rowData = $('#table-list').bootstrapTable('getData')[rowIndex];
+
+        if (rowData.status !== "Reserved") {
+            Swal.fire({
+                title: `ยืนยันการจองโต๊ะที่ ${rowData.table_id}`,
+                text: "คุณแน่ใจหรือไม่?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "ใช่",
+                cancelButtonText: "ยกเลิก"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#table-list").bootstrapTable("updateRow", {
+                        index: rowIndex,
+                        row: { status: "Reserved" }
+                    });
+                    var data_ = { table_id: rowData.table_id, status: "Reserved" }
+                    $.post('/table/update', data_, function (event) { })
+
+                } else {
+                    console.log("ผู้ใช้กด Cancel");
+                }
+            });
+
+
+        } else if (rowData.status === "Reserved") {
+            Swal.fire({
+                title: `ยกเลิกการจองโต๊ะที่ ${rowData.table_id}`,
+                text: "คุณแน่ใจหรือไม่?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "ใช่",
+                cancelButtonText: "ยกเลิก"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#table-list").bootstrapTable("updateRow", {
+                        index: rowIndex,
+                        row: { status: "Available" }
+                    });
+                    var data_ = { table_id: rowData.table_id, status: "Available" }
+                    $.post('/table/update', data_, function (event) { })
+                } else {
+                    console.log("ผู้ใช้กด Cancel");
+                }
+            });
+        }
+
+
+    });
+
+    $("#table-list").on("click", "#occupy", function () {
+        var rowIndex = $(this).closest("tr").data("index");
+        var rowData = $('#table-list').bootstrapTable('getData')[rowIndex];
+        console.log(rowData)
+        if (rowData.status !== "Occupied") {
+            Swal.fire({
+                title: `ยืนยันการใช้โต๊ะที่ ${rowData.table_id}`,
+                text: "คุณแน่ใจหรือไม่?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "ใช่",
+                cancelButtonText: "ยกเลิก"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#table-list").bootstrapTable("updateRow", {
+                        index: rowIndex,
+                        row: { status: "Occupied" }
+                    });
+                    var data_ = { table_id: rowData.table_id, status: "Occupied" }
+                    console.log(data_)
+                    $.post('/table/update', data_, function (event) { })
+                } else {
+                    console.log("ผู้ใช้กด Cancel");
+                }
+            });
+
+
+        } else if (rowData.status === "Reserved") {
+            Swal.fire({
+                title: `ยกเลิกการจองโต๊ะที่ ${rowData.table_id}`,
+                text: "คุณแน่ใจหรือไม่?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "ใช่",
+                cancelButtonText: "ยกเลิก"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var data_ = { table_id: rowData.table_id, status: "Available" }
+                    $.post('/table/update', data_, function (event) { loadTable(); })
+                } else {
+                    console.log("ผู้ใช้กด Cancel");
+                }
+            });
+        }
+
+
+    });
+
+
+    $("#table-list").on("click", "#print", function () {
+        var rowIndex = $(this).closest("tr").data("index");
+        var rowData = $('#table-list').bootstrapTable('getData')[rowIndex];
+        Swal.fire({
+            title: `ปริ้น QR Code ของโต๊ะที่ ${rowData.table_id}`,
+            text: "คุณแน่ใจหรือไม่?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "ใช่",
+            cancelButtonText: "ยกเลิก"
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+            } else {
+                console.log("ผู้ใช้กด Cancel");
+            }
+        });
+    });
+
 </script>
 {% endblock %}
