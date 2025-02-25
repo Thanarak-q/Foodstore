@@ -30,20 +30,16 @@ def table_create():
         result = request.form.to_dict()
 
         validated = True
-        valid_keys = ['is_employee']
+        valid_keys = ['status']
         for key in result:
             app.logger.debug(f"{key}: {result[key]}")
             # screen of unrelated inputs
             if key not in valid_keys:
                 continue
 
-
             value = result[key].strip()
             if not value or value == 'undefined':
                 validated = False
-                break
-            if key == 'is_employee' and result[key].lower() != "true":
-                validated = False    
                 break
             
         if validated:
@@ -52,7 +48,7 @@ def table_create():
                 tables = list(map(lambda x: x.to_dict(), db_allTable))
                 tables.sort(key=(lambda x: int(x['table_id'])), reverse=True)
                 id = tables[0]['table_id'] + 1
-                qrCode = gennerate_qrcode(id)
+                qrCode = gennerate_qrcode(id, 0)
                 db.session.add(Tables(qrcode=qrCode))
                 db.session.commit()
                 
@@ -128,7 +124,7 @@ def table_delete():
 
         validated = True
         validated_dict = dict()
-        valid_keys = ['is_employee', 'table_id']
+        valid_keys = ['table_id']
         for key in result:
             app.logger.debug(f"{key}: {result[key]}")
             # screen of unrelated inputs
@@ -140,9 +136,7 @@ def table_delete():
             if not value or value == 'undefined':
                 validated = False
                 break
-            if key == 'is_employee' and result[key].lower() != "true":
-                validated = False    
-                break
+        
             validated_dict[key] = value
             
         if validated:
