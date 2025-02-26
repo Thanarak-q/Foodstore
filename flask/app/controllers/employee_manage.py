@@ -35,15 +35,17 @@ def em_list():
                 break
             validated_dict[key] = value
         
-        user = Employee.query.filter_by(username=validated_dict['username']).with_for_update().first()
- 
-        if user:
-            flash('username address already exists')
-            # if the user doesn't exist or password is wrong, reload the page
-            return render_template('Admin_page/login.html')
-        
-        validated_dict['password'] = generate_password_hash(validated_dict['password'],method='sha256')
+        if 'username' not in validated_dict:
+            flash('Username is required')
+            return render_template('Admin_page/list_em.html')
 
+        user = Employee.query.filter_by(username=validated_dict['username']).with_for_update().first()
+
+        if user:
+            flash('Username already exists')
+            return render_template('Admin_page/list_em.html')
+        
+        validated_dict['password'] = generate_password_hash(validated_dict['password'], method='sha256')
 
         if validated:
             app.logger.debug('Validated dict: ' + str(validated_dict))

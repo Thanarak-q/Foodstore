@@ -27,12 +27,24 @@
         </div>
       </div>
       <div class="field">
+        <label class="label has-text-black" for="username">Username</label>
+        <div class="control">
+          <input class="input" type="text" id="username" name="username" placeholder="Username" required />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label has-text-black" for="password">Password</label>
+        <div class="control">
+          <input class="input" type="password" id="password" name="password" placeholder="Password" required />
+        </div>
+      </div>
+      <div class="field">
         <label class="label has-text-black" for="role">Role</label>
         <div class="control">
           <input class="input" type="text" id="role" name="role" placeholder="Role" required />
         </div>
       </div>
-      <input type="hidden" id="employee_id" name="id" />
+      <input type="hidden" id="id" name="id" />
       <div class="field is-grouped">
         <div class="control">
           <input class="button is-link" type="submit" name="submit" value="Submit" />
@@ -52,13 +64,14 @@
   <button id="add_employee" class="button is-primary" type="button">Create Employee</button>
   <p></p><br />
   <div class="table-container">
-    <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="employee-table" data-search="true" data-sort-name="em_id" data-sort-order="asc">
+    <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="employee-table" data-search="true" data-sort-name="id" data-sort-order="asc">
       <thead>
         <tr>
-          <th data-field="em_id" data-sortable="true"><span class="has-text-black"> ID </span></th>
+          <th data-field="id" data-sortable="true"><span class="has-text-black"> ID </span></th>
           <th data-field="firstname" data-sortable="true"><span class="has-text-black"> First Name </span></th>
           <th data-field="lastname" data-sortable="true"><span class="has-text-black"> Last Name </span></th>
           <th data-field="phone" data-sortable="true"><span class="has-text-black"> Phone </span></th>
+          <th data-field="username" data-sortable="true"><span class="has-text-black"> Username </span></th>
           <th data-field="role" data-sortable="true"><span class="has-text-black"> Role </span></th>
           <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
             <span class="has-text-black"> Edit/Delete </span>
@@ -148,25 +161,27 @@
 
   function prePopulateForm(row) {
     $('#addEmployeeForm')[0].reset();
-    $('#employee_id').val(row.em_id);  // ใช้ em_id แทน id
+    $('#id').val(row.id);  // ใช้ id แทน id
     $('#firstname').val(row.firstname);
     $('#lastname').val(row.lastname);
     $('#phone').val(row.phone);
     $('#role').val(row.role);
+    $('#username').val(row.username);
+    $('#password').val(row.password);
     toggleView();
   }
 
   function removeItem(row) {
-    if (!confirm('Delete Employee with ID ' + row.em_id + '?')) {
+    if (!confirm('Delete Employee with ID ' + row.id + '?')) {
       return false;
     }
     var url = '/em/remove_em';
-    var formData = { id: row.em_id };
+    var formData = { id: row.id };
     $.post(url, formData, function (table_data) {
       refresh_employee_table(table_data);
-      alert('Employee with ID ' + row.em_id + ' has been deleted.');
+      alert('Employee with ID ' + row.id + ' has been deleted.');
     }).fail(function() {
-      alert('Failed to delete Employee with ID ' + row.em_id);
+      alert('Failed to delete Employee with ID ' + row.id);
     });
   }
 
