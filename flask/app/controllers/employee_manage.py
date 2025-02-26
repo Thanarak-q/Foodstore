@@ -45,7 +45,7 @@ def em_list():
         return em_db_ems()
     return render_template('Admin_page/list_em.html')
 
-@app.route("/em/ems")
+@app.route("/em/get_all_em")
 def em_db_ems():
     ems = []
     # ดึงข้อมูลจากฐานข้อมูล พร้อมเรียงลำดับตาม name

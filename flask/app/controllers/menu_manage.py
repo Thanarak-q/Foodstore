@@ -1,4 +1,5 @@
 import os
+from PIL import Image
 from flask import (jsonify, render_template, request, url_for, flash, redirect)
 from werkzeug.utils import secure_filename
 import qrcode
@@ -14,6 +15,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.route('/menu', methods=('GET', 'POST'))
 @app.route('/menu', methods=('GET', 'POST'))
 def menu_list():
     if request.method == 'POST':
@@ -43,6 +45,20 @@ def menu_list():
         if 'image_file' in request.files:
             file = request.files['image_file']
             if file and allowed_file(file.filename):
+                # เปิดไฟล์ด้วย Pillow
+                img = Image.open(file)
+                # width, height = 228, 232
+
+                # # คำนวณตำแหน่งของตรงกลางของภาพ
+                # img_width, img_height = img.size
+                # left = (img_width - width) // 2
+                # top = (img_height - height) // 2
+                # right = (img_width + width) // 2
+                # bottom = (img_height + height) // 2
+
+                # # ตัดรูป
+                # img = img.crop((left, top, right, bottom))
+
                 # ทำความสะอาดชื่อไฟล์และกำหนด path
                 filename = validated_dict['name'].replace(' ', '_') + '.jpg'
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'food_image', filename)
@@ -56,8 +72,8 @@ def menu_list():
                         if os.path.exists(old_image_path):
                             os.remove(old_image_path)
                 
-                # บันทึกไฟล์ภาพใหม่
-                file.save(file_path)
+                # บันทึกไฟล์ภาพใหม่หลังจากที่ทำการรีไซส์
+                img.save(file_path)
                 validated_dict['image_url'] = f'/static/food_image/{filename}'
 
         if validated:

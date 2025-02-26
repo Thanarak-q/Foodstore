@@ -1,0 +1,175 @@
+http://localhost:56733/em/get_all_em
+'''
+0	
+em_id	1
+firstname	"ธนารักษ์"
+lastname	"กันยาประสิทธิ์"
+phone	"081-111-1111"
+role	"Admin"
+1	
+em_id	2
+firstname	"ทิวัตถ์"
+lastname	"ทาจุมปู"
+phone	"082-222-2222"
+role	"chef"
+'''
+
+
+http://localhost:56733/menu/menus
+''' มี category เมนูขายดี ใช้กับ หน้าาั่งอาหารของลูกค้า
+0	
+availability	true
+category	"เมนูขายดี"
+description	"ข้าวเหนียวไก่ทอดสูตรเด็ด"
+id	15
+image_url	"/static/food_image/ข้าวเหนียวไก่ทอด.jpg"
+name	"ข้าวเหนียวไก่ทอด"
+ordered	785
+price	75
+1	
+availability	true
+category	"เมนูขายดี"
+description	"ข้าวผัดหมู"
+id	1
+image_url	"/static/food_image/ข้าวผัด.jpg"
+name	"ข้าวผัด"
+ordered	755
+price	50
+2	
+availability	true
+category	"เมนูขายดี"
+description	"ส้มตำไทย"
+id	11
+image_url	"/static/food_image/ส้มตำ.jpg"
+name	"ส้มตำ"
+ordered	722
+price	60
+'''
+
+http://localhost:56733/menus/get_all_menus
+''' ไม่มี category เมนูขายดี ใช้กับ หน้า admin
+0	
+availability	true
+category	"อาหารคาว"
+description	"ข้าวผัดหมู"
+id	1
+image_url	"/static/food_image/ข้าวผัด.jpg"
+name	"ข้าวผัด"
+ordered	755
+price	50
+1	
+availability	true
+category	"อาหารคาว"
+description	"ไก่ย่างสูตรพิเศษ"
+id	2
+image_url	"/static/food_image/ไก่ย่าง.jpg"
+name	"ไก่ย่าง"
+ordered	689
+price	100
+2	
+availability	true
+category	"อาหารคาว"
+description	"ต้มยำกุ้งรสแซ่บ"
+id	3
+image_url	"/static/food_image/ต้มยำกุ้ง.jpg"
+name	"ต้มยำกุ้ง"
+ordered	714
+price	150
+'''
+
+http://localhost:56733/table/get_all_table
+'''
+0	
+count	0
+qrcode	"app/static/qrcode/1.png"
+status	"Available"
+table_id	1
+1	
+count	0
+qrcode	"app/static/qrcode/2.png"
+status	"Available"
+table_id	2
+2	
+count	0
+qrcode	"app/static/qrcode/3.png"
+status	"Available"
+table_id	3
+3	
+count	0
+qrcode	"app/static/qrcode/4.png"
+status	"Available"
+table_id	4
+'''
+
+http://localhost:56733/reviews/get_all_reviews
+'''
+reviews	
+0	
+name	"uiia"
+review	"uiiauiiia"
+review_id	1
+star	5
+'''
+
+http://localhost:56733/orders/get_all_orders
+'''
+0	
+menu_list	
+6	5
+order_id	1
+order_time	"2025-02-24 06:03:30"
+status	"Preparing"
+table_id	2
+total_price	450
+1	
+menu_list	
+9	6
+order_id	2
+order_time	"2025-02-24 06:03:30"
+status	"Preparing"
+table_id	4
+total_price	450
+2	
+menu_list	{…}
+order_id	3
+order_time	"2025-02-24 06:03:30"
+status	"Preparing"
+table_id	17
+total_price	1340
+'''
+http://localhost:56733/payment/get_all_payment
+'''
+0	
+amount	3470
+order_id	1
+payment_id	1
+payment_method	"cash"
+payment_time	"2025-02-15 04:06:00"
+1	
+amount	3638
+order_id	2
+payment_id	2
+payment_method	"credit_card"
+payment_time	"2023-09-12 16:52:00"
+2	
+amount	3488
+order_id	3
+payment_id	3
+payment_method	"bank_transfer"
+payment_time	"2023-05-15 16:10:00"
+3	
+amount	3205
+order_id	4
+payment_id	4
+payment_method	"cash"
+payment_time	"2023-04-30 18:57:00"
+'''
+
+
+'''
+menu traing
+'''
+http://localhost:56733/all_time_trending
+http://localhost:56733/daily_trending
+http://localhost:56733/weekly_trending
+http://localhost:56733/yearly_trending

@@ -22,6 +22,7 @@ from app.models.employee import Employee
 from app.models.table import Tables
 from app.models.order import Order
 from app.models.review import Review
+from app.models.store import Store
 # from app.models.employee import AuthUser
 
 '''
@@ -163,11 +164,23 @@ def seed_db():
         menu.update_ordered(amount)
         db.session.commit()
     
-    large_list = [{random.randint(1, 20): random.randint(1, 10) for _ in range(random.randint(1, 5))} for _ in range(700)]
+    def random_date(start_year=2023):
+            start_date = datetime.date(start_year, 1, 1)
+            end_date = datetime.date(start_year+6, 5, 5)
+            delta = end_date - start_date
+            random_days = random.randint(0, delta.days)
+            random_date = start_date + datetime.timedelta(days=random_days)
+            return random_date
+
+    # ใช้สุ่มค่าเวลาในโค้ดหลัก
+    large_list = [{
+        random.randint(1, 20): random.randint(1, 10) for _ in range(random.randint(1, 5))
+    } for _ in range(700)]
+
     for menu_list in large_list:
         temp = Order(
             table_id=random.randint(1, 20),
-            time=datetime.datetime.now(datetime.timezone.utc),
+            time=random_date(),
             menu_list=menu_list
         )
         temp.change_price(cal_price(menu_list))
@@ -178,17 +191,19 @@ def seed_db():
     #?-------------------------------------------------------------------------
     # สร้างข้อมูลพนักงาน
     sample_employees = [
-    ('ธนารักษ์', 'กันยาประสิทธิ์', '081-111-1111', 'Admin'),
-    ('ทิวัตถ์', 'ทาจุมปู', '082-222-2222', 'chef'),
+    ('User1', 1234, 'ธนารักษ์', 'กันยาประสิทธิ์', '081-111-1111', 'Admin'),
+    ('User2', 1234, 'ทิวัตถ์', 'ทาจุมปู', '082-222-2222', 'Chef'),
+    ('User3', 1234, 'ทิวัตถ์', 'ทาจุมปู', '082-222-2222', 'Waiter'),
+    ('User4', 1234, 'ทิวัตถ์', 'ทาจุมปู', '082-222-2222', 'Cashier')
     ]
 
-    for fname, lname, phone, role in sample_employees:
-        db.session.add(Employee(firstname=fname, lastname=lname, phone=phone, role=role))
+    for user, password, fname, lname, phone, role in sample_employees:
+        db.session.add(Employee(username=user, password=generate_password_hash(str(password), method='sha256'), firstname=fname, lastname=lname, phone=phone, role=role))
 
     #?-------------------------------------------------------------------------
     payment_methods = ["cash", "credit_card", "paypal", "bank_transfer"]
     start_time = datetime.datetime(2023, 1, 1, 0, 0, 0)  # เริ่มตั้งแต่ปี 2015
-    num_payments = 700 # สุ่ม 700 records
+    num_payments = 19 # สุ่ม 700 records
 
     years = 3  # กำหนดจำนวนปีที่ต้องการ
 
@@ -206,14 +221,18 @@ def seed_db():
     ]
 
     for order_id, payment_method, payment_time, amount in sample_payments:
-        db.session.add(Payment(order_id=order_id, payment_method=payment_method, payment_time=payment_time, amount=amount))
+        db.session.add(Payment(table_id=order_id, payment_method=payment_method, payment_time=payment_time, amount=amount))
 
-    #?-------------------------------------------------------------------------
-    # เพิ่มเติม Contact 
-    
     db.session.commit()
 
-    db.session.add(Review(name='uiia', star=5, review='uiiauiiia'))
+    #?-------------------------------------------------------------------------
+    db.session.add(Review(name='people1', star=5, review='แซ่บหลาย'))
+    db.session.add(Review(name='people2', star=5, review='เฮาคนสุพัน'))
+    db.session.add(Review(name='people-', star=5, review='that crazy i can  eat MJ WTH'))
+    db.session.commit()
+    #?-------------------------------------------------------------------------
+
+    db.session.add(Store(name = "ปลาดุกทอด", vat = 7.0, service_charge = 0 , Max_Orders_per_Round = 5, Max_Food_Quantity_per_Order = 100))
     db.session.commit()
 
 @cli.command("secret_key")
