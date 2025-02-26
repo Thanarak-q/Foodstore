@@ -1,6 +1,7 @@
 import os
 from flask import (jsonify, render_template, request, url_for, flash, redirect)
 from werkzeug.utils import secure_filename
+from flask_login import login_required, current_user
 import qrcode
 from sqlalchemy.sql import text
 from app import app, db
@@ -199,7 +200,7 @@ def menu_delete():
 
         validated = True
         validated_dict = dict()
-        valid_keys = ['is_employee', 'id']
+        valid_keys = ['id']
         for key in result:
             app.logger.debug(f"{key}: {result[key]}")
             # screen of unrelated inputs
@@ -210,9 +211,6 @@ def menu_delete():
             value = result[key].strip()
             if not value or value == 'undefined':
                 validated = False
-                break
-            if key == 'is_employee' and result[key].lower() != "true":
-                validated = False    
                 break
             validated_dict[key] = value
             

@@ -36,7 +36,7 @@ class Employee(db.Model, UserMixin):
 
     def to_dict(self):
         return {
-            'em_id': self.em_id,
+            'id': self.id,
             'username': self.username,
             'password': self.password,
             'firstname': self.firstname,

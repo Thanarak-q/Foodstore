@@ -6,6 +6,7 @@ import qrcode
 from sqlalchemy.sql import text
 from app import app
 from app import db
+from flask_login import login_required, current_user
 import jwt
 import datetime
 from manage import SECRET_KEY
@@ -23,10 +24,12 @@ def table_list():
     return jsonify(tables)
 
 @app.route('/table/create', methods=('GET', 'POST'))
+@login_required
 def table_create():
-    app.logger.debug("Tables - CREATE")
     if request.method == 'POST':
-        
+        if current_user.role != 'Admin':
+            return 'You are not Admin'
+        app.logger.debug("Tables - CREATE")
         result = request.form.to_dict()
 
         validated = True
@@ -73,10 +76,60 @@ def generate_jwt(table_number, count):
     }
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
     return token
+@app.route('/table/admin', methods=['POST'])
+def table_admin():
+    app.logger.debug("table - SUPER FUNC ADMIN")
+    if request.method == 'POST':
+        if current_user.role != 'Admin':
+            return 'You are not Admin'
+        
+        result = request.form.to_dict()
+        app.logger.debug(result)
+        valid_keys = ['status']
+        id_ = result['table_id']
+        validated = True
+        validated_dict = dict()
+        for key in result:
+            app.logger.debug(f"{key}: {result[key]}")
+            # screen of unrelated inputs
+            if key not in valid_keys:
+                continue
+
+            value = result[key].strip()
+            if not value or value == 'undefined':
+                validated = False
+                break
+
+            validated_dict[key] = value
+        app.logger.debug(validated_dict)
+        if validated:
+            try:
+                table = Tables.query.filter_by(table_id=int(id_)).first()
+                if table == None:
+                    db_allTable = Tables.query.all()
+                    tables = list(map(lambda x: x.to_dict(), db_allTable))
+                    tables.sort(key=(lambda x: int(x['table_id'])), reverse=True)
+                    id = tables[0]['table_id'] + 1
+                    qrCode = gennerate_qrcode(id, 0)
+                    db.session.add(Tables(qrcode=qrCode))
+                    db.session.commit()
+                else:
+                    table.update_status(validated_dict['status'])
+                db.session.commit()
+                
+            except Exception as ex:
+                app.logger.error(f"Error create new order: {ex}")
+                raise
+            
+    return table_list()
 
 @app.route('/table/update', methods=('GET', 'POST'))
+@login_required
 def table_update():
     if request.method == 'POST':
+        if current_user.role != 'Admin':
+            return 'You are not Admin'
+        
         app.logger.debug("Tables - UPDATE")
         result = request.form.to_dict()
         
@@ -116,8 +169,12 @@ def table_update():
     return table_list()
 
 @app.route('/table/delete', methods=('GET', 'POST'))
+@login_required
 def table_delete():
     if request.method == 'POST':
+        if current_user.role != 'Admin':
+            return 'You are not Admin'
+        
         app.logger.debug("Tables - DELETE")
         result = request.form.to_dict()
 
