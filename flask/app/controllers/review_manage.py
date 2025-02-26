@@ -4,6 +4,7 @@ from flask import (jsonify, render_template,
 from app import app
 from app import db
 from app.models.review import Review
+from flask_login import login_required, current_user
 
 @app.route('/reviews/get_all_reviews')
 def reviews_list():
@@ -14,9 +15,9 @@ def reviews_list():
 
 @app.route('/reviews/create', methods=('GET', 'POST'))
 def review_create():
-    app.logger.debug("review - CREATE")
+    
     if request.method == 'POST':
-        
+        app.logger.debug("review - CREATE")
         result = request.form.to_dict()
         app.logger.debug(result)
         valid_keys = ['name', 'star', 'review']
@@ -53,10 +54,14 @@ def review_create():
     return reviews_list()
 
 @app.route('/reviews/update', methods=('GET', 'POST'))
+@login_required
 def review_update():
-    app.logger.debug("review - UPDATE")
+    
     if request.method == 'POST':
+        if current_user.role != 'Admin':
+            return 'You are not Admin'
         
+        app.logger.debug("review - UPDATE")
         result = request.form.to_dict()
         app.logger.debug(result)
         valid_keys = ['review_id', 'name', 'star', 'review']
@@ -91,10 +96,14 @@ def review_update():
     return reviews_list()
 
 @app.route('/reviews/delete', methods=('GET', 'POST'))
+@login_required
 def review_delete():
-    app.logger.debug("review - DELETE")
+    
     if request.method == 'POST':
+        if current_user.role != 'Admin':
+            return 'You are not Admin'
         
+        app.logger.debug("review - DELETE")
         result = request.form.to_dict()
         app.logger.debug(result)
         valid_keys = ['review_id']

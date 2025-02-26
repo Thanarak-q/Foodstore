@@ -5,6 +5,7 @@ from flask import (jsonify, render_template,
 from app import app
 from app import db
 from sqlalchemy.sql import text
+from flask_login import login_required, current_user
 import datetime
 
 from app.models.table import Tables
@@ -21,10 +22,12 @@ def payment_list():
 
 
 @app.route('/payment/create', methods=('GET', 'POST'))
+@login_required
 def payment_create():
     app.logger.debug("Payment - CREATE")
     if request.method == 'POST':
-        
+        if current_user.role != 'Admin' and current_user.role != 'Cashier':
+            return 'You are not Cashier'
         result = request.form.to_dict()
 
         validated = True
@@ -60,9 +63,12 @@ def payment_create():
     return payment_list()
 
 @app.route('/payment/update', methods=('GET', 'POST'))
+@login_required
 def payment_update():
     app.logger.debug("Payment - UPDATE")
     if request.method == 'POST':
+        if current_user.role != 'Admin':
+            return 'You are not Admin'
         
         result = request.form.to_dict()
 
@@ -99,9 +105,12 @@ def payment_update():
     return payment_list()
 
 @app.route('/payment/delete', methods=('GET', 'POST'))
+@login_required
 def payment_delete():
     app.logger.debug("Payment - DELETE")
     if request.method == 'POST':
+        if current_user.role != 'Admin':
+            return 'You are not Admin'
         
         result = request.form.to_dict()
 
@@ -134,13 +143,16 @@ def payment_delete():
     return payment_list()
 
 @app.route('/payment/create_slip', methods=('GET', 'POST'))
+@login_required
 def slip_create():
     app.logger.debug("Payment - CREATE SLIP")
     if request.method == 'POST':
+        if current_user.role != 'Admin' and current_user.role != 'Cashier':
+            return 'You are not Cashier'
         result = request.form.to_dict()
         table_id = result.get('table_id', '')
         app.logger.debug(table_id)
-        db_order = db.session.query(Order).filter(Order.table_id == table_id).all() 
+        db_order = db.session.query(Order).filter(Order.table_id == table_id and Order.status != 'Paid').all() 
         orders = list(map(lambda x: x.to_dict(), db_order))
         menu_list = dict()
         sum_list = dict()
@@ -155,8 +167,8 @@ def slip_create():
                                       'price_per_unit': menu['price'],
                                       'amount': menu_list[menu_id]}
     
-        total = subtotal * 7 / 100
-        temp = {'vat_7%': total, 'total' : subtotal, 'sum_price': sum_list}
+        vat = subtotal * 7 / 100
+        temp = {'vat_7%': vat, 'total' : subtotal, 'sum_price': sum_list}
         return temp
 
 def merge_dict(A, B):

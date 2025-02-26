@@ -28,9 +28,9 @@ if app.debug:
 
 # Creating an SQLAlchemy instance
 db = SQLAlchemy(app)
-# login_manager = LoginManager()
-# login_manager.login_view = 'login'
-# login_manager.init_app(app)
+login_manager = LoginManager()
+login_manager.login_view = 'login'
+login_manager.init_app(app)
 migrate = Migrate(app, db)
 
 @app.before_request

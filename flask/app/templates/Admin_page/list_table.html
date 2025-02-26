@@ -9,6 +9,7 @@
     </h2>
     <form id="addTableForm" class="box">
       <div class="field">
+        <input class="input" type="hidden" id="table_id"  value="" name="table_id" >
         <label class="label has-text-black" for="status">Status</label>
         <div class="control">
           <div class="select">
@@ -90,6 +91,7 @@
 {% endblock %} {% block extra_js %}
 <script>
   function populate_table(table_data) {
+    
     $("#table-table").bootstrapTable({
       data: table_data,
       columns: [
@@ -148,7 +150,7 @@
     });
 
     var $form = $(this);
-    var url = "/table/create";
+    var url = "/table/admin";
 
     $.post(url, formData, function (table_data) {
       refresh_table(table_data);
@@ -192,8 +194,9 @@
   };
 
   function prePopulateForm(row) {
+    console.log(row)
     $("#addTableForm")[0].reset();
-    $("#CT_id").val(row.table_id);
+    $("#table_id").val(row.table_id);
     $("#qr_code").val(row.qr_code);
     $("#status").val(row.status);
     toggleView();
@@ -213,6 +216,10 @@
   $("#add_table").click(function () {
     clearForm();
     toggleView();
+    $.getJSON("/table/get_all_table", function(x){
+      let lasttable = Object.keys(x).length + 1;
+      $('#table_id').val(lasttable);
+    });
   });
 
   $("#clear_form").click(function () {

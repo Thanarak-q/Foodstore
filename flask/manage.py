@@ -191,25 +191,31 @@ def seed_db():
     #?-------------------------------------------------------------------------
     # สร้างข้อมูลพนักงาน
     sample_employees = [
-    ('User1', 1234, 'ธนารักษ์', 'กันยาประสิทธิ์', '081-111-1111', 'Admin'),
-    ('User2', 1234, 'ทิวัตถ์', 'ทาจุมปู', '082-222-2222', 'Chef'),
-    ('User3', 1234, 'ทิวัตถ์', 'ทาจุมปู', '082-222-2222', 'Waiter'),
-    ('User4', 1234, 'ทิวัตถ์', 'ทาจุมปู', '082-222-2222', 'Cashier')
+    ('User1', '1234' ,'ธนารักษ์', 'กันยาประสิทธิ์', '081-111-1111', 'Admin'),
+    ('User2', '1234' ,'ทิวัตถ์', 'ทาจุมปู', '082-222-2222', 'Chef'),
+    ('User3', '1234' ,'หวัง', 'รอยเลื่อน', '082-222-2222', 'Waiter'),
+    ('User4', '1234' ,'เถื่อน', 'เลอะเลือน', '082-222-2222', 'Cashier'),
     ]
 
     for user, password, fname, lname, phone, role in sample_employees:
-        db.session.add(Employee(username=user, password=generate_password_hash(str(password), method='sha256'), firstname=fname, lastname=lname, phone=phone, role=role))
+        db.session.add(Employee(username=user, 
+                                password=generate_password_hash(password,method='sha256')
+                                , firstname=fname
+                                , lastname=lname
+                                , phone=phone
+                                , role=role))
 
     #?-------------------------------------------------------------------------
     payment_methods = ["cash", "credit_card", "paypal", "bank_transfer"]
     start_time = datetime.datetime(2023, 1, 1, 0, 0, 0)  # เริ่มตั้งแต่ปี 2015
-    num_payments = 19 # สุ่ม 700 records
+
+    num_payments = 19
 
     years = 3  # กำหนดจำนวนปีที่ต้องการ
 
     sample_payments = [
         [
-            str(i + 1),  # order_id
+            str(i + 1),  # table_id
             random.choice(payment_methods),  # payment_method
             (start_time + datetime.timedelta(days=random.randint(0, 365 * years),  # สุ่มวันที่ในช่วง 5 ปี
                                             hours=random.randint(0, 23),
@@ -220,10 +226,8 @@ def seed_db():
         for i in range(num_payments)
     ]
 
-    for order_id, payment_method, payment_time, amount in sample_payments:
-        db.session.add(Payment(table_id=order_id, payment_method=payment_method, payment_time=payment_time, amount=amount))
-
-    db.session.commit()
+    for table_id, payment_method, payment_time, amount in sample_payments:
+        db.session.add(Payment(table_id=table_id, payment_method=payment_method, payment_time=payment_time, amount=amount))
 
     #?-------------------------------------------------------------------------
     db.session.add(Review(name='people1', star=5, review='แซ่บหลาย'))

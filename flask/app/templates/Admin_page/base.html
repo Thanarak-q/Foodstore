@@ -45,102 +45,75 @@
     </div>
   </nav>
 
-    <!-- Sidebar + Main Content -->
-    <div class="columns is-gapless">
-      <!-- Sidebar -->
-      <div class="column is-2 sidebar" id="sidebar-content">
-        <aside class="menu">
-          <ul class="menu-list">
-            <li>
-              <a
-                href="{{ url_for('dashboard') }}"
-                class="{% if request.endpoint == 'dashboard' %}is-active{% endif %}"
-              >
-                <i class="fas fa-tachometer-alt"></i>&nbsp; Dashboard
-              </a>
-            </li>
-            <li>
-              <a class="menu-label" id="management-label">
-                <i class="fas fa-cogs"></i>&nbsp; Management
-              </a>
-              <ul class="submenu">
-                <li>
-                  <a
-                    href="{{ url_for('table_creates') }}"
-                    class="{% if request.endpoint == 'table_list' %}is-active{% endif %}"
-                  >
-                    <i class="fas fa-table"></i>&nbsp; Table Management
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="{{ url_for('menu_list') }}"
-                    class="{% if request.endpoint == 'menu_list' %}is-active{% endif %}"
-                  >
-                    <i class="fas fa-utensils"></i>&nbsp; Menu Management
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="{{ url_for('em_list') }}"
-                    class="{% if request.endpoint == 'em_list' %}is-active{% endif %}"
-                  >
-                    <i class="fas fa-users"></i>&nbsp; Employee Management
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a
-                href="{{ url_for('orders') }}"
-                class="{% if request.endpoint == 'order' %}is-active{% endif %}"
-              >
-                <i class="fas fa-shopping-cart"></i>&nbsp; Order
-              </a>
-            </li>
-            <li>
-              <a
-                href="{{ url_for('menu_list') }}"
-                class="{% if request.endpoint == 'review' %}is-active{% endif %}"
-              >
-                <i class="fas fa-star"></i>&nbsp; Review
-              </a>
-            </li>
-            <li>
-              <a
-                href="{{ url_for('menu_list') }}"
-                class="{% if request.endpoint == 'reservations' %}is-active{% endif %}"
-              >
-                <i class="fas fa-calendar-check"></i>&nbsp; Reservations
-              </a>
-            </li>
-            <li>
-              <a
-                href="{{ url_for('menu_list') }}"
-                class="{% if request.endpoint == 'customers' %}is-active{% endif %}"
-              >
-                <i class="fas fa-user-friends"></i>&nbsp; Customers
-              </a>
-            </li>
-            <li>
-              <a
-                href="{{ url_for('report') }}"
-                class="{% if request.endpoint == 'reports' %}is-active{% endif %}"
-              >
-                <i class="fas fa-chart-line"></i>&nbsp; Reports
-              </a>
-            </li>
-            <li>
-              <a
-                href="{{ url_for('setting') }}"
-                class="{% if request.endpoint == 'settings' %}is-active{% endif %}"
-              >
-                <i class="fas fa-cog"></i>&nbsp; Settings
-              </a>
-            </li>
-          </ul>
-        </aside>
-      </div>
+  <!-- Sidebar + Main Content -->
+  <div class="columns is-gapless">
+    <!-- Sidebar -->
+    <div class="column is-2 sidebar" id="sidebar-content">
+      <aside class="menu">
+        <ul class="menu-list">
+          <li>
+            <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}is-active{% endif %}">
+              <i class="fas fa-tachometer-alt"></i>&nbsp; Dashboard
+            </a>
+          </li>
+          <li>
+            <a class="menu-label" id="management-label">
+              <i class="fas fa-cogs"></i>&nbsp; Management
+            </a>
+            <ul class="submenu">
+              <li>
+                <a href="{{ url_for('table_creates') }}"
+                  class="{% if request.endpoint == 'table_list' %}is-active{% endif %}">
+                  <i class="fas fa-table"></i>&nbsp; Table Management
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('menu_list') }}"
+                  class="{% if request.endpoint == 'menu_list' %}is-active{% endif %}">
+                  <i class="fas fa-utensils"></i>&nbsp; Menu Management
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('em_list') }}" class="{% if request.endpoint == 'em_list' %}is-active{% endif %}">
+                  <i class="fas fa-users"></i>&nbsp; Employee Management
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="{{ url_for('orders') }}" class="{% if request.endpoint == 'order' %}is-active{% endif %}">
+              <i class="fas fa-shopping-cart"></i>&nbsp; Order
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'review' %}is-active{% endif %}">
+              <i class="fas fa-star"></i>&nbsp; Review
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('menu_list') }}"
+              class="{% if request.endpoint == 'reservations' %}is-active{% endif %}">
+              <i class="fas fa-calendar-check"></i>&nbsp; Reservations
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'customers' %}is-active{% endif %}">
+              <i class="fas fa-user-friends"></i>&nbsp; Customers
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('report') }}" class="{% if request.endpoint == 'reports' %}is-active{% endif %}">
+              <i class="fas fa-chart-line"></i>&nbsp; Reports
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('setting') }}" class="{% if request.endpoint == 'settings' %}is-active{% endif %}">
+              <i class="fas fa-cog"></i>&nbsp; Settings
+            </a>
+          </li>
+        </ul>
+      </aside>
+    </div>
 
     <!-- Main Content -->
     <div class="column main-content is-fullheight is-fullwidth">

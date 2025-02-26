@@ -159,7 +159,7 @@ payment_manage
 employee_manage
     route : /em, methods=('GET', 'POST')
     func name: em_list()
-    input : none for GET/ 'payment_id' for POST
+    input : none for GET/ 'username', 'password', 'firstname', 'lastname', 'phone', 'role' for POST
     return :  render_template('Admin_page/list_em.html') for GET/all employee for POST
     note: create employee
 
