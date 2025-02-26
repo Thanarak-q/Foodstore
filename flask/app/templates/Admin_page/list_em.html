@@ -47,6 +47,7 @@
     </form>
   </div>
 </div>
+<div class="card p-5">
 <div id="employee_display" class="container">
   <button id="add_employee" class="button is-primary" type="button">Create Employee</button>
   <p></p><br />
@@ -70,6 +71,7 @@
     </table>
   </div>
 </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -85,7 +87,7 @@
 
   $(document).ready(function () {
     (function () {
-      $.getJSON('/em/ems', populate_employee_table);
+      $.getJSON('/em/get_all_em', populate_employee_table);
     })();
   });
 

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        .invoice-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #store-name {
+            display: flex;
+            justify-content: center;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px dashed;
+            height: 2px;
+            margin: 1rem 0;
+            opacity: 0.7;
+        }
+
+        .circle-image {
+            width: 125px;
+            height: 125px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto 1rem auto;
+        }
+
+        #qrcode {
+            display: flex;
+            justify-content: center;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: Arial, sans-serif;
+            }
+
+            .invoice-container {
+                width: 80mm;
+                /* ความกว้างสำหรับเครื่องพิมพ์ใบเสร็จ 80 มม. */
+                max-width: 80mm;
+                margin: 0;
+                padding: 5mm;
+                /* ลด padding ให้เหมาะกับกระดาษเล็ก */
+                border: none;
+                box-shadow: none;
+                text-align: center;
+
+            }
+
+            .circle-image {
+                width: 40mm;
+                height: 40mm;
+                margin: 0 auto 5mm auto;
+            }
+
+            #store-name {
+                font-size: 16pt;
+                margin-bottom: 2mm;
+            }
+
+            #header-details {
+                font-size: 12pt;
+                margin-bottom: 5mm;
+                text-align: center;
+                /* จัดกึ่งกลางเมื่อพิมพ์ */
+            }
+
+            #details p {
+                font-size: 12pt;
+                margin: 5mm 0;
+            }
+
+            #qrcode img {
+                width: 50mm;
+                /* ขนาด QR Code = 5 ซม. เหมาะกับหน้ากว้าง 80 มม. */
+                height: auto;
+                margin: 5mm 0;
+            }
+
+            hr {
+                margin: 5mm 0;
+            }
+
+            .button {
+                display: none;
+                /* ซ่อนปุ่ม Print QR เมื่อพิมพ์ */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-container">
+        <div id="header-container" style="margin-top: 1.5rem;">
+            <img src="/static/ico/logo.jpg" class="circle-image" alt="Logo">
+            <h1 id="store-name">ร้านขายปลากดุกย่าง สาขาหลัก</h1>
+            <h2 style="justify-content: center; display: flex;" id="header-details"
+                class="is-size-4 has-text-weight-bold">ใบสั่งอาหาร</h2>
+        </div>
+
+        <hr>
+
+        <div id="content-container">
+            <div id="details">
+                <p style="justify-content: center; display: flex;" class="is-size-4 has-text-weight-bold">
+                    หมายเลขโต๊ะ: {{table_id}}
+                </p>
+                <p class="is-size-4 has-text-weight-bold" style="justify-content: center; display: flex;">
+                    Scan สั่งอาหารที่นี่
+                </p>
+            </div>
+
+            <div id="qr-image">
+                <span style="margin: 1.5rem 0 1.5rem 0;" id="qrcode">{{qrcode}}</span>
+            </div>
+        </div>
+
+        <a href="cashier/download" style="margin-top: 1.5rem;"
+            class="button is-fullwidth is-link has-text-weight-bold is-responsive">
+            Print QR
+        </a>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var qrCodeValue = $("#qrcode").text();
+            $("#qrcode").html(qrcodeFormatter(qrCodeValue));
+        });
+
+        function qrcodeFormatter(value) {
+            console.log(value.replace("app/", "/"));
+            return `<img src="${value.replace("app/", "/")}" alt="QR Image" style="width: 250px; height: auto;">`;
+        }
+    </script>
+</body>
+
+</html>

@@ -157,7 +157,7 @@
 
             <!-- Card Header -->
             <header class="card-header">
-                <h1 class="card-header-title is-size-3">Table Availability</h1>
+                <h1 class="card-header-title is-size-3">สถานะของโต๊ะภายในร้าน</h1>
             </header>
 
             <!-- Card Content (Table) -->
@@ -171,6 +171,7 @@
                             <th data-field="reserve" data-sortable="false">การจอง</th>
                             <th data-field="occupy" data-sortable="false">การใช้งาน/ชำระเงิน</th>
                             <th data-field="print" data-sortable="false">QR Code</th>
+                            <th data-field="qrcode" data-sortable="false" hidden>QR Image</th>
                         </tr>
                     </thead>
                 </table>
@@ -216,13 +217,19 @@
                     { field: 'status', sortable: false, formatter: statusFormatter, align: "center" },
                     { field: 'reserve', sortable: false, formatter: reserveButton, align: "center" },
                     { field: 'occupy', sortable: false, formatter: stateButton, align: "center" },
-                    { field: 'print', sortable: false, formatter: printButton, align: "center" }
+                    { field: 'print', sortable: false, formatter: printButton, align: "center" },
+                    { field: 'qrcode', sortable: false, formatter: qrcodeFormatter, align: "center", visible: false }
                 ]
             });
             showLessTables()
         }).fail(function (jqXHR, textStatus, error) {
             console.error("Request Failed:", textStatus, error);
         });
+    }
+
+    function qrcodeFormatter(value) {
+        value = value.replace("app/", "");
+        return value
     }
 
     function stateButton(value, row, index) {
@@ -272,7 +279,7 @@
         if (row.status === "Occupied") { state = "" }
         return `
             <button id="print" class="button width-tag is-medium is-respondsive is-link" ${state}>
-                <p class="has-text-weight-bold">Print</p>
+                <p class="has-text-weight-bold">พิมพ์</p>
             </button >
         `
 
@@ -440,10 +447,10 @@
 
     });
 
-
     $("#table-list").on("click", "#print", function () {
         var rowIndex = $(this).closest("tr").data("index");
         var rowData = $('#table-list').bootstrapTable('getData')[rowIndex];
+
         Swal.fire({
             title: `ปริ้น QR Code ของโต๊ะที่ ${rowData.table_id}`,
             text: "คุณแน่ใจหรือไม่?",
@@ -453,7 +460,13 @@
             cancelButtonText: "ยกเลิก"
         }).then((result) => {
             if (result.isConfirmed) {
+                // Construct the URL with table_id and qrcode as query parameters
+                let tableId = encodeURIComponent(rowData.table_id);
+                let qrCode = encodeURIComponent(rowData.qrcode);
+                let url = `/cashier/invoice?table_id=${encodeURIComponent(rowData.table_id)}&qrcode=${encodeURIComponent(rowData.qrcode)}`;
 
+                // Redirect to invoice.html
+                window.location.href = url;
             } else {
                 console.log("ผู้ใช้กด Cancel");
             }
