@@ -6,6 +6,43 @@
     </div>
   </div>
 
+  <div class="card rows">
+    <div class="card-header">
+      <h1 class="card-header-title">Setting name</h1>
+    </div>
+    <div class="card-content">
+      <div class="column is-one-third">
+        <div class="box">
+          <h2 class="subtitle">Setting name</h2>
+          <form method="POST" action="/setting">
+            <div class="field">
+              <label class="label" for="name">name</label>
+              <div class="control">
+                <input
+                  type="text"
+                  class="input"
+                  id="name"
+                  name="name"
+                  minlength="0"
+                  maxlength="100"
+                  step="0.01"
+                  value="{{ store.name if store else '' }}"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <button type="submit" class="button is-info">
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Sound Settings -->
   <div class="card rows">
     <div class="card-header">

@@ -41,3 +41,5 @@ class Store(db.Model, SerializerMixin):
     def update_service_charge(self, service_charge):
         self.service_charge = service_charge
         db.session.commit()
+
+    

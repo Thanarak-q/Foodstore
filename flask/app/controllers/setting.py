@@ -17,6 +17,13 @@ os.makedirs(LOGO_FOLDER, exist_ok=True)
 def setting():
     if request.method == 'POST':
         # Handle file uploads and form data here
+        if 'name' in request.form:
+            print("eieieiieieieieiei")
+            name = str(request.form['name'])
+            store = Store.query.first()
+            if store:
+                store.update_name(name)
+
         if 'cooking_sound' in request.files:
             cooking_sound = request.files['cooking_sound']
             if cooking_sound.filename != '':
