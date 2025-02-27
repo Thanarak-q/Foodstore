@@ -6,17 +6,15 @@ from flask import (jsonify, render_template,
                   request, url_for, flash, redirect)
 from werkzeug.security import generate_password_hash
 from flask_login import login_required, current_user
-
+from app.controllers.role_controller import roles_required 
 from app.controllers import Admin
 from app.models.employee import Employee
 
 @app.route('/em', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin')
 def em_list():
     if request.method == 'POST':
-        if current_user.role != 'Admin':
-            return 'You are not Admin'
-        
         result = request.form.to_dict()
         app.logger.debug(str(result))
         id_ = result.get('id', '')  # รับค่า id จากฟอร์ม
@@ -76,10 +74,9 @@ def em_db_ems():
 
 @app.route('/em/remove_em', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin')
 def em_remove_em():    
     if request.method == 'POST':
-        if current_user.role != 'Admin':
-            return 'You are not Admin'
         app.logger.debug("em - REMOVE em")
         result = request.form.to_dict()
         id_ = result.get('id', '')

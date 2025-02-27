@@ -6,8 +6,7 @@ from app import app
 from app import db
 from sqlalchemy.sql import text
 from flask_login import login_required, current_user
-import datetime
-
+from app.controllers.role_controller import roles_required 
 from app.models.table import Tables
 from app.models.order import Order
 from app.models.payment import Payment
@@ -23,11 +22,10 @@ def payment_list():
 
 @app.route('/payment/create', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin', 'Cashier')
 def payment_create():
     app.logger.debug("Payment - CREATE")
     if request.method == 'POST':
-        if current_user.role != 'Admin' and current_user.role != 'Cashier':
-            return 'You are not Cashier'
         result = request.form.to_dict()
 
         validated = True
@@ -64,12 +62,10 @@ def payment_create():
 
 @app.route('/payment/update', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin')
 def payment_update():
     app.logger.debug("Payment - UPDATE")
     if request.method == 'POST':
-        if current_user.role != 'Admin':
-            return 'You are not Admin'
-        
         result = request.form.to_dict()
 
         validated = True
@@ -106,6 +102,7 @@ def payment_update():
 
 @app.route('/payment/delete', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin')
 def payment_delete():
     app.logger.debug("Payment - DELETE")
     if request.method == 'POST':
@@ -144,11 +141,10 @@ def payment_delete():
 
 @app.route('/payment/create_slip', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin', 'Cashier')
 def slip_create():
     app.logger.debug("Payment - CREATE SLIP")
     if request.method == 'POST':
-        if current_user.role != 'Admin' and current_user.role != 'Cashier':
-            return 'You are not Cashier'
         result = request.form.to_dict()
         table_id = result.get('table_id', '')
         app.logger.debug(table_id)

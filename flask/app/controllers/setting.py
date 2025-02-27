@@ -1,8 +1,11 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask_login import login_required
 from app import app
 from werkzeug.utils import secure_filename
 from app.models.store import Store
+from app.controllers.role_controller import roles_required
+
 
 
 # Define the paths for sounds and logos
@@ -14,6 +17,8 @@ os.makedirs(SOUNDS_FOLDER, exist_ok=True)
 os.makedirs(LOGO_FOLDER, exist_ok=True)
 
 @app.route('/setting', methods=['GET', 'POST'])
+@login_required
+@roles_required('Admin')
 def setting():
     if request.method == 'POST':
         # Handle file uploads and form data here

@@ -6,6 +6,7 @@ from app import app
 from app import db
 from sqlalchemy.sql import text
 from flask_login import login_required, current_user
+from app.controllers.role_controller import roles_required 
 from app.models.order import Order
 from app.models.menu import Menu
 
@@ -68,11 +69,10 @@ def order_create():
 
 @app.route('/orders/admin', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin')
 def order_admin():
     app.logger.debug("Order - CREATE")
     if request.method == 'POST':
-        if current_user.role != 'Admin':
-            return 'You are not Admin'
         
         result = request.form.to_dict()
         app.logger.debug(result)
@@ -149,26 +149,24 @@ def plus_menu_ordered(menu_id, amount):
 
 @app.route('/orders/update', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin', 'Chef', 'Waiter')
 def order_update():
     if request.method == 'POST':
         app.logger.debug("Order - UPDATE")
-        if current_user.role == 'Admin' or current_user.role == 'Chef' or current_user.role == 'Waiter':
-            # return 'Who are you?'
-            result = request.form.to_dict()
+        # return 'Who are you?'
+        result = request.form.to_dict()
 
-            validated_dict, validated = validate_data(result, ['order_id', 'status'])
+        validated_dict, validated = validate_data(result, ['order_id', 'status'])
 
-            app.logger.debug(validated_dict)
-            if validated:
-                try:
-                    orders = Order.query.get(validated_dict['order_id'])
-                    orders.update_status(validated_dict['status'])
-                    db.session.commit()
-                except Exception as ex:
-                    app.logger.error(f"Error update order status: {ex}")
-                    raise
-        else:
-            return 'Who are you?'
+        app.logger.debug(validated_dict)
+        if validated:
+            try:
+                orders = Order.query.get(validated_dict['order_id'])
+                orders.update_status(validated_dict['status'])
+                db.session.commit()
+            except Exception as ex:
+                app.logger.error(f"Error update order status: {ex}")
+                raise
 
     return orders_list()
 
@@ -176,11 +174,10 @@ def order_update():
 
 @app.route('/orders/delete', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin')
 def order_delete():
     if request.method == 'POST':
         app.logger.debug("Orders - DELETE")
-        if current_user.role != 'Admin':
-            return 'You are not Admin'
         result = request.form.to_dict()
 
         validated_dict, validated = validate_data(result, ['order_id'])
