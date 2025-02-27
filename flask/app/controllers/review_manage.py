@@ -134,3 +134,16 @@ def review_delete():
                 raise
             
     return reviews_list()
+
+@app.route('/list_review.html')
+def review_list():
+    return render_template('Admin_page/list_review.html')
+
+@app.route('/reviews/get_all_reviews_array')
+def reviews_list_array():
+    db_allreview = Review.query.all()
+    reviews = sorted(
+        (x.to_dict() for x in db_allreview),
+        key=lambda x: int(x['review_id'])
+    )
+    return jsonify(reviews)  # ส่งเป็น array ตรงๆ

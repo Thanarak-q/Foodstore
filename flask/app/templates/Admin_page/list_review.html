@@ -1,0 +1,86 @@
+{% extends 'Admin_page/base.html' %}
+
+{% block content %}
+<div class="card p-5">
+  <div id="review_display" class="container">
+    <h1 class="title has-text-black">Customer Reviews</h1>
+    <div class="table-container">
+      <table
+        class="table is-striped is-bordered is-hoverable is-fullwidth"
+        id="review-table"
+        data-search="true"
+        data-sort-name="review_id"
+        data-sort-order="asc"
+      >
+        <thead>
+          <tr>
+            <th data-field="review_id" data-sortable="true">
+              <span class="has-text-black">Review ID</span>
+            </th>
+            <th data-field="name" data-sortable="true">
+              <span class="has-text-black">Name</span>
+            </th>
+            <th data-field="review" data-sortable="true">
+              <span class="has-text-black">Review</span>
+            </th>
+            <th data-field="star" data-sortable="true">
+              <span class="has-text-black">Stars</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows will be populated dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Include Bootstrap Table CSS and JS -->
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css">
+<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    $.getJSON("/reviews/get_all_reviews_array", function (review_data) {
+      console.log("Review Data:", review_data);
+
+      $("#review-table").bootstrapTable({
+        data: review_data,
+        columns: [
+          {
+            field: "review_id",
+            title: "Review ID",
+            sortable: true,
+          },
+          {
+            field: "name",
+            title: "Name",
+            sortable: true,
+          },
+          {
+            field: "review",
+            title: "Review",
+            sortable: true,
+          },
+          {
+            field: "star",
+            title: "Stars",
+            sortable: true,
+            formatter: function (value) {
+              return "⭐".repeat(value); // Display stars as emojis
+            },
+          },
+        ],
+        loadingTemplate: function () {
+          return ""; // Custom loading template (empty in this case)
+        },
+      });
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error("Failed to fetch review data:", textStatus, errorThrown);
+    });
+  });
+</script>
+{% endblock %}

@@ -1,6 +1,6 @@
 {% extends 'Admin_page/base.html' %} 
 {% block content %}
-<div class="row">
+<div class="container">
   <div class="columns is-vcentered is-justify-content-space-between mt-5">
     <div class="column is-3">
       <h1 class="title">Dashboard</h1>
@@ -9,7 +9,7 @@
       <div class="field is-grouped is-grouped-right">
         <div class="control">
           <button class="button is-info" id="toggleFilterButton">
-            <span id="filterPeriodLabel">Day</span> <!-- แสดงช่วงเวลาที่เลือก -->
+            <span id="filterPeriodLabel">Day</span>
           </button>
         </div>
       </div>
@@ -22,12 +22,10 @@
                 <option value="week">Week</option>
                 <option value="month">Month</option>
                 <option value="year">Year</option>
-                <!-- <option value="custom">Custom</option> -->
                 <option value="all_time">All Time</option>
               </select>
             </div>
           </div>
-          <!-- ส่วนของ input วันที่ซ่อนเมื่อไม่ได้เลือก Custom -->
           <div class="control" id="startDateContainer" style="display: none;">
             <input type="date" id="startDate" class="input" />
           </div>
@@ -41,16 +39,13 @@
       </div>
     </div>
   </div>
-</div>
 
-
-<div class="row mt-5">
-  <div class="columns is-multiline is-centered">
+  <div class="columns is-multiline is-centered mt-5">
     <div class="column is-one-quarter">
       <div class="card has-text-centered">
         <div class="card-content">
           <i class="fas fa-dollar-sign fa-3x"></i>
-          <p class="subtitle">Total Sale</p>
+          <p class="subtitle">รายได้ทั้งหมด</p>
           <p id="totalSale" class="title has-text-weight-bold">กำลังคำนวณ...</p>
         </div>
       </div>
@@ -59,7 +54,7 @@
       <div class="card has-text-centered">
         <div class="card-content">
           <i class="fas fa-shopping-cart fa-3x"></i>
-          <p class="subtitle">Total Order</p>
+          <p class="subtitle">จำวนออเด้อทั้งหมด</p>
           <p id="totalOrder" class="title has-text-weight-bold">
             กำลังคำนวณ...
           </p>
@@ -69,19 +64,8 @@
     <div class="column is-one-quarter">
       <div class="card has-text-centered">
         <div class="card-content">
-          <i class="fas fa-chart-line fa-3x"></i>
-          <p class="subtitle">Average Order Value</p>
-          <p id="avgOrderValue" class="title has-text-weight-bold">
-            กำลังคำนวณ...
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="column is-one-quarter">
-      <div class="card has-text-centered">
-        <div class="card-content">
           <i class="fas fa-utensils fa-3x"></i>
-          <p class="subtitle">Total Menu Items</p>
+          <p class="subtitle">เมนูทั้งหมดในร้าน</p>
           <p id="totalMenuItems" class="title has-text-weight-bold">
             กำลังคำนวณ...
           </p>
@@ -89,9 +73,7 @@
       </div>
     </div>
   </div>
-</div>
 
-<div class="row mt-5">
   <div class="columns mt-5">
     <div class="column is-half">
       <div class="card">
@@ -115,20 +97,18 @@
       </div>
     </div>
   </div>
-</div>
 
-
-<div class="row mt-5">
-  <div class="column is-full">
-    <div id="notifications">
-      <!-- Notifications -->
+  <div class="columns mt-5">
+    <div class="column is-full">
+      <div id="notifications">
+        <!-- Notifications -->
+      </div>
     </div>
   </div>
 </div>
 {% endblock %} 
 
 {% block extra_js %}
-<!-- ✅ เรียกใช้งาน Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link
   href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"

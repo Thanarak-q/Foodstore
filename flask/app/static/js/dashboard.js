@@ -97,7 +97,7 @@ $(document).ready(function () {
     } else {
       $("#startDate").val("");
       $("#endDate").val("");
-      $("#filterPeriodLabel").text("Select Range");
+      $("#filterPeriodLabel").text("All time");
     }
 
     // เรียกฟังก์ชันเพื่ออัปเดตข้อมูล
@@ -159,35 +159,9 @@ function fetchTotalOrder() {
 
     const totalOrder = filteredData.length;
     $("#totalOrder").text(`${totalOrder.toLocaleString()}`);
-    
-    // คำนวณ Average Order Value
-    if (totalOrder > 0) {
-      $.getJSON("/payment/get_all_payment", function (paymentData) {
-        let filteredPaymentData = paymentData;
-        
-        // กรองข้อมูลการชำระเงินตามวันที่
-        if (selectedRange !== "all_time" && startDate && endDate) {
-          filteredPaymentData = paymentData.filter((payment) => {
-            const paymentTime = new Date(payment.payment_time);
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            return paymentTime >= start && paymentTime <= end;
-          });
-        }
-        
-        const totalSale = filteredPaymentData.reduce(
-          (acc, pay) => acc + (Number(pay.amount) || 0),
-          0
-        );
-        
-        const avgOrderValue = totalSale / totalOrder;
-        $("#avgOrderValue").text(`฿ ${avgOrderValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`);
-      });
-    } else {
-      $("#avgOrderValue").text("฿ 0.00");
-    }
   });
 }
+
 
 function fetchtotalMenuItems() {
   $.getJSON("/menus/get_all_menus", function (menuData) {
@@ -448,27 +422,48 @@ function fetchAndDrawRevenueChart() {
 }
 function fetchLatestReviews() {
   $.getJSON("/reviews/get_all_reviews", function (reviewData) {
-    console.log(reviewData)
+    console.log(reviewData);
     const reviewContainer = $("#ReviewRes");
     reviewContainer.empty();
     let htmlContent = '';
     let count = 0;
     let reviews = reviewData.reviews.slice().reverse();
-    for (i of reviews){
-      if(count >= 5) break;
+
+    for (let i of reviews) {
+      if (count >= 5) break;
       count++;
-          htmlContent += 
-            `<div class="media">
-               <div class="media-content">
-                 <p class="subtitle is-6">โดย: ${i.name}</p>
-              <p class="subtitle is-6">คะแนน: ${i.star}</p>
-              <p class="subtitle is-6">รีวิว: ${i.review}</p>
-               </div>
-             </div>
-             <hr>`;
+
+      // สร้างดาวตามคะแนน
+      const starRating = generateStars(i.star);
+
+      htmlContent += 
+        `<div class="media">
+           <div class="media-content">
+             <p class="subtitle is-6">โดย: ${i.name} คะแนน: ${starRating}</p>
+             <p class="subtitle is-6">รีวิว: ${i.review}</p>
+           </div>
+         </div>
+         <hr>`;
     }
     reviewContainer.html(htmlContent);
   });
+}
+
+// ฟังก์ชันสร้างดาวตามคะแนน
+function generateStars(rating) {
+  const fullStar = '★'; // ดาวเต็ม
+  const emptyStar = '☆'; // ดาวว่าง
+  const maxStars = 5; // จำนวนดาวสูงสุด
+
+  let stars = '';
+  for (let i = 1; i <= maxStars; i++) {
+    if (i <= rating) {
+      stars += fullStar; // เพิ่มดาวเต็ม
+    } else {
+      stars += emptyStar; // เพิ่มดาวว่าง
+    }
+  }
+  return stars;
 }
 
 $(document).ready(function () {

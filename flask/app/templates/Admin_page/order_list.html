@@ -91,6 +91,11 @@
     display: inline-block;
     vertical-align: middle;
   }
+
+  .is-served {
+    background-color: #117a39 !important;
+    color: white !important;
+  }
 </style>
 {% endblock %} {% block content %}
 <br />
@@ -336,7 +341,7 @@
     } else if (value === "Paid") {
       return '<span class="tag is-info is-size-5">Paid</span>';
     } else if (value === "Served") {
-      return '<span class="tag is-primary is-size-5">Served</span>';
+      return '<span class="tag is-served is-size-5">Served</span>';
     }
     return '<span class="tag is-danger is-size-5">' + value + "</span>";
   }

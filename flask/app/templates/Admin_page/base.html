@@ -5,6 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Admin Dashboard</title>
+  
 
   <!-- Bulma CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css" />
@@ -86,7 +87,7 @@
             </a>
           </li>
           <li>
-            <a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'review' %}is-active{% endif %}">
+            <a href="{{ url_for('review_list') }}" class="{% if request.endpoint == 'review' %}is-active{% endif %}">
               <i class="fas fa-star"></i>&nbsp; Review
             </a>
           </li>
@@ -95,12 +96,12 @@
               class="{% if request.endpoint == 'reservations' %}is-active{% endif %}">
               <i class="fas fa-calendar-check"></i>&nbsp; Reservations
             </a>
-          </li>
+          </li> 
           <li>
             <a href="{{ url_for('menu_list') }}" class="{% if request.endpoint == 'customers' %}is-active{% endif %}">
               <i class="fas fa-user-friends"></i>&nbsp; Customers
             </a>
-          </li>
+          </li> 
           <li>
             <a href="{{ url_for('report') }}" class="{% if request.endpoint == 'reports' %}is-active{% endif %}">
               <i class="fas fa-chart-line"></i>&nbsp; Reports
