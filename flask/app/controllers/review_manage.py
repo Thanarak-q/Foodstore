@@ -5,6 +5,8 @@ from app import app
 from app import db
 from app.models.review import Review
 from flask_login import login_required, current_user
+from app.controllers.role_controller import roles_required 
+
 
 @app.route('/reviews/get_all_reviews')
 def reviews_list():
@@ -55,11 +57,10 @@ def review_create():
 
 @app.route('/reviews/update', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin')
 def review_update():
     
     if request.method == 'POST':
-        if current_user.role != 'Admin':
-            return 'You are not Admin'
         
         app.logger.debug("review - UPDATE")
         result = request.form.to_dict()
@@ -97,11 +98,10 @@ def review_update():
 
 @app.route('/reviews/delete', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin')
 def review_delete():
     
     if request.method == 'POST':
-        if current_user.role != 'Admin':
-            return 'You are not Admin'
         
         app.logger.debug("review - DELETE")
         result = request.form.to_dict()
@@ -134,3 +134,16 @@ def review_delete():
                 raise
             
     return reviews_list()
+
+@app.route('/list_review.html')
+def review_list():
+    return render_template('Admin_page/list_review.html')
+
+@app.route('/reviews/get_all_reviews_array')
+def reviews_list_array():
+    db_allreview = Review.query.all()
+    reviews = sorted(
+        (x.to_dict() for x in db_allreview),
+        key=lambda x: int(x['review_id'])
+    )
+    return jsonify(reviews)  # ส่งเป็น array ตรงๆ

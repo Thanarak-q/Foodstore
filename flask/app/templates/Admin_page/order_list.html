@@ -91,6 +91,11 @@
     display: inline-block;
     vertical-align: middle;
   }
+
+  .is-served {
+    background-color: #117a39 !important;
+    color: white !important;
+  }
 </style>
 {% endblock %} {% block content %}
 <br />
@@ -135,7 +140,7 @@
               <option value="Ready">Ready</option>
               <option value="Paid">Paid</option>
               <option value="Served">Served</option>
-              <option value="Preparing">Preparing</option>
+              <option value="Preparing" selected>Preparing</option>
             </select>
           </div>
         </div>
@@ -186,8 +191,8 @@
     </form>
   </div>
 </div>
-<div class="card p-5">
-<div id="table_display" class="container">
+<div class="card p-5" id="table_display" >
+<div class="container">
   <button id="add_order" class="button is-primary is-size-4" type="button">
     <p class="has-text-weight-bold">Create Order</p>
   </button>
@@ -336,7 +341,7 @@
     } else if (value === "Paid") {
       return '<span class="tag is-info is-size-5">Paid</span>';
     } else if (value === "Served") {
-      return '<span class="tag is-primary is-size-5">Served</span>';
+      return '<span class="tag is-served is-size-5">Served</span>';
     }
     return '<span class="tag is-danger is-size-5">' + value + "</span>";
   }

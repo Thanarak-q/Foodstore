@@ -101,7 +101,7 @@
       class="navbar is-dark"
       role="navigation"
       aria-label="main navigation"
-      style="width: 100%"
+      style="width: 100%; padding: 0%;"
     >
       <div class="navbar-brand">
         <a class="navbar-item" href="#"><strong>Cooking Panel</strong></a>
@@ -121,7 +121,7 @@
       <div id="navbarAdmin" class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link"> <i class="fas fa-user"></i>&nbsp; Admin </a>
+            <a class="navbar-link"> <i class="fas fa-user"></i>&nbsp; {{ current_user.role }}  </a>
             <div class="navbar-dropdown is-right">
               <a class="navbar-item" href="/profile">
                 <i class="fas fa-id-badge"></i>&nbsp; Profile

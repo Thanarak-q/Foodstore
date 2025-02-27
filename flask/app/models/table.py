@@ -13,6 +13,7 @@ class Tables(db.Model, SerializerMixin):
     qrcode = db.Column(db.String(100))
     status = db.Column(db.String(20), nullable=False, default="Available")  # สถานะโต๊ะ
     count = db.Column(db.Integer, nullable=False)
+    
 
     '''
     สถานะโต๊ะ ("Available","Occupied", "Reserved", "Paid", "Disable")
