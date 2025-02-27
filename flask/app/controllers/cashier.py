@@ -1,14 +1,20 @@
 from flask import Flask, render_template, request
+from flask_login import login_required
+from app.controllers.role_controller import roles_required 
 
 from app import app
 
 @app.route('/cashier')
+@login_required
+@roles_required('Admin', 'Cashier')
 def cashier_index():
     return render_template('cashier_page/index.html')
 
 
 
 @app.route('/cashier/invoice')
+@login_required
+@roles_required('Admin', 'Cashier')
 def invoice():
     table_id = request.args.get('table_id')
     qrcode = request.args.get('qrcode')

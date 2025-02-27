@@ -37,13 +37,13 @@ def login():
         login_user(user, remember=remember)
 
         if current_user.role == 'Admin':
-            return render_template('Admin_page/dashboard.html')
+            return redirect(url_for('dashboard'))
         elif current_user.role == 'Chef':
-            return render_template('cooking_page/base.html')
+            return redirect(url_for('cookingroom'))
         elif current_user.role == 'Waiter':
-            return render_template('waiter_page/base.html')
+            return redirect(url_for('waiter'))
         elif current_user.role == 'Cashier':
-            return render_template('cashier_page/index.html')
+            return redirect(url_for('cashier'))
         else:
             return 'Who r u?'
 
@@ -53,7 +53,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return render_template('Admin_page/login.html')
+    return redirect(url_for('login'))
 
 @login_manager.user_loader
 def load_user(user_id):

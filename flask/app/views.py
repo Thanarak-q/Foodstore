@@ -8,7 +8,8 @@ from werkzeug.security import check_password_hash
 from werkzeug.urls import url_parse
 # from app import login_manager
 from sqlalchemy.sql import text
-from flask_login import login_user
+from flask_login import login_required
+from app.controllers.role_controller import roles_required
 from app import app
 from app import db
 
@@ -65,14 +66,20 @@ from app.models.table import Tables
 #     return render_template('lab11/login.html')
 
 @app.route('/table/test')
+@login_required
+@roles_required('Admin')
 def table_test():
     return render_template('test_bend.html')
 
 @app.route("/Order")
+@login_required
+@roles_required('Admin')
 def order():
     return render_template('order_page/index.html')
 
 @app.route('/table/create_new')
+@login_required
+@roles_required('Admin')
 def table_creates():
     return render_template('Admin_page/list_table.html')
 
@@ -159,6 +166,8 @@ def decode_jwt(token):
 
 
 @app.route('/')
+@login_required
+@roles_required('Admin')
 def home():
     # return render_template('order_page/index.html')
     return '<h1> ready </h1>'
@@ -176,6 +185,8 @@ def review():
     return render_template('review_page.html')
 
 @app.route('/db')
+@login_required
+@roles_required('Admin')
 def db_connection():
     try:
         with db.engine.connect() as conn:
@@ -185,9 +196,13 @@ def db_connection():
         return '<h1>db is broken.</h1>' + str(e)
 
 @app.route('/cookingroom')
+@login_required
+@roles_required('Admin', 'Chef')
 def cookingroom():
     return render_template('cooking_page/base.html')
 
 @app.route('/waiter')
+@login_required
+@roles_required('Admin', 'Waiter')
 def waiter():
     return render_template('waiter_page/base.html')

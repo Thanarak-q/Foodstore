@@ -14,6 +14,7 @@ from manage import SECRET_KEY
 from app.controllers import Admin
 from app.models.table import Tables
 from app.models.order import Order
+from app.controllers.role_controller import roles_required
 
 @app.route('/table/get_all_table')
 def table_list():
@@ -25,10 +26,9 @@ def table_list():
 
 @app.route('/table/create', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin')
 def table_create():
     if request.method == 'POST':
-        if current_user.role != 'Admin':
-            return 'You are not Admin'
         app.logger.debug("Tables - CREATE")
         result = request.form.to_dict()
 
@@ -77,11 +77,11 @@ def generate_jwt(table_number, count):
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
     return token
 @app.route('/table/admin', methods=['POST'])
+@login_required
+@roles_required('Admin')
 def table_admin():
     app.logger.debug("table - SUPER FUNC ADMIN")
     if request.method == 'POST':
-        if current_user.role != 'Admin':
-            return 'You are not Admin'
         
         result = request.form.to_dict()
         app.logger.debug(result)
@@ -125,10 +125,9 @@ def table_admin():
 
 @app.route('/table/update', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin', 'Cashier')
 def table_update():
     if request.method == 'POST':
-        if current_user.role != 'Admin':
-            return 'You are not Admin'
         
         app.logger.debug("Tables - UPDATE")
         result = request.form.to_dict()
@@ -170,6 +169,7 @@ def table_update():
 
 @app.route('/table/delete', methods=('GET', 'POST'))
 @login_required
+@roles_required('Admin')
 def table_delete():
     if request.method == 'POST':
         if current_user.role != 'Admin':

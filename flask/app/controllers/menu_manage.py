@@ -3,7 +3,7 @@ from PIL import Image
 from flask import (jsonify, render_template, request, url_for, flash, redirect)
 from werkzeug.utils import secure_filename
 from flask_login import login_required, current_user
-import qrcode
+from app.controllers.role_controller import roles_required 
 from sqlalchemy.sql import text
 from app import app, db
 from app.models.menu import Menu
@@ -18,6 +18,8 @@ def allowed_file(filename):
 
 
 @app.route('/menu', methods=('GET', 'POST'))
+@login_required
+@roles_required('Admin')
 def menu_list():
     if request.method == 'POST':
         result = request.form.to_dict()
@@ -106,6 +108,8 @@ def menu_db_menus():
     return jsonify(menus)
 
 @app.route('/menu/remove_menu', methods=('GET', 'POST'))
+@login_required
+@roles_required('Admin')
 def menu_remove_menu():
     app.logger.debug("menu - REMOVE menu")
     if request.method == 'POST':
@@ -125,6 +129,8 @@ def menu_remove_menu():
     return menu_db_menus()
 
 @app.route('/menus/create', methods=('GET', 'POST'))
+@login_required
+@roles_required('Admin')
 def menu_create():
     app.logger.debug("Menu - CREATE")
     if request.method == 'POST':
@@ -174,6 +180,8 @@ def menus_list():
     return jsonify(menus)
 
 @app.route('/menus/update', methods=('GET', 'POST'))
+@login_required
+@roles_required('Admin')
 def menu_update():
     if request.method == 'POST':
         app.logger.debug("Menu - UPDATE")
@@ -209,6 +217,8 @@ def menu_update():
     return menus_list()
 
 @app.route('/menus/delete', methods=('GET', 'POST'))
+@login_required
+@roles_required('Admin')
 def menu_delete():
     if request.method == 'POST':
         app.logger.debug("Menu - DELETE")

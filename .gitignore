@@ -3,6 +3,8 @@ postgres_data
 flask/app/static/qrcode/
 flask/app/static/sound/
 .vscode
+lazygit
+lazygit.tar.gz
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
