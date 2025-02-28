@@ -7,6 +7,9 @@ from app.controllers.role_controller import roles_required
 from sqlalchemy.sql import text
 from app import app, db
 from app.models.menu import Menu
+from app.models.noti import Noti
+
+
 
 UPLOAD_FOLDER = os.path.join(app.static_folder)
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -65,7 +68,7 @@ def menu_list():
                 # ทำความสะอาดชื่อไฟล์และกำหนด path
                 filename = validated_dict['name'].replace(' ', '_') + '.jpg'
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'food_image', filename)
-                
+
                 # ถ้ามี id => แก้ไขรายการเดิม
                 if id_:
                     menu = Menu.query.filter_by(name=id_).first()
@@ -84,11 +87,28 @@ def menu_list():
             if not id_:  # ถ้าไม่มี id => เพิ่มใหม่
                 entry = Menu(**validated_dict)
                 db.session.add(entry)
+
+                newNoti = Noti(                    
+                    type="Menu",
+                    message="มีการเพิ่มเมนู",
+                    link='http://localhost:56733/menu'
+                )
+                db.session.add(newNoti)
+                db.session.commit()
+
             else:  # ถ้ามี id => แก้ไขรายการเดิม
                 menu = Menu.query.filter_by(name=id_).first()
                 if menu:
                     for key, value in validated_dict.items():
                         setattr(menu, key, value)
+
+                newNoti = Noti(                    
+                    type="Menu",
+                    message="มีการแก้ไขข้อมูลเมนู",
+                    link='http://localhost:56733/menu'
+                )
+                db.session.add(newNoti)
+                db.session.commit()
 
             db.session.commit()
 

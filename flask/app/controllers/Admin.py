@@ -9,3 +9,4 @@ from app.controllers import setting
 from app.controllers import report
 from app.controllers import login
 from app.controllers import tranding
+from app.controllers import notification

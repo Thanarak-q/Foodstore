@@ -14,6 +14,7 @@ from manage import SECRET_KEY
 from app.controllers import Admin
 from app.models.table import Tables
 from app.models.order import Order
+from app.models.noti import Noti
 from app.controllers.role_controller import roles_required
 
 @app.route('/table/get_all_table')
@@ -52,6 +53,14 @@ def table_create():
                 id = tables[0]['table_id'] + 1
                 qrCode = gennerate_qrcode(id, 0)
                 db.session.add(Tables(qrcode=qrCode))
+                db.session.commit()
+
+                newNoti = Noti(                    
+                    type="Order",
+                    message="มีการเพิ่มโต๊ะใหม่",
+                    link='http://localhost:56733/menu'
+                )
+                db.session.add(newNoti)
                 db.session.commit()
                 
             except Exception as ex:
@@ -113,8 +122,22 @@ def table_admin():
                     qrCode = gennerate_qrcode(id, 0)
                     db.session.add(Tables(qrcode=qrCode))
                     db.session.commit()
+
+                    newNoti = Noti(                    
+                        type="Order",
+                        message="มีการเพิ่มโต๊ะใหม่",
+                        link='http://localhost:56733/menu'
+                    )
+                    db.session.add(newNoti)
+
                 else:
                     table.update_status(validated_dict['status'])
+                    newNoti = Noti(                    
+                        type="Order",
+                        message="มีการแก้ไขโต๊ะ",
+                        link='http://localhost:56733/menu'
+                    )
+                    db.session.add(newNoti)
                 db.session.commit()
                 
             except Exception as ex:
@@ -156,10 +179,22 @@ def table_update():
             try:
                 table = Tables.query.get(validated_dict['table_id'])
                 table.update_status(validated_dict['status'])
+                newNoti = Noti(                    
+                        type="Order",
+                        message="มีการแก้ไขโต๊ะ",
+                        link='http://localhost:56733/menu'
+                )
+                db.session.add(newNoti)
                 db.session.commit()
                 if validated_dict['status'] == 'Available':
                     table = Tables.query.get(validated_dict['table_id'])
                     qrcode = gennerate_qrcode(table.table_id, table.count)
+                    newNoti = Noti(                    
+                        type="Order",
+                        message="มีการแก้ไขโต๊ะ",
+                        link='http://localhost:56733/menu'
+                    )
+                    db.session.add(newNoti)
                     table.change_qrcode(qrcode)
             except Exception as ex:
                 app.logger.error(f"Error update status: {ex}")
@@ -198,6 +233,12 @@ def table_delete():
             try:
                 table = Tables.query.get(validated_dict['table_id'])
                 table.update_status('Disable')
+                newNoti = Noti(                    
+                    type="Order",
+                    message="มีการแก้ไขโต๊ะ",
+                    link='http://localhost:56733/menu'
+                )
+                db.session.add(newNoti)
                 db.session.commit()
             except Exception as ex:
                 app.logger.error(f"Error delete: {ex}")

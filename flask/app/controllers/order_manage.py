@@ -9,6 +9,7 @@ from flask_login import login_required, current_user
 from app.controllers.role_controller import roles_required 
 from app.models.order import Order
 from app.models.menu import Menu
+from app.models.noti import Noti
 
 
 
@@ -60,7 +61,6 @@ def order_create():
                 db.session.add(temp)
                 
                 db.session.commit()
-                
             except Exception as ex:
                 app.logger.error(f"Error create new order: {ex}")
                 raise
@@ -110,12 +110,29 @@ def order_admin():
                 )
                     temp.change_price(cal_price(validated_dict['menu_list']))
                     db.session.add(temp)
+
+                    newNoti = Noti(                    
+                        type="Order",
+                        message="มีการเพิ่มออเดอร์ใหม่",
+                        link='http://localhost:56733/menu'
+                    )
+                    db.session.add(newNoti)
+
                 else:
                     orders.table_id = int(validated_dict['table_id'])
                     orders.time = validated_dict['time']
                     orders.status = validated_dict['status']
                     orders.menu_list = validated_dict['menu_list']
                     orders.change_price(cal_price(validated_dict['menu_list']))
+
+                    newNoti = Noti(                    
+                        type="Order",
+                        message="มีการแก้ไขออเดอร์",
+                        link='http://localhost:56733/menu'
+                    )
+                    db.session.add(newNoti)
+                    db.session.commit()
+
                 db.session.commit()
                 
             except Exception as ex:
@@ -164,6 +181,15 @@ def order_update():
                 orders = Order.query.get(validated_dict['order_id'])
                 orders.update_status(validated_dict['status'])
                 db.session.commit()
+
+                newNoti = Noti(                    
+                    type="Order",
+                    message="มีการแก้ไขออเดอร์",
+                    link='http://localhost:56733/menu'
+                )
+                db.session.add(newNoti)
+                db.session.commit()
+                
             except Exception as ex:
                 app.logger.error(f"Error update order status: {ex}")
                 raise

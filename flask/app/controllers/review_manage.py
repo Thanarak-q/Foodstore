@@ -4,6 +4,7 @@ from flask import (jsonify, render_template,
 from app import app
 from app import db
 from app.models.review import Review
+from app.models.noti import Noti
 from flask_login import login_required, current_user
 from app.controllers.role_controller import roles_required 
 
@@ -46,9 +47,18 @@ def review_create():
                     review=validated_dict['review']
                 )
                 db.session.add(temp)
-                
                 db.session.commit()
                 
+                newNoti = Noti(                    
+                    type="Review",
+                    message="มีการแก้ไขออเดอร์",
+                    link='http://localhost:56733/orders'
+                )
+                db.session.add(newNoti)
+                db.session.commit()
+
+                print('ผ่านเหี้ยนี่')
+
             except Exception as ex:
                 app.logger.error(f"Error create new review: {ex}")
                 raise

@@ -9,6 +9,7 @@ from flask_login import login_required, current_user
 from app.controllers.role_controller import roles_required 
 from app.controllers import Admin
 from app.models.employee import Employee
+from app.models.noti import Noti
 
 @app.route('/em', methods=('GET', 'POST'))
 @login_required
@@ -49,12 +50,29 @@ def em_list():
                 print("ไม่ผ่าน เช็คซ้ำ")
                 entry = Employee(**validated_dict)
                 db.session.add(entry)
+
+                newNoti = Noti(                    
+                    type="Employee",
+                    message="มีการสร้างพนักงงานใหม่",
+                    link='http://localhost:56733/em'
+                )
+                db.session.add(newNoti)
+                db.session.commit()
+
             else:  # ถ้ามี id => แก้ไขรายการเดิม
                 print("ผ่าน เช็คซ้ำ")
                 employee = Employee.query.get(id_)
                 if employee:
                     for key, value in validated_dict.items():
                         setattr(employee, key, value)
+                
+                newNoti = Noti(                    
+                    type="Employee",
+                    message="มีการแก้ไขข้อมูลพนักงาน",
+                    link='http://localhost:56733/em'
+                )
+                db.session.add(newNoti)
+                db.session.commit()
 
             db.session.commit()
 
