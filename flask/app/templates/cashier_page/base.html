@@ -23,12 +23,10 @@
 </head>
 
 <body>
-    <!-- nav bar -->
-    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+    <!-- Navbar -->
+    <nav class="navbar is-dark" role="navigation" aria-label="main navigation" style="width: 100%; padding: 0%;">
         <div class="navbar-brand">
-            <a class="navbar-item" href="#">
-                <strong>Cashier Panel</strong>
-            </a>
+            <a class="navbar-item" href="#"><strong>Cashier Panel</strong></a>
             <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarAdmin">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
@@ -39,9 +37,7 @@
         <div id="navbarAdmin" class="navbar-menu">
             <div class="navbar-end">
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
-                        <i class="fas fa-user"></i>&nbsp; Cashier
-                    </a>
+                    <a class="navbar-link"> <i class="fas fa-user"></i>&nbsp; {{ current_user.role }} </a>
                     <div class="navbar-dropdown is-right">
                         <a class="navbar-item" href="/profile">
                             <i class="fas fa-id-badge"></i>&nbsp; Profile
