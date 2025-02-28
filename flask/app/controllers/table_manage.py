@@ -265,13 +265,13 @@ def table_delete():
 
     return table_list()
 
-@app.route('/table/cancle', methods=('POST',))
+@app.route('/table/cancel', methods=('POST',))
 @login_required
 @roles_required('Admin', 'Cashier')
 def table_cancle():
     if request.method == 'POST':
         
-        app.logger.debug("Tables - CANCLE")
+        app.logger.debug("Tables - CANCEL")
         result = request.form.to_dict()
 
         validated = True
@@ -302,7 +302,7 @@ def table_cancle():
                 db.session.add(newNoti)
                 db.session.commit()
             except Exception as ex:
-                app.logger.error(f"Error cancle: {ex}")
+                app.logger.error(f"Error cancel: {ex}")
                 raise
 
     return table_list()

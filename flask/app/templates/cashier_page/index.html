@@ -235,16 +235,23 @@
     function stateButton(value, row, index) {
         text = "ชำระเงิน"
         color = "is-success"
+        cancel_button = `
+            <br>
+            <button id="cancel" class="button width-tag is-medium is-respondsive is-danger mt-3">
+                <p class="has-text-weight-bold">ยกเลิก</p>
+            </button>
+        `
 
         if (row.status !== "Occupied") {
             text = "เริ่มใช้งาน"
             color = "is-link"
+            cancel_button = ""
 
         }
         return `
             <button id="occupy" class="button width-tag is-medium is-respondsive ${color}">
                 <p class="has-text-weight-bold">${text}</p>
-            </button>
+            </button>${cancel_button}
         `;
     }
 
@@ -358,12 +365,16 @@
                 cancelButtonText: "ยกเลิก"
             }).then((result) => {
                 if (result.isConfirmed) {
+                    
                     $("#table-list").bootstrapTable("updateRow", {
                         index: rowIndex,
                         row: { status: "Reserved" }
                     });
-                    var data_ = { table_id: rowData.table_id, status: "Reserved" }
+                    let data_ = { table_id: rowData.table_id, status: "Reserved" }
                     $.post('/table/update', data_, function (event) { })
+
+                    // let reserve_data_ = {table_id: rowData.table_id, }
+                    // $.post('reserve/create', )
 
                 } else {
                     console.log("ผู้ใช้กด Cancel");
@@ -485,6 +496,37 @@
 
                 // Redirect to invoice.html
                 window.location.href = url;
+            } else {
+                console.log("ผู้ใช้กด Cancel");
+            }
+        });
+
+    });
+
+    $("#table-list").on("click", "#cancel", function () {
+        var rowIndex = $(this).closest("tr").data("index");
+        var rowData = $('#table-list').bootstrapTable('getData')[rowIndex];
+
+        Swal.fire({
+            title: `ยกเลิกการใช้โต๊ะที่ ${rowData.table_id}`,
+            text: "คุณแน่ใจหรือไม่?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "ใช่",
+            cancelButtonText: "ยกเลิก"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                data_ = { table_id: rowData.table_id }
+                $("#table-list").bootstrapTable("updateRow", {
+                    index: rowIndex,
+                    row: { status: "Available" }
+                });
+                $.post('/table/cancel', data_, function (event) {
+
+                }).fail(function (error) {
+                    console.error("Error can't cancel table", "error");
+                });
+
             } else {
                 console.log("ผู้ใช้กด Cancel");
             }
