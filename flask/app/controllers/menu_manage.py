@@ -87,10 +87,12 @@ def menu_list():
             if not id_:  # ถ้าไม่มี id => เพิ่มใหม่
                 entry = Menu(**validated_dict)
                 db.session.add(entry)
-
+                last_menu = Menu.query.order_by(Menu.id.desc()).first()
+                last_menu_id = last_menu.id if last_menu else 0
+                next_menu_id = last_menu_id
                 newNoti = Noti(                    
                     type="Menu",
-                    message="มีการเพิ่มเมนู",
+                    message="มีการเพิ่มเมนู เมนูไอดีที่" + str(next_menu_id),
                     link='http://localhost:56733/menu'
                 )
                 db.session.add(newNoti)
@@ -104,7 +106,7 @@ def menu_list():
 
                 newNoti = Noti(                    
                     type="Menu",
-                    message="มีการแก้ไขข้อมูลเมนู",
+                    message="มีการแก้ไขข้อมูลเมนู เมนูไอดีที่ " + str(id_),
                     link='http://localhost:56733/menu'
                 )
                 db.session.add(newNoti)

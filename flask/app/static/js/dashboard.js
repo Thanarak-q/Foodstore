@@ -451,7 +451,7 @@ function fetchLatestReviews() {
 
 // ฟังก์ชันสร้างดาวตามคะแนน
 function generateStars(rating) {
-  const fullStar = '★'; // ดาวเต็ม
+  const fullStar = '⭐'; // ดาวเต็ม
   const emptyStar = '☆'; // ดาวว่าง
   const maxStars = 5; // จำนวนดาวสูงสุด
 

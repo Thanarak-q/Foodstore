@@ -110,11 +110,13 @@ def order_admin():
                 )
                     temp.change_price(cal_price(validated_dict['menu_list']))
                     db.session.add(temp)
-
+                    last_order = Order.query.order_by(Order.order_id.desc()).first()
+                    last_order_id = last_order.order_id if last_order else 0
+                    next_order_id = last_order_id
                     newNoti = Noti(                    
                         type="Order",
-                        message="มีการเพิ่มออเดอร์ใหม่",
-                        link='http://localhost:56733/menu'
+                        message="มีการเพิ่มออเดอร์ใหม่ ออเดอร์ไอดีที่ " + str(next_order_id),
+                        link='http://localhost:56733/orders'
                     )
                     db.session.add(newNoti)
 
@@ -127,7 +129,7 @@ def order_admin():
 
                     newNoti = Noti(                    
                         type="Order",
-                        message="มีการแก้ไขออเดอร์",
+                        message="มีการแก้ไขออเดอร์ ออเดอร์ไอดีที่ " + str(id_),
                         link='http://localhost:56733/menu'
                     )
                     db.session.add(newNoti)

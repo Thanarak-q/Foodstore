@@ -122,10 +122,12 @@ def table_admin():
                     qrCode = gennerate_qrcode(id, 0)
                     db.session.add(Tables(qrcode=qrCode))
                     db.session.commit()
-
-                    newNoti = Noti(                    
+                    last_menu = Tables.query.order_by(Tables.id.desc()).first()
+                    last_menu_id = last_menu.id if last_menu else 0
+                    next_menu_id = last_menu_id
+                    newNoti = Noti(                
                         type="Table",
-                        message="มีการเพิ่มโต๊ะใหม่",
+                        message="มีการเพิ่มโต๊ะใหม่ ไอดีที่ " + str(next_menu_id),
                         link='http://localhost:56733/menu'
                     )
                     db.session.add(newNoti)
@@ -134,7 +136,7 @@ def table_admin():
                     table.update_status(validated_dict['status'])
                     newNoti = Noti(                    
                         type="Table",
-                        message="มีการแก้ไขโต๊ะ",
+                        message="มีการแก้ไขโต๊ะ ไอดีที่ " + str(id_),
                         link='http://localhost:56733/menu'
                     )
                     db.session.add(newNoti)
@@ -191,7 +193,7 @@ def table_update():
                     qrcode = gennerate_qrcode(table.table_id, table.count)
                     newNoti = Noti(                    
                         type="Table",
-                        message="มีการแก้ไขโต๊ะ",
+                        message="มีการแก้ไขโต๊ะ ไอดีที่" + str(valid_keys['table_id']),
                         link='http://localhost:56733/menu'
                     )
                     db.session.add(newNoti)

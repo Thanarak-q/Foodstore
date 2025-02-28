@@ -226,8 +226,8 @@ body {
 .notification-item {
   margin-bottom: 1rem;
   padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  /* border: 1px solid #ddd; */
+  /* border-radius: 4px; */
 }
 
 .notification-count {
@@ -251,9 +251,6 @@ body {
   transition: transform 0.2s;
 }
 
-.notification-card:hover {
-  transform: translateY(-2px);
-}
 
 .notif-success {
   background: #e6ffe6;
@@ -326,4 +323,26 @@ body {
 .btn a {
   text-decoration: none;
   color: inherit;
+}
+
+
+.sidebar a {
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  padding: 16px 24px; 
+  margin: 10px 0;
+  font-size: 18px; 
+  border-radius: 10px;
+  text-decoration: none;
+  background-color: transparent;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.sidebar a i {
+  margin-right: 16px;
+  color: #9ca3af;
+  font-size: 20px; 
+  transition: all 0.3s ease;
 }
