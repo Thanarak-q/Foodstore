@@ -175,8 +175,8 @@ def seed_db():
 
     # ใช้สุ่มค่าเวลาในโค้ดหลัก
     large_list = [{
-        random.randint(1, 20): random.randint(1, 5) for _ in range(random.randint(1, 5))
-    } for _ in range(10)]
+        random.randint(1, 20): random.randint(1, 10) for _ in range(random.randint(1, 5))
+    } for _ in range(5)]
 
     for menu_list in large_list:
         temp = Order(

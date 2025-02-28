@@ -19,6 +19,7 @@
     {% block extra_css %}{% endblock %}
   </head>
 
+  testtttttttttttttttttttttttttttttttttttttttttttttttttttt
   <body>
     <nav
       class="navbar is-dark"
@@ -66,7 +67,6 @@
         </div>
       </div>
     </nav>
-
     <div class="notification-sidebar" id="notificationSidebar">
       <div class="notification-header">
         <h3>การแจ้งเตือน</h3>
@@ -86,86 +86,80 @@
                 href="{{ url_for('dashboard') }}"
                 class="{% if request.endpoint == 'dashboard' %}is-active{% endif %}"
               >
-                <i class="fas fa-tachometer-alt"></i>&nbsp; Dashboard
+                <i class="fas fa-tachometer-alt"></i>&nbsp; แดชบอร์ด
               </a>
             </li>
             <li>
-              <a class="menu-label" id="management-label">
-                <i class="fas fa-cogs"></i>&nbsp; Management
+              <a id="management-label"
+                 class="menu-label {% if request.endpoint in ['table_creates', 'menu_list', 'em_list'] %} is-active {% endif %}">
+                <i class="fas fa-cogs"></i>&nbsp; การจัดการ
               </a>
               <ul class="submenu">
                 <li>
-                  <a
-                    href="{{ url_for('table_creates') }}"
-                    class="{% if request.endpoint == 'table_list' %}is-active{% endif %}"
-                  >
-                    <i class="fas fa-table"></i>&nbsp; Table Management
+                  <a href="{{ url_for('table_creates') }}"
+                     class="{% if request.endpoint == 'table_creates' %}is-active{% endif %}">
+                    <i class="fas fa-table"></i>&nbsp; การจัดการโต๊ะ
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="{{ url_for('menu_list') }}"
-                    class="{% if request.endpoint == 'menu_list' %}is-active{% endif %}"
-                  >
-                    <i class="fas fa-utensils"></i>&nbsp; Menu Management
+                  <a href="{{ url_for('menu_list') }}"
+                     class="{% if request.endpoint == 'menu_list' %}is-active{% endif %}">
+                    <i class="fas fa-utensils"></i>&nbsp; การจัดการเมนู
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="{{ url_for('em_list') }}"
-                    class="{% if request.endpoint == 'em_list' %}is-active{% endif %}"
-                  >
-                    <i class="fas fa-users"></i>&nbsp; Employee Management
+                  <a href="{{ url_for('em_list') }}"
+                     class="{% if request.endpoint == 'em_list' %}is-active{% endif %}">
+                    <i class="fas fa-users"></i>&nbsp; การจัดการพนักงาน
                   </a>
                 </li>
               </ul>
             </li>
+            
             <li>
               <a
                 href="{{ url_for('orders') }}"
-                class="{% if request.endpoint == 'order' %}is-active{% endif %}"
+                class="{% if request.endpoint == 'orders' %}is-active{% endif %}"
               >
-                <i class="fas fa-shopping-cart"></i>&nbsp; Order
+                <i class="fas fa-shopping-cart"></i>&nbsp; ออเดอร์
               </a>
             </li>
             <li>
               <a
                 href="{{ url_for('review_list') }}"
-                class="{% if request.endpoint == 'review' %}is-active{% endif %}"
+                class="{% if request.endpoint == 'review_list' %}is-active{% endif %}"
               >
-                <i class="fas fa-star"></i>&nbsp; Review
+                <i class="fas fa-star"></i>&nbsp; รีวิว
               </a>
             </li>
             <li>
               <a
-                href="{{ url_for('menu_list') }}"
                 class="{% if request.endpoint == 'reservations' %}is-active{% endif %}"
               >
-                <i class="fas fa-calendar-check"></i>&nbsp; Reservations
+                <i class="fas fa-calendar-check"></i>&nbsp; การจอง
               </a>
             </li>
             <li>
               <a
-                href="{{ url_for('menu_list') }}"
                 class="{% if request.endpoint == 'customers' %}is-active{% endif %}"
               >
-                <i class="fas fa-user-friends"></i>&nbsp; Customers
+                <i class="fas fa-user-friends"></i>&nbsp; ลูกค้า
               </a>
             </li>
             <li>
               <a
                 href="{{ url_for('report') }}"
-                class="{% if request.endpoint == 'reports' %}is-active{% endif %}"
+                class="{% if request.endpoint == 'report' %}is-active{% endif %}"
               >
-                <i class="fas fa-chart-line"></i>&nbsp; Reports
+                <i class="fas fa-chart-line"></i>&nbsp; วิเคราะห์ข้อมูล
               </a>
             </li>
             <li>
               <a
                 href="{{ url_for('setting') }}"
-                class="{% if request.endpoint == 'settings' %}is-active{% endif %}"
+                class="{% if request.endpoint == 'setting' %}is-active{% endif %}"
               >
-                <i class="fas fa-cog"></i>&nbsp; Settings
+                <i class="fas fa-cog"></i>&nbsp; ตั้งค่า
               </a>
             </li>
           </ul>
@@ -226,49 +220,55 @@
         });
       });
 
-      // function fetchNotifications() {
-      //   fetch("/api/notifications")
-      //     .then((response) => response.json())
-      //     .then((data) => {
-      //       const notificationsDiv = document.getElementById("notifications");
-      //       const notificationCount = document.querySelector(
-      //         ".notification-count"
-      //       );
-      //       notificationsDiv.innerHTML = "";
-      //       notificationCount.textContent = data.length;
-
-      //       data.forEach((notif) => {
-      //         const notificationItem = document.createElement("div");
-      //         notificationItem.className = `notification ${
-      //           notif.type === "order" ? "is-success" : "is-warning"
-      //         } is-light`;
-      //         notificationItem.innerHTML = `
-      //                 <i class="fas fa-${
-      //                   notif.type === "order" ? "shopping-cart" : "star"
-      //                 }"></i> ${notif.message} - ${new Date(
-      //           notif.created_at
-      //         ).toLocaleTimeString()}
-      //                 <a href="${
-      //                   notif.link
-      //                 }" class="button is-small is-pulled-right" onclick="markAsRead(${
-      //           notif.notification_id
-      //         })">ดูเพิ่มเติม</a>
-      //                 <button class="button is-small is-danger is-pulled-right" onclick="deleteNotification(${
-      //                   notif.notification_id
-      //                 })">ลบ</button>
-      //             `;
-      //         notificationsDiv.appendChild(notificationItem);
-      //       });
-
-      //       // Call fetchNotifications again after 10 seconds
-      //       // setTimeout(fetchNotifications, 1000000);
-      //     })
-      //     .catch((error) => {
-      //       console.error("Error fetching notifications:", error);
-      //       // Retry after 10 seconds even if there's an error
-      //       // setTimeout(fetchNotifications, 1000000);
-      //     });
-      // }
+      function fetchNotifications() {
+        fetch("/api/notifications")
+            .then((response) => response.json())
+            .then((data) => {
+                const notificationsDiv = document.getElementById("notifications");
+                const notificationCount = document.querySelector(".notification-count");
+                notificationsDiv.innerHTML = "";
+                notificationCount.textContent = data.length;
+    
+                data.forEach((notif) => {
+                    const notificationItem = document.createElement("div");
+                    notificationItem.className = "notification-item";
+                    notificationItem.innerHTML = `
+                        <div class="notification-card ${
+                            notif.type === "order" ? "notif-success" : "notif-warning"
+                        }">
+                            <div class="notif-header">
+                                <span class="notif-type">${notif.type.toUpperCase()}</span>
+                                <span class="notif-time">
+                                    ${new Date(notif.created_at).toLocaleTimeString()}
+                                </span>
+                            </div>
+                            <div class="notif-message">
+                                ${notif.message}
+                            </div>
+                            <div class="notif-actions">
+                                <button 
+                                    class="btn btn-view" 
+                                    onclick="markAsRead(${notif.notification_id})">
+                                    <a href="${notif.link}">View Details</a>
+                                </button>
+                                <button 
+                                    class="btn btn-delete" 
+                                    onclick="deleteNotification(${notif.notification_id})">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    notificationsDiv.appendChild(notificationItem);
+                });
+    
+                setTimeout(fetchNotifications, 1000000);
+            })
+            .catch((error) => {
+                console.error("Error fetching notifications:", error);
+                setTimeout(fetchNotifications, 1000000);
+            });
+    }
 
       // function markAsRead(notificationId) {
       //   fetch(`/api/notifications/${notificationId}`, {
@@ -293,22 +293,22 @@
       //     });
       // }
 
-      // function deleteNotification(notificationId) {
-      //   console.log("Deleting notification with ID:", notificationId); 
-      //   fetch(`/api/notifications/${notificationId}`, {
-      //     method: "DELETE",
-      //   })
-      //     .then((response) => response.json())
-      //     .then((data) => {
-      //       console.log("Notification deleted:", data);
-      //       fetchNotifications();
-      //     })
-      //     .catch((error) => {
-      //       console.error("Error deleting notification:", error);
-      //     });
-      // }
+      function deleteNotification(notificationId) {
+        console.log("Deleting notification with ID:", notificationId);
+        fetch(`/api/notifications/${notificationId}`, {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Notification deleted:", data);
+            fetchNotifications();
+          })
+          .catch((error) => {
+            console.error("Error deleting notification:", error);
+          });
+      }
 
-      // setInterval(fetchNotifications, 1000000);
+      setInterval(fetchNotifications, 1000000);
       fetchNotifications();
     </script>
 

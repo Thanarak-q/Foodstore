@@ -1,9 +1,9 @@
 {% extends 'Admin_page/base.html' %} 
 {% block content %}
 <div class="container">
-  <div class="columns is-vcentered is-justify-content-space-between mt-5">
+  <div class="columns is-vcentered is-justify-content-space-between">
     <div class="column is-3">
-      <h1 class="title">Dashboard</h1>
+      <h1 class="title">แดชบอร์ด</h1>
     </div>
     <div class="column">
       <div class="field is-grouped is-grouped-right">
@@ -40,54 +40,67 @@
     </div>
   </div>
 
-  <div class="columns is-multiline is-centered mt-5 is-justify-content-start" >
-    <div class="column is-one-quarter ">
-      <div class="card has-text-centered">
-        <div class="card-content">
-          <i class="fas fa-dollar-sign fa-3x"></i>
-          <p class="subtitle">รายได้ทั้งหมด</p>
-          <p id="totalSale" class="title has-text-weight-bold">กำลังคำนวณ...</p>
-        </div>
-      </div>
-    </div>
-    <div class="column is-one-quarter">
-      <div class="card has-text-centered">
-        <div class="card-content">
-          <i class="fas fa-shopping-cart fa-3x"></i>
-          <p class="subtitle">จำวนออเด้อทั้งหมด</p>
-          <p id="totalOrder" class="title has-text-weight-bold">
-            กำลังคำนวณ...
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="column is-one-quarter">
-      <div class="card has-text-centered">
-        <div class="card-content">
-          <i class="fas fa-utensils fa-3x"></i>
-          <p class="subtitle">เมนูทั้งหมดในร้าน</p>
-          <p id="totalMenuItems" class="title has-text-weight-bold">
-            กำลังคำนวณ...
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="columns mt-5">
-    <div class="column is-half">
+  <!-- Main Content -->
+  <div class="columns is-multiline is-mobile">
+    <!-- Left Side: Stats Cards -->
+    <div class="column is-12-mobile is-8-tablet is-two-thirds-desktop">
+      <div class="columns is-multiline is-mobile">
+        <!-- 1: Total Sales -->
+        <div class="column is-6-mobile is-half-tablet">
+          <div class="card has-text-centered">
+            <div class="card-content">
+              <i class="fas fa-dollar-sign fa-3x"></i>
+              <p class="subtitle">รายได้ทั้งหมด</p>
+              <p id="totalSale" class="title has-text-weight-bold">กำลังคำนวณ...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2: Total Orders -->
+        <div class="column is-6-mobile is-half-tablet">
+          <div class="card has-text-centered">
+            <div class="card-content">
+              <i class="fas fa-shopping-cart fa-3x"></i>
+              <p class="subtitle">จำนวนออเดอร์ทั้งหมด</p>
+              <p id="totalOrder" class="title has-text-weight-bold">กำลังคำนวณ...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3: Total Menu Items -->
+        <div class="column is-6-mobile is-half-tablet">
+          <div class="card has-text-centered">
+            <div class="card-content">
+              <i class="fas fa-utensils fa-3x"></i>
+              <p class="subtitle">เมนูทั้งหมดในร้าน</p>
+              <p id="totalMenuItems" class="title has-text-weight-bold">กำลังคำนวณ...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4: Empty (Placeholder) -->
+        <div class="column is-6-mobile is-half-tablet">
+          <div class="card has-text-centered">
+            <div class="card-content">
+              <!-- Placeholder for future content -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side: Top 5 Menus & Reviews -->
+    <div class="column is-12-mobile is-12-tablet is-one-third-desktop">
       <div class="card">
         <div class="card-content">
-          <h2 class="title is-4">เมนูเทรนด์ Top 5</h2>
+          <h2 class="title is-4">ขายดีที่สุด</h2>
           <div id="top5OrderMenus" class="content">
             <!-- ข้อมูลเมนู top 5 จะถูกแสดงที่นี่ -->
           </div>
         </div>
       </div>
-    </div>
-  
-    <div class="column is-half">
-      <div class="card">
+      <div class="card mt-4">
         <div class="card-content">
           <h2 class="title is-4">รีวิวล่าสุด</h2>
           <div id="ReviewRes" class="content">
@@ -98,7 +111,8 @@
     </div>
   </div>
 
-  <div class="columns mt-5">
+  <!-- Notifications -->
+  <div class="columns">
     <div class="column is-full">
       <div id="notifications">
         <!-- Notifications -->
@@ -106,7 +120,7 @@
     </div>
   </div>
 </div>
-{% endblock %} 
+{% endblock %}
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
