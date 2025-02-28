@@ -41,7 +41,7 @@ $(document).ready(function () {
     const selectedRange = $(this).val();
     const today = new Date();
     let startDate, endDate;
-
+  
     // ซ่อน/แสดง input วันที่
     if (selectedRange === "custom") {
       $("#startDateContainer").show();
@@ -50,7 +50,7 @@ $(document).ready(function () {
       $("#startDateContainer").hide();
       $("#endDateContainer").hide();
     }
-
+  
     switch (selectedRange) {
       case "day":
         startDate = new Date(today);
@@ -60,10 +60,10 @@ $(document).ready(function () {
         break;
       case "week":
         startDate = new Date(today);
-        startDate.setDate(today.getDate() - today.getDay());
+        startDate.setDate(today.getDate() - today.getDay()); // เริ่มต้นวันอาทิตย์
         startDate.setHours(0, 0, 0, 0);
         endDate = new Date(today);
-        endDate.setDate(today.getDate() + (6 - today.getDay()));
+        endDate.setDate(today.getDate() + (6 - today.getDay())); // สิ้นสุดวันเสาร์
         endDate.setHours(23, 59, 59, 999);
         break;
       case "month":
@@ -88,27 +88,26 @@ $(document).ready(function () {
         endDate = null;
         break;
     }
-
+  
     if (startDate && endDate) {
       $("#startDate").val(startDate.toISOString().split("T")[0]);
       $("#endDate").val(endDate.toISOString().split("T")[0]);
-      // แสดงช่วงเวลาที่เลือกในปุ่ม Filter
       $("#filterPeriodLabel").text(`${selectedRange.charAt(0).toUpperCase() + selectedRange.slice(1)}`);
     } else {
       $("#startDate").val("");
       $("#endDate").val("");
       $("#filterPeriodLabel").text("All time");
     }
-
+  
     // เรียกฟังก์ชันเพื่ออัปเดตข้อมูล
     fetchTotalSale();
     fetchTotalOrder();
-    fetchTop5Menus(); // เพิ่มการอัปเดต Top 5 Menus เมื่อเปลี่ยนช่วงเวลา
+    fetchTop5Menus();
   });
 });
 
 function fetchTotalSale() {
-  const selectedRange = $("#timeRange").val(); // ตรวจสอบช่วงเวลาที่เลือก
+  const selectedRange = $("#timeRange").val();
   const startDate = $("#startDate").val();
   const endDate = $("#endDate").val();
 
@@ -125,13 +124,11 @@ function fetchTotalSale() {
       });
     }
 
-    // คำนวณยอดขายรวม
     const totalSale = filteredData.reduce(
       (acc, pay) => acc + (Number(pay.amount) || 0),
       0
     );
 
-    // แสดงผลยอดขายรวม
     $("#totalSale").text(`฿ ${totalSale.toLocaleString()}`);
   }).fail(function (jqXHR, textStatus, errorThrown) {
     console.error("Error fetching payment data:", textStatus, errorThrown);
