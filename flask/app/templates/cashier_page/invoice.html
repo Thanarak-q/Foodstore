@@ -171,9 +171,10 @@
     </div>
 
     <script>
+        const localDate = new Date();
+
         $(document).ready(function () {
             let table_id_ = '{{table_id}}';
-            const localDate = new Date();
             const formattedUtcDate = new Intl.DateTimeFormat('th-TH', {
                 weekday: 'long',
                 year: 'numeric',
@@ -221,6 +222,11 @@
 
             // Home button with payment confirmation
             $("#confirm-button").on("click", function (e) {
+                var sumprice;
+                $.post('/payment/create_slip', { table_id: table_id_ }, function (table_data) {
+                    sumprice = table_data['total'] + table_data['vat_7%'];
+                });
+
                 e.preventDefault();
 
                 Swal.fire({
@@ -228,23 +234,27 @@
                     text: `โต๊ะ ${table_id_} ได้ชำระเงินเรียบร้อยแล้วหรือยัง?`,
                     icon: "question",
                     showCancelButton: true,
-                    confirmButtonText: "ใช่ ชำระแล้ว",
+                    confirmButtonText: "ชำระแล้ว",
                     cancelButtonText: "ยังไม่ชำระ"
                 }).then((paymentResult) => {
                     if (paymentResult.isConfirmed) {
-                        // Second alert: Confirm table usage (existing logic)
-
-                        var data_ = { table_id: table_id_, status: "Available" };
-                        console.log("Sending data:", data_);
-                        $.post('/table/update', data_, function () {
+                        let payment_data = {
+                            table_id: table_id_,
+                            payment_method: "{{payment_method}}",
+                            amount: sumprice,
+                            payment_time: localDate.toISOString()
+                        }
+                        console.log("Sending data:", payment_data);
+                        $.post('/payment/create', payment_data, function () {
                             Swal.fire("สำเร็จ!", "สถานะโต๊ะอัปเดตเรียบร้อย", "success")
                                 .then(() => {
                                     window.location.href = "/cashier";
                                 });
+
                         }).fail(function (error) {
-                            console.error("Error updating table:", error);
-                            Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถอัปเดตสถานะโต๊ะได้", "error");
+                            console.error("Error create slip:", "error");
                         });
+
 
                     } else {
                         console.log("ผู้ใช้ระบุว่ายังไม่ชำระเงิน");
@@ -284,7 +294,6 @@
                 </li><hr/>`;
 
                 Object.entries(data).forEach(([key, item], index) => {
-                    console.log(item);
                     let amount = item.amount || 'N/A';
                     let price = parseFloat(item.price).toFixed(2) || 'N/A';
                     let pricePerUnit = parseFloat(item.price_per_unit).toFixed(2) || 'N/A';
