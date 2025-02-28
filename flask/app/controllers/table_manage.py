@@ -123,8 +123,8 @@ def table_admin():
                     qrCode = gennerate_qrcode(id, 0)
                     db.session.add(Tables(qrcode=qrCode))
                     db.session.commit()
-                    last_menu = Tables.query.order_by(Tables.id.desc()).first()
-                    last_menu_id = last_menu.id if last_menu else 0
+                    last_menu = Tables.query.order_by(Tables.table_id.desc()).first()
+                    last_menu_id = last_menu.table_id if last_menu else 0
                     next_menu_id = last_menu_id
                     newNoti = Noti(                
                         type="Table",
@@ -254,7 +254,7 @@ def table_delete():
                 table.update_status('Disable')
                 newNoti = Noti(                    
                     type="Table",
-                    message="มีการลบไขโต๊ะ",
+                    message="มีการลบโต๊ะ ไอดีที่" + str(validated_dict['table_id']),
                     link='http://localhost:56733/table/create_new'
                 )
                 db.session.add(newNoti)

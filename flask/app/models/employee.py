@@ -29,7 +29,6 @@ class Employee(db.Model, UserMixin):
         self.role = role
 
     def update(self, firstname, username, password, phone, role, lastname=None):
-        # print("eieieieeieieieii")
         self.username = username
         self.password = password
         self.firstname = firstname
@@ -45,7 +44,8 @@ class Employee(db.Model, UserMixin):
             'firstname': self.firstname,
             'lastname': self.lastname,
             'phone': self.phone,
-            'role': self.role
+            'role': self.role,
+            'status': self.status
         }
     
     def change_status(self, status):

@@ -386,6 +386,7 @@
     //     console.error("Error:", error);
     //   },
     // });
+    fetchNotifications()
   });
 
   function clearForm() {
@@ -484,6 +485,7 @@
     }).fail(function (jqXHR, textStatus, error) {
       console.error("Failed to delete order:", textStatus, error);
     });
+    fetchNotifications()
   }
 
   $("#add_order").click(function () {

@@ -157,6 +157,7 @@
       clearForm();
       toggleView();
     });
+    fetchNotifications()
   });
 
   function clearForm() {
@@ -211,6 +212,7 @@
     $.post(url, formData, function (table_data) {
       refresh_table(table_data);
     });
+    fetchNotifications()
   }
 
   $("#add_table").click(function () {

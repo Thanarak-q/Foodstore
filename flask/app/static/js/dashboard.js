@@ -163,8 +163,9 @@ function fetchTop5Menus() {
       top5.map((menu, index) => `
         <div class="media">
           <div class="media-left">
-            <figure class="image is-128x128">
-              <img src="${menu.image_url}" alt="${menu.menu_name}" style="object-fit: cover; object-position: center;">
+            <figure class="image is-128x128" style="width: 4rem; height: 4rem; overflow: hidden;">
+              <img src="${menu.image_url}" alt="${menu.menu_name}" 
+                style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
             </figure>
           </div>
           <div class="media-content">

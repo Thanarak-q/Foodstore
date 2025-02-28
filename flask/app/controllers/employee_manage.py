@@ -86,10 +86,8 @@ def em_db_ems():
     ems = []
     # ดึงข้อมูลจากฐานข้อมูล พร้อมเรียงลำดับตาม name
     db_employees = Employee.query.all()
-
     ems = list(map(lambda x: x.to_dict(), db_employees))
     app.logger.debug("DB employees (Sorted): " + str(ems))
-
     return jsonify(ems)
 
 @app.route('/em/remove_em', methods=('GET', 'POST'))

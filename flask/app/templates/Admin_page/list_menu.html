@@ -243,7 +243,6 @@
     event.preventDefault();
   
     var formData = new FormData(this);
-  
     var url = "/menu";
   
     $.ajax({
@@ -261,6 +260,7 @@
         console.error("Error:", error);
       },
     });
+    fetchNotifications()
   });
 
   function clearForm() {
@@ -321,6 +321,7 @@
     }).fail(function () {
       alert("Failed to delete menu with ID " + row.id);
     });
+    fetchNotifications()
   }
 
   $("#add_menu").click(function () {
