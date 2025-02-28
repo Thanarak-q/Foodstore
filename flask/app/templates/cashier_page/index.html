@@ -399,7 +399,9 @@
     $("#table-list").on("click", "#occupy", function () {
         var rowIndex = $(this).closest("tr").data("index");
         var rowData = $('#table-list').bootstrapTable('getData')[rowIndex];
-        console.log(rowData)
+
+        console.log(rowData);
+
         if (rowData.status !== "Occupied") {
             Swal.fire({
                 title: `ยืนยันการใช้โต๊ะที่ ${rowData.table_id}`,
@@ -414,39 +416,53 @@
                         index: rowIndex,
                         row: { status: "Occupied" }
                     });
-                    var data_ = { table_id: rowData.table_id, status: "Occupied" }
-                    console.log(data_)
-                    $.post('/table/update', data_, function (event) { })
+
+                    var data_ = { table_id: rowData.table_id, status: "Occupied" };
+                    console.log(data_);
+
+                    $.post('/table/update', data_, function (event) { });
                 } else {
                     console.log("ผู้ใช้กด Cancel");
                 }
             });
 
-
         } else if (rowData.status === "Occupied") {
             Swal.fire({
                 title: `ดำเนินการชำระเงินของโต๊ะที่ ${rowData.table_id}`,
-                text: "คุณแน่ใจหรือไม่?",
+                html: `
+                <p>เลือกวิธีการชำระเงิน:</p>
+                <select id="payment-method" class="swal2-select">
+                    <option value="cash">เงินสด</option>
+                    <option value="credit_card">บัตรเครดิต</option>
+                    <option value="bank_transfer">โอนผ่านธนาคาร</option>
+                    <option value="paypal">Paypal</option>
+                </select>
+            `,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "ใช่",
-                cancelButtonText: "ยกเลิก"
+                cancelButtonText: "ยกเลิก",
+                preConfirm: () => {
+                    const selectedPayment = document.getElementById("payment-method").value;
+                    if (!selectedPayment) {
+                        Swal.showValidationMessage("กรุณาเลือกวิธีการชำระเงิน");
+                    }
+                    return selectedPayment;
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     let tableId = encodeURIComponent(rowData.table_id);
-                    let qrCode = encodeURIComponent(rowData.qrcode);
-                    let url = `/cashier/invoice?table_id=${encodeURIComponent(rowData.table_id)}&qrcode=${encodeURIComponent(rowData.qrcode)}`;
+                    let payment_method = encodeURIComponent(result.value);
+
+                    let url = `/cashier/invoice?table_id=${tableId}&payment_method=${payment_method}`;
 
                     // Redirect to invoice.html
                     window.location.href = url;
-
                 } else {
                     console.log("ผู้ใช้กด Cancel");
                 }
             });
         }
-
-
     });
 
     $("#table-list").on("click", "#print", function () {

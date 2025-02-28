@@ -29,7 +29,7 @@ def payment_create():
         result = request.form.to_dict()
 
         validated = True
-        valid_keys = ['payment_method', 'payment_time', 'amount']
+        valid_keys = ['payment_method', 'payment_time', 'amount', 'table_id']
         table_id = result.get('table_id', '')
         validated_dict = dict()
         for key in result:
