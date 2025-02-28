@@ -50,10 +50,12 @@ def em_list():
                 print("ไม่ผ่าน เช็คซ้ำ")
                 entry = Employee(**validated_dict)
                 db.session.add(entry)
-
+                last_employee = Employee.query.order_by(Employee.id.desc()).first()
+                last_employee_id = last_employee.id if last_employee else 0
+                next_employee_id = last_employee_id
                 newNoti = Noti(                    
                     type="Employee",
-                    message="มีการสร้างพนักงงานใหม่",
+                    message="มีการสร้างพนักงงานใหม่ ไอดีที่" + str(next_employee_id),
                     link='http://localhost:56733/em'
                 )
                 db.session.add(newNoti)
@@ -68,7 +70,7 @@ def em_list():
                 
                 newNoti = Noti(                    
                     type="Employee",
-                    message="มีการแก้ไขข้อมูลพนักงาน",
+                    message="มีการแก้ไขข้อมูลพนักงาน ไอดีที่" + str(id_),
                     link='http://localhost:56733/em'
                 )
                 db.session.add(newNoti)
@@ -101,6 +103,14 @@ def em_remove_em():
         try:
             em = Employee.query.get(id_)
             db.session.delete(em)
+            db.session.commit()
+
+            newNoti = Noti(                    
+                type="Employee",
+                message="ลบพนักงงาน ไอดีที่" + str(id_),
+                link='http://localhost:56733/em'
+            )
+            db.session.add(newNoti)
             db.session.commit()
         except Exception as ex:
             app.logger.error(f"Error removing em with id {id_}: {ex}")
