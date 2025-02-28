@@ -43,7 +43,7 @@ def login():
         elif current_user.role == 'Waiter':
             return redirect(url_for('waiter'))
         elif current_user.role == 'Cashier':
-            return redirect(url_for('cashier'))
+            return redirect(url_for('cashier_index'))
         else:
             return 'Who r u?'
 

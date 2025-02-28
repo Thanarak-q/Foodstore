@@ -227,9 +227,6 @@ def table_update():
 @roles_required('Admin')
 def table_delete():
     if request.method == 'POST':
-        if current_user.role != 'Admin':
-            return 'You are not Admin'
-        
         app.logger.debug("Tables - DELETE")
         result = request.form.to_dict()
 
@@ -262,6 +259,48 @@ def table_delete():
                 db.session.commit()
             except Exception as ex:
                 app.logger.error(f"Error delete: {ex}")
+                raise
+
+    return table_list()
+
+@app.route('/table/cancle', methods=('POST',))
+@login_required
+@roles_required('Admin', 'Cashier')
+def table_cancle():
+    if request.method == 'POST':
+        
+        app.logger.debug("Tables - CANCLE")
+        result = request.form.to_dict()
+
+        validated = True
+        validated_dict = dict()
+        valid_keys = ['table_id']
+        for key in result:
+            app.logger.debug(f"{key}: {result[key]}")
+            # screen of unrelated inputs
+            if key not in valid_keys:
+                continue
+
+
+            value = result[key].strip()
+            if not value or value == 'undefined':
+                validated = False
+                break
+            validated_dict[key] = value
+            
+        if validated:
+            try:
+                table = Tables.query.get(validated_dict['table_id'])
+                table.cancle()
+                newNoti = Noti(                    
+                    type="Table",
+                    message="มีการ cancle โต๊ะ",
+                    link='http://localhost:56733/menu'
+                )
+                db.session.add(newNoti)
+                db.session.commit()
+            except Exception as ex:
+                app.logger.error(f"Error cancle: {ex}")
                 raise
 
     return table_list()
