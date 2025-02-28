@@ -56,7 +56,7 @@ def table_create():
                 db.session.commit()
 
                 newNoti = Noti(                    
-                    type="Order",
+                    type="Table",
                     message="มีการเพิ่มโต๊ะใหม่",
                     link='http://localhost:56733/menu'
                 )
@@ -124,7 +124,7 @@ def table_admin():
                     db.session.commit()
 
                     newNoti = Noti(                    
-                        type="Order",
+                        type="Table",
                         message="มีการเพิ่มโต๊ะใหม่",
                         link='http://localhost:56733/menu'
                     )
@@ -133,7 +133,7 @@ def table_admin():
                 else:
                     table.update_status(validated_dict['status'])
                     newNoti = Noti(                    
-                        type="Order",
+                        type="Table",
                         message="มีการแก้ไขโต๊ะ",
                         link='http://localhost:56733/menu'
                     )
@@ -180,7 +180,7 @@ def table_update():
                 table = Tables.query.get(validated_dict['table_id'])
                 table.update_status(validated_dict['status'])
                 newNoti = Noti(                    
-                        type="Order",
+                        type="Table",
                         message="มีการแก้ไขโต๊ะ",
                         link='http://localhost:56733/menu'
                 )
@@ -190,7 +190,7 @@ def table_update():
                     table = Tables.query.get(validated_dict['table_id'])
                     qrcode = gennerate_qrcode(table.table_id, table.count)
                     newNoti = Noti(                    
-                        type="Order",
+                        type="Table",
                         message="มีการแก้ไขโต๊ะ",
                         link='http://localhost:56733/menu'
                     )
@@ -234,7 +234,7 @@ def table_delete():
                 table = Tables.query.get(validated_dict['table_id'])
                 table.update_status('Disable')
                 newNoti = Noti(                    
-                    type="Order",
+                    type="Table",
                     message="มีการแก้ไขโต๊ะ",
                     link='http://localhost:56733/menu'
                 )
