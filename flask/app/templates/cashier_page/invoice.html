@@ -9,8 +9,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
+        /* คงสไตล์เดิมไว้เหมือนในโค้ดก่อนหน้า */
         body {
             font-family: Arial, sans-serif;
             margin: 40px;
@@ -117,15 +119,7 @@
             justify-content: space-between;
             padding: 10px;
             margin: 5px 0;
-            /* border: 1px solid #ddd; */
-            border-radius: 5px;
-            /* background-color: #f9f9f9; */
-            /* transition: background-color 0.3s; */
         }
-
-        /* .item:hover {
-            background-color: #f0f0f0;
-        } */
 
         .item-name {
             font-weight: bold;
@@ -158,185 +152,212 @@
         <hr>
 
         <div id="content-container">
-            <div id="details">
-
-            </div>
+            <div id="details"></div>
         </div>
-
     </div>
     <div style="text-align: center; margin-top: 1.5rem;">
-        <a href="#" id="print-qr-button" class="button is-medium is-link has-text-weight-bold is-responsive mr-3">
+        <a href="#" id="print-qr-button" style="width: 11.5rem;"
+            class="button is-medium is-link has-text-weight-bold is-responsive mr-3">
             Print Invoice
         </a>
+        <a href="#" id="confirm-button" style="width: 11.5rem;"
+            class="button is-medium has-text-weight-bold is-responsive mr-3 is-success">
+            Confirm payment
+        </a>
         <a href="/cashier" id="home-button" class="button is-medium has-text-weight-bold is-responsive"
-            style="background-color: coral; color: white;">
+            style="background-color: coral; color: white; width: 11.5rem">
             Home
         </a>
     </div>
 
     <script>
         $(document).ready(function () {
-            let table_id_ = '{{table_id}}'
-            updateDetails(table_id_);
-            const localDate = new Date(); // Current local date and time
+            let table_id_ = '{{table_id}}';
+            const localDate = new Date();
             const formattedUtcDate = new Intl.DateTimeFormat('th-TH', {
-                weekday: 'long',   // e.g., "Monday"
-                year: 'numeric',   // e.g., "2025"
-                month: 'short',     // e.g., "February"
-                day: 'numeric',    // e.g., "27"
-                hour: 'numeric',   // e.g., "5 PM"
-                minute: 'numeric', // e.g., "30"
-                // second: 'numeric', // e.g., "00"
-                // hour12: true       // Use 12-hour format
+                weekday: 'long',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
             }).format(localDate);
+            $('#time').text(`${formattedUtcDate} น.`);
 
-            $('#time').text(`${formattedUtcDate} น.`)
+            // Load invoice details
+            updateDetails(table_id_);
 
+            // Print button with auto height
             $("#print-qr-button").on("click", function (e) {
                 e.preventDefault();
-
                 const element = document.getElementById("slip-content");
                 html2canvas(element, {
                     scale: 2,
                     useCORS: true,
-                    logging: true // Helps with debugging
+                    logging: true
                 }).then(canvas => {
                     const imgData = canvas.toDataURL("image/png");
                     const { jsPDF } = window.jspdf;
-
-                    // Set PDF width to 80mm (standard receipt width)
-                    const pdfWidth = 80; // in mm
-                    // Calculate height based on canvas aspect ratio
-                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Maintains aspect ratio
-
+                    const pdfWidth = 80;
+                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
                     const pdf = new jsPDF({
                         orientation: "portrait",
                         unit: "mm",
-                        format: [pdfWidth, pdfHeight] // Dynamic height
+                        format: [pdfWidth, pdfHeight]
                     });
-
-                    // Add image with calculated dimensions
                     pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-
-                    // Open PDF in a new window for printing
                     const printWindow = window.open(pdf.output("bloburl"), "_blank");
-
                     printWindow.onload = function () {
                         printWindow.print();
                         setTimeout(() => {
                             printWindow.close();
-                        }, 3000); // Close window after 3 seconds
+                        }, 3000);
                     };
                 }).catch(error => {
                     console.error("Error generating PDF:", error);
                     alert("เกิดข้อผิดพลาดในการสร้างบิล กรุณาตรวจสอบคอนโซล");
                 });
             });
-        });
 
-        function updateDetails(table_id_) {
-            console.log(2222222222)
-            $.getJSON("/store_list", function (data) {
-                $("#store-name").html(data[0].name)
+            // Home button with payment confirmation
+            $("#confirm-button").on("click", function (e) {
+                e.preventDefault();
 
+                Swal.fire({
+                    title: "ชำระเงินแล้วใช่หรือไม่?",
+                    text: `โต๊ะ ${table_id_} ได้ชำระเงินเรียบร้อยแล้วหรือยัง?`,
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "ใช่ ชำระแล้ว",
+                    cancelButtonText: "ยังไม่ชำระ"
+                }).then((paymentResult) => {
+                    if (paymentResult.isConfirmed) {
+                        // Second alert: Confirm table usage (existing logic)
+                        Swal.fire({
+                            title: `ยืนยันการเปิดใช้โต๊ะที่ ${table_id_}`,
+                            text: "คุณแน่ใจหรือไม่?",
+                            icon: "question",
+                            showCancelButton: true,
+                            confirmButtonText: "ใช่",
+                            cancelButtonText: "ยกเลิก"
+                        }).then((tableResult) => {
+                            if (tableResult.isConfirmed) {
+                                var data_ = { table_id: table_id_, status: "Available" };
+                                console.log("Sending data:", data_);
+                                $.post('/table/update', data_, function () {
+                                    Swal.fire("สำเร็จ!", "สถานะโต๊ะอัปเดตเรียบร้อย", "success")
+                                        .then(() => {
+                                            window.location.href = "/cashier";
+                                        });
+                                }).fail(function (error) {
+                                    console.error("Error updating table:", error);
+                                    Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถอัปเดตสถานะโต๊ะได้", "error");
+                                });
+                            } else {
+                                console.log("ผู้ใช้กดยกเลิกการใช้โต๊ะ");
+                            }
+                        });
+                    } else {
+                        console.log("ผู้ใช้ระบุว่ายังไม่ชำระเงิน");
+                        Swal.fire("แจ้งเตือน", "กรุณาชำระเงินก่อนดำเนินการต่อ", "warning");
+                    }
+                });
             });
 
-            $.post('/payment/create_slip', { table_id: table_id_ }, function (table_data) {
+            function updateDetails(table_id_) {
+                console.log("Fetching store data...");
+                $.getJSON("/store_list", function (data) {
+                    $("#store-name").html(data[0].name);
+                });
 
-                const sumprice = table_data['sum_price']
-                const total = table_data['total']
-                const vat = table_data['vat_7%']
-                create_list(sumprice, total, vat)
-
-            })
-
-        }
-
-        function create_list(data, total, vat) {
-            let totalamout = 0
-            if (typeof data !== 'object' || data === null) {
-                console.error('Expected an object with item data');
-                return;
+                $.post('/payment/create_slip', { table_id: table_id_ }, function (table_data) {
+                    const sumprice = table_data['sum_price'];
+                    const total = table_data['total'];
+                    const vat = table_data['vat_7%'];
+                    create_list(sumprice, total, vat);
+                });
             }
 
-            let listItems = '<ul class="item-list">';
+            function create_list(data, total, vat) {
+                let totalamout = 0;
+                if (typeof data !== 'object' || data === null) {
+                    console.error('Expected an object with item data');
+                    $('#details').html('<p>Error: No item data available</p>');
+                    return;
+                }
 
+                let listItems = '<ul class="item-list">';
+                listItems += `<li class="item"> 
+                    <span class="item-name">ชื่อเมนู</span>
+                    <span class="item-amount">จำนวน</span>
+                    <span class="item-price-per-unit">ราคาต่อชิ้น</span>
+                    <span class="item-price">ราคารวม</span>
+                </li><hr/>`;
 
-            listItems += `<li class="item"> 
-                <span class="item-name">ชื่อเมนู</span>  <!-- Assuming 'name' is a field -->
-                <span class="item-amount">จำนวน</span>
-                <span class="item-price-per-unit">ราคาต่อชิ้น</span>
-                <span class="item-price">ราคารวม</span>
-            </li><hr/>`
-            // Loop through the object entries
-            Object.entries(data).forEach(([key, item], index) => {
-                console.log(item);
-                let amount = item.amount || 'N/A';
-                let price = parseFloat(item.price).toFixed(2) || 'N/A';
-                let pricePerUnit = parseFloat(item.price_per_unit).toFixed(2) || 'N/A';
-                totalamout += amount;
+                Object.entries(data).forEach(([key, item], index) => {
+                    console.log(item);
+                    let amount = item.amount || 'N/A';
+                    let price = parseFloat(item.price).toFixed(2) || 'N/A';
+                    let pricePerUnit = parseFloat(item.price_per_unit).toFixed(2) || 'N/A';
+                    totalamout += amount;
+                    listItems += `
+                <li class="item">
+                    <span class="item-name">${key || 'Unnamed'}</span>
+                    <span class="item-amount">${amount}</span>
+                    <span class="item-price-per-unit">${pricePerUnit}</span>
+                    <span class="item-price">${price}</span>
+                </li>
+            `;
+                });
+
                 listItems += `
-            <li class="item">
-                
-                <span class="item-name">${key || 'Unnamed'}</span>  <!-- Assuming 'name' is a field -->
-                <span class="item-amount">${amount}</span>
-                <span class="item-price-per-unit">${pricePerUnit}</span>
-                <span class="item-price">${price}</span>
-            </li>
-        `;
-            });
-
-            listItems += `
-                <hr>
-            <li class="item">
-                <span class="item-name">ราคาไม่รวม vat</span>  <!-- Assuming 'name' is a field -->
-                <span class="item-amount"></span>
-                <span class="item-price-per-unit"></span>
-                <span class="item-price">${parseFloat(total).toFixed(2)}</span>
-            </li>
-        `;
-
-            listItems += `
-                
-            <li class="item">
-                <span class="item-name">vat 7%</span>  <!-- Assuming 'name' is a field -->
-                <span class="item-amount"></span>
-                <span class="item-price-per-unit"></span>
-                <span class="item-price">${(vat).toFixed(2)}</span>
-            </li>
-        `;
-
-            listItems += `
-                
-            <li class="item">
-                <span class="item-name">ราคารวม vat 7%</span>  <!-- Assuming 'name' is a field -->
-                <span class="item-amount"></span>
-                <span class="item-price-per-unit"></span>
-                <span class="item-price">${vat + total}</span>
-            </li>
-        `;
-            listItems += `
-                
-            <li class="item">
-                    <span class="item-name">ราคารวม vat 7% (ปัดเศษ)</span>  <!-- Assuming 'name' is a field -->
+                    <hr>
+                <li class="item">
+                    <span class="item-name">ราคาไม่รวม vat</span>
                     <span class="item-amount"></span>
                     <span class="item-price-per-unit"></span>
-                <span class="item-price">${Math.floor(vat + total)}</span>
-            </li>
-        `;
+                    <span class="item-price">${parseFloat(total).toFixed(2)}</span>
+                </li>
+            `;
 
-            listItems += `
-                <hr>
-            <div style="display: flex; justify-content: center;">
-                <p>ขอบคุณที่มาใช้บริการครับ/ค่ะ</p>
-            </div>
-        `;
+                listItems += `
+                <li class="item">
+                    <span class="item-name">vat 7%</span>
+                    <span class="item-amount"></span>
+                    <span class="item-price-per-unit"></span>
+                    <span class="item-price">${(vat).toFixed(2)}</span>
+                </li>
+            `;
 
-            listItems += '</ul>';
-            $('#details').html(listItems);
-        };
+                listItems += `
+                <li class="item">
+                    <span class="item-name">ราคารวม vat 7%</span>
+                    <span class="item-amount"></span>
+                    <span class="item-price-per-unit"></span>
+                    <span class="item-price">${(vat + total).toFixed(2)}</span>
+                </li>
+            `;
 
+                listItems += `
+                <li class="item">
+                    <span class="item-name">ราคารวม vat 7% (ปัดเศษ)</span>
+                    <span class="item-amount"></span>
+                    <span class="item-price-per-unit"></span>
+                    <span class="item-price">${Math.floor(vat + total)}</span>
+                </li>
+            `;
 
+                listItems += `
+                    <hr>
+                <div style="display: flex; justify-content: center;">
+                    <p>ขอบคุณที่มาใช้บริการครับ/ค่ะ</p>
+                </div>
+            `;
+
+                listItems += '</ul>';
+                $('#details').html(listItems);
+            }
+        });
     </script>
 </body>
 
