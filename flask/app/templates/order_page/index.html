@@ -15,6 +15,10 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
   <style>
+    body {
+      position: relative;
+    }
+
     /* Fly-to-cart animation */
     @keyframes flyToCart {
       0% {
@@ -34,7 +38,7 @@
     }
 
     .fly-item {
-      position: fixed;
+      position: absolute;
       z-index: 2000;
       pointer-events: none;
       animation: flyToCart 0.7s ease forwards;
@@ -320,6 +324,13 @@
 
       const button = $(buttonElement);
       const cartButton = $("#cart-button");
+
+      // Get the starting position from the clicked button
+      const buttonOffset = button.offset();
+      const buttonWidth = button.outerWidth();
+      const buttonHeight = button.outerHeight();
+
+      // Create the flying item
       const flyItem = $('<img>')
         .attr('src', item.image_url)
         .addClass('fly-item')
@@ -328,16 +339,26 @@
           height: '50px',
           borderRadius: '50%',
           objectFit: 'cover',
-          top: button.offset().top + button.height() / 2 - 25,
-          left: button.offset().left + button.width() / 2 - 25,
+          // Position at the center of the clicked button
+          top: buttonOffset.top + (buttonHeight / 2) - 25,
+          left: buttonOffset.left + (buttonWidth / 2) - 25,
         });
 
       $('body').append(flyItem);
 
-      const cartPos = cartButton.offset();
+      // Get cart button position dynamically
+      const cartOffset = cartButton.offset();
+      const cartWidth = cartButton.outerWidth();
+      const cartHeight = cartButton.outerHeight();
+
+      // Calculate the target position (center of cart button)
+      const targetTop = cartOffset.top + (cartHeight / 2) - 25;
+      const targetLeft = cartOffset.left + (cartWidth / 2) - 25;
+
+      // Animate to cart position
       flyItem.animate({
-        top: cartPos.top + cartButton.height() / 2 - 25,
-        left: cartPos.left + cartButton.width() / 2 - 25,
+        top: targetTop,
+        left: targetLeft
       }, 700, function () {
         flyItem.remove();
         $("#cart-count").addClass("animate");
