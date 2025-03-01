@@ -73,16 +73,16 @@
       }
 
       .order-card h5 {
-        font-size: 1.5rem;
+        font-size: 2.5rem;
         font-weight: bold;
       }
 
       .order-details {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
       }
 
       .menu-item {
-        font-size: 1.1rem;
+        font-size: 1.8rem;
       }
 
       .btn-confirm {
@@ -101,7 +101,7 @@
       class="navbar is-dark"
       role="navigation"
       aria-label="main navigation"
-      style="width: 100%; padding: 0%;"
+      style="width: 100%; padding: 0%"
     >
       <div class="navbar-brand">
         <a class="navbar-item" href="#"><strong>Waiter Panel</strong></a>
@@ -121,7 +121,9 @@
       <div id="navbarAdmin" class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link"> <i class="fas fa-user"></i>&nbsp; {{ current_user.role }}  </a>
+            <a class="navbar-link">
+              <i class="fas fa-user"></i>&nbsp; {{ current_user.role }}
+            </a>
             <div class="navbar-dropdown is-right">
               <a class="navbar-item" href="/profile">
                 <i class="fas fa-id-badge"></i>&nbsp; Profile
@@ -202,28 +204,37 @@
                     menuItems += `<li class="menu-item">${menuName} (x${quantity})</li>`;
                   });
 
+                  var utcDate = new Date(order.order_time);
+                  var offset = utcDate.getTimezoneOffset();
+                  var localDate = new Date(utcDate.getTime() - offset * 60000);
+                  let year = localDate.getFullYear();
+                  let month = String(localDate.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+                  let day = String(localDate.getDate()).padStart(2, "0");
+                  let hours = String(localDate.getHours()).padStart(2, "0");
+                  let minutes = String(localDate.getMinutes()).padStart(2, "0");
+                  let seconds = String(localDate.getSeconds()).padStart(2, "0");
+                  localDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
                   const columnIndex = index % 3; // Distribute orders across 3 columns
                   $(`.order-list-column:eq(${columnIndex})`).append(`
             <div class="order-card">
-              <h5>Order ID: ${order.order_id}</h5>
-              <p class="order-details"><strong>Order Time:</strong> ${
-                order.order_time
-              }</p>
-              <p class="order-details"><strong>Status:</strong> ${
-                order.status
-              }</p>
-              <p class="order-details"><strong>Table ID:</strong> ${
-                order.table_id
-              }</p>
-              <p class="order-details"><strong>Total Price:</strong> $${order.total_price.toFixed(
-                2
-              )}</p>
-              <p class="order-details"><strong>Menu Items:</strong></p>
-              <ul>${menuItems}</ul>
-              <button class="btn btn-success btn-confirm" data-order-id="${
-                order.order_id
-              }">Confirm Order</button>
-            </div>
+                      <h5>Order ID: ${order.order_id}</h5>
+                      <p class="order-details"><strong>Order Time:</strong> ${localDate}</p>
+                      <!-- <p class="order-details"><strong>Status:</strong> ${
+                        order.status
+                      }</p> -->
+                      <p class="order-details"><strong>Table ID:</strong> ${
+                        order.table_id
+                      }</p>
+                      <!-- <p class="order-details"><strong>Total Price:</strong> $${order.total_price.toFixed(
+                        2
+                      )}</p> -->
+                      <p class="order-details"><strong>Menu Items:</strong></p>
+                      <ul style="list-style-type:disc" class="ml-5">${menuItems}</ul>
+                      <button class="btn btn-success btn-confirm" data-order-id="${
+                        order.order_id
+                      }">Confirm Order</button>
+                    </div>
           `);
                 });
               }
