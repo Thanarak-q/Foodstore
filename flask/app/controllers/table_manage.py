@@ -29,6 +29,7 @@ def table_list():
 @login_required
 @roles_required('Admin')
 def table_create():
+
     if request.method == 'POST':
         app.logger.debug("Tables - CREATE")
         result = request.form.to_dict()
@@ -91,75 +92,63 @@ def generate_jwt(table_number, count):
 @roles_required('Admin')
 def table_admin():
     app.logger.debug("table - SUPER FUNC ADMIN")
+    
     if request.method == 'POST':
-        
         result = request.form.to_dict()
         app.logger.debug(result)
-        valid_keys = ['status']
-        id_ = result['table_id']
-        validated = True
-        validated_dict = dict()
-        for key in result:
-            app.logger.debug(f"{key}: {result[key]}")
-            # screen of unrelated inputs
-            if key not in valid_keys:
-                continue
-
-            value = result[key].strip()
+        
+        id_ = result.get('table_id')
+        validated_dict = {}
+        
+        for key in ['status']:
+            value = result.get(key, '').strip()
             if not value or value == 'undefined':
-                validated = False
-                break
-
+                app.logger.debug("Validation failed")
+                return table_list()
             validated_dict[key] = value
-        app.logger.debug(validated_dict)
-        if validated:
-            try:
-                table = Tables.query.filter_by(table_id=int(id_)).first()
-                if table == None:
-                    db_allTable = Tables.query.all()
-                    tables = list(map(lambda x: x.to_dict(), db_allTable))
-                    tables.sort(key=(lambda x: int(x['table_id'])), reverse=True)
-                    id = tables[0]['table_id'] + 1
-                    qrCode = gennerate_qrcode(id, 0)
-                    db.session.add(Tables(qrcode=qrCode))
-                    db.session.commit()
-                    last_menu = Tables.query.order_by(Tables.table_id.desc()).first()
-                    last_menu_id = last_menu.table_id if last_menu else 0
-                    next_menu_id = last_menu_id
-                    newNoti = Noti(                
-                        type="Table",
-                        message="มีการเพิ่มโต๊ะใหม่ ไอดีที่ " + str(next_menu_id),
-                        link='http://localhost:56733/table/create_new'
-                    )
-                    db.session.add(newNoti)
-
-                else:
-                    table = Tables.query.get(validated_dict['table_id'])
-                    table.update_status(validated_dict['status'])
-                    newNoti = Noti(                    
-                        type="Table",
-                        message="มีการแก้ไขโต๊ะ ไอดีที่ " + str(id_),
-                        link='http://localhost:56733/table/create_new'
-                    )
-                    db.session.add(newNoti)
-                    db.session.commit()
-                    if validated_dict['status'] == 'Available':
-                        table = Tables.query.get(validated_dict['table_id'])
-                        qrcode = gennerate_qrcode(table.table_id, table.count)
-                        newNoti = Noti(                    
-                            type="Order",
-                            message="มีการแก้ไขโต๊ะ",
-                            link='http://localhost:56733/table/create_new'
-                        )
-                        db.session.add(newNoti)
-                        table.change_qrcode(qrcode)
+        
+        try:
+            table = Tables.query.filter_by(table_id=int(id_)).first()
+            if not table:
+                db_allTable = Tables.query.all()
+                tables = sorted([t.to_dict() for t in db_allTable], key=lambda x: int(x['table_id']), reverse=True)
+                new_id = (tables[0]['table_id'] + 1) if tables else 1
+                
+                qrCode = gennerate_qrcode(new_id, 0)
+                db.session.add(Tables(qrcode=qrCode))
                 db.session.commit()
                 
-            except Exception as ex:
-                app.logger.error(f"Error create new order: {ex}")
-                raise
-            
+                newNoti = Noti(
+                    type="Table",
+                    message=f"มีการเพิ่มโต๊ะใหม่ ไอดีที่ {new_id}",
+                    link='http://localhost:56733/table/create_new'
+                )
+                db.session.add(newNoti)
+                db.session.commit()
+            else:
+                table.update_status(validated_dict['status'])
+                db.session.add(Noti(
+                    type="Table",
+                    message=f"มีการแก้ไขโต๊ะ ไอดีที่ {table.table_id}",
+                    link='http://localhost:56733/table/create_new'
+                ))
+                db.session.commit()
+                
+                if validated_dict['status'] == 'Available':
+                    new_qrcode = gennerate_qrcode(table.table_id, table.count)
+                    table.change_qrcode(new_qrcode)
+                    db.session.add(Noti(
+                        type="Order",
+                        message="มีการแก้ไขโต๊ะ",
+                        link='http://localhost:56733/table/create_new'
+                    ))
+                    db.session.commit()
+        except Exception as ex:
+            app.logger.error(f"Error updating table: {ex}")
+            raise
+    
     return table_list()
+
 
 @app.route('/table/update', methods=('GET', 'POST'))
 @login_required
@@ -250,6 +239,7 @@ def table_delete():
             
         if validated:
             try:
+                
                 table = Tables.query.get(validated_dict['table_id'])
                 table.update_status('Disable')
                 newNoti = Noti(                    
