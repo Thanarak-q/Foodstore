@@ -7,6 +7,7 @@ from app.controllers.role_controller import roles_required
 from app.models.payment import Payment
 from app import db
 from app.models.employee import Employee
+from app.models.order import Order
 
 @app.route('/report')
 @login_required
@@ -96,3 +97,7 @@ def employee_roles_distribution():
     role_distribution = {role: count for role, count in results}
     
     return jsonify(role_distribution)
+
+
+#! we can find how many in this time range customer come
+#!
