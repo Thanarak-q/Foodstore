@@ -22,11 +22,11 @@
   <body>
     <nav
       class="navbar is-dark"
-      style="height: 2.5rem"
+      style="height: 4.5rem"
       role="navigation"
       aria-label="main navigation"
     >
-      <div class="navbar-brand">
+      <div class="navbar-brand" >
         <a class="navbar-item" href="#" id="title_"
           ><strong
             >{{current_user.firstname}} {{current_user.lastname}}</strong
@@ -172,140 +172,41 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+    <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
+<script>
+  $(document).ready(function () {
+    $(".navbar-burger").click(function () {
+      $(this).toggleClass("is-active");
+      $("#navbarAdmin").toggleClass("is-active");
+    });
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const burger = document.querySelector(".navbar-burger");
-        const menu = document.querySelector("#navbarAdmin");
+    $(".menu-label").click(function () {
+      $(this).toggleClass("is-active");
+      $(this).next().slideToggle();
+    });
 
-        burger.addEventListener("click", () => {
-          burger.classList.toggle("is-active");
-          menu.classList.toggle("is-active");
-        });
+    $("#notificationIcon").click(function () {
+      $("#notificationSidebar").toggleClass("open");
+    });
 
-        const menuLabels = document.querySelectorAll(".menu-label");
-        menuLabels.forEach((label) => {
-          label.addEventListener("click", () => {
-            label.classList.toggle("is-active");
-            const submenu = label.nextElementSibling;
-            submenu.style.display =
-              submenu.style.display === "block" ? "none" : "block";
-          });
-        });
+    $("#closeNotificationSidebar").click(function () {
+      $("#notificationSidebar").removeClass("open");
+    });
 
-        const notificationIcon = document.getElementById("notificationIcon");
-        const notificationSidebar = document.getElementById(
-          "notificationSidebar"
-        );
-        const closeNotificationSidebar = document.getElementById(
-          "closeNotificationSidebar"
-        );
-
-        notificationIcon.addEventListener("click", () => {
-          notificationSidebar.classList.toggle("open");
-        });
-
-        closeNotificationSidebar.addEventListener("click", () => {
-          notificationSidebar.classList.remove("open");
-        });
-
-        document.addEventListener("click", (event) => {
-          if (
-            !notificationSidebar.contains(event.target) &&
-            !notificationIcon.contains(event.target)
-          ) {
-            notificationSidebar.classList.remove("open");
-          }
-        });
-      });
-
-  function fetchNotifications() {
-    fetch("/api/notifications")
-      .then((response) => response.json())
-      .then((data) => {
-        const notificationsDiv = document.getElementById("notifications");
-        const notificationCount = document.querySelector(".notification-count");
-        notificationsDiv.innerHTML = "";
-        notificationCount.textContent = data.length;
-
-        data.forEach((notif) => {
-          const notificationItem = document.createElement("div");
-          notificationItem.className = "notification-item";
-          notificationItem.innerHTML = `
-            <div class="notification-card ${
-              notif.type === "order" ? "notif-success" : "notif-warning"
-            }">
-              <div class="notif-header">
-                <span class="notif-type">${notif.type.toUpperCase()}</span>
-                <span class="notif-time">
-                  ${new Date(notif.created_at).toLocaleTimeString()}
-                </span>
-              </div>
-              <div class="notif-message">
-                ${notif.message}
-              </div>
-              <div class="notif-actions">
-                <button 
-                  class="btn btn-view" 
-                  onclick="markAsRead(${notif.notification_id})">
-                  <a href="${notif.link}">View Details</a>
-                </button>
-                <button 
-                  class="btn btn-delete" 
-                  onclick="deleteNotification(${notif.notification_id})">
-                  Delete
-                </button>
-              </div>
-            </div>
-          `;
-          notificationsDiv.appendChild(notificationItem);
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching notifications:", error);
-      });
-  }
-
-      // function markAsRead(notificationId) {
-      //   fetch(`/api/notifications/${notificationId}`, {
-      //     method: "PUT",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({ is_read: true }),
-      //   })
-      //     .then((response) => {
-      //       if (!response.ok) {
-      //         throw new Error("Network response was not ok");
-      //       }
-      //       return response.json();
-      //     })
-      //     .then((data) => {
-      //       console.log("Notification marked as read:", data);
-      //       fetchNotifications();
-      //     })
-      //     .catch((error) => {
-      //       console.error("Error marking notification as read:", error);
-      //     });
-      // }
-
-      function deleteNotification(notificationId) {
-        console.log("Deleting notification with ID:", notificationId);
-        fetch(`/api/notifications/${notificationId}`, {
-          method: "DELETE",
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Notification deleted:", data);
-            fetchNotifications();
-          })
-          .catch((error) => {
-            console.error("Error deleting notification:", error);
-          });
+    $(document).click(function (event) {
+      if (
+        !$(event.target).closest("#notificationSidebar, #notificationIcon").length
+      ) {
+        $("#notificationSidebar").removeClass("open");
       }
+    });
 
-      fetchNotifications();
-    </script>
+
+
+    fetchNotifications();
+  });
+</script>
+
 
     {% block extra_js %}{% endblock %}
   </body>
