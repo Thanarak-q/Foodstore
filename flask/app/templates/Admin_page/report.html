@@ -19,6 +19,26 @@
       </div>
     </div>
   </div>
+
+  <!-- New Card for Customer Insights -->
+  <div class="column is-half">
+    <div class="card">
+      <div class="card-content">
+        <h2 class="subtitle">Customer Insights</h2>
+        <div class="field is-grouped">
+          <div class="control is-expanded">
+            <select id="customerTimeSelector">
+              <option value="all_time">All Time</option>
+              <option value="yearly">Yearly</option>
+              <option value="monthly">Monthly</option>
+              <option value="weekly">Weekly</option>
+            </select>
+          </div>
+        </div>
+        <canvas id="customerChart"></canvas>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 

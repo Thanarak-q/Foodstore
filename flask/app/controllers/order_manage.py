@@ -94,7 +94,7 @@ def order_admin():
             app.logger.debug(f"{key}: {result[key]}")
             # screen of unrelated inputs
             if key == 'order_id':
-                continue
+                continue        
 
             if key not in valid_keys:
                 validated_dict['menu_list'][key] = int(result[key])
