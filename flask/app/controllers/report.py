@@ -6,6 +6,7 @@ from flask_login import login_required
 from app.controllers.role_controller import roles_required
 from app.models.payment import Payment
 from app import db
+from app.models.employee import Employee
 
 @app.route('/report')
 @login_required
@@ -85,3 +86,13 @@ def get_yearly_payment_methods():
 @app.route('/all_time_payment_methods')
 def get_all_time_payment_methods():
     return jsonify(get_payment_method_counts())
+
+
+
+@app.route('/employee_roles_distribution', methods=['GET'])
+def employee_roles_distribution():
+    results = db.session.query(Employee.role, db.func.count(Employee.id)).group_by(Employee.role).all()
+    
+    role_distribution = {role: count for role, count in results}
+    
+    return jsonify(role_distribution)

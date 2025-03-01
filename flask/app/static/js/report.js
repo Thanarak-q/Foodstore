@@ -2,6 +2,7 @@ $(document).ready(function () {
   fetchAndDrawRevenueChart();
   fetchAndDrawCustomerChart(); // Initialize customer chart
   fetchAndDrawPaymentMethodChart(); // Initialize payment methods chart
+  fetchAndDrawEmployeeRolesChart(); // Initialize employee roles chart
 
   $("#yearSelector").on("change", function () {
     fetchAndDrawRevenueChart();
@@ -23,6 +24,7 @@ $(document).ready(function () {
 let revenueChart;
 let customerChart;
 let paymentMethodChart;
+let employeeRolesChart;
 
 function populateYearSelector(data) {
   const years = [...new Set(data.map((p) => new Date(p.payment_time).getFullYear()))].sort().reverse();
@@ -206,5 +208,53 @@ function fetchAndDrawPaymentMethodChart() {
     });
   }).fail((jqXHR, textStatus, errorThrown) => {
     console.error("Error fetching payment methods data:", textStatus, errorThrown);
+  });
+}
+
+// Function to fetch and draw employee roles chart
+function fetchAndDrawEmployeeRolesChart() {
+  const apiUrl = "/employee_roles_distribution";
+
+  $.getJSON(apiUrl, function (data) {
+    const roles = Object.keys(data);
+    const roleCounts = Object.values(data);
+
+    const ctx = document.getElementById("employeeRolesChart").getContext("2d");
+    if (employeeRolesChart) employeeRolesChart.destroy();
+
+    employeeRolesChart = new Chart(ctx, {
+      type: "pie",
+      data: {
+        labels: roles,
+        datasets: [
+          {
+            label: "Employee Roles Distribution",
+            data: roleCounts,
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.5)",
+              "rgba(54, 162, 235, 0.5)",
+              "rgba(75, 192, 192, 0.5)",
+              "rgba(255, 206, 86, 0.5)",
+            ],
+            borderColor: [
+              "rgba(255, 99, 132, 1)",
+              "rgba(54, 162, 235, 1)",
+              "rgba(75, 192, 192, 1)",
+              "rgba(255, 206, 86, 1)",
+            ],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: "top" },
+          title: { display: true, text: "Employee Roles Distribution" },
+        },
+      },
+    });
+  }).fail((jqXHR, textStatus, errorThrown) => {
+    console.error("Error fetching employee roles data:", textStatus, errorThrown);
   });
 }

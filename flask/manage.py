@@ -218,7 +218,7 @@ def seed_db():
         [
             str(i + 1),  # table_id
             random.choice(payment_methods),  # payment_method
-            (start_time + datetime.timedelta(days=random.randint(0, 365 * years),  # สุ่มวันที่ในช่วง 5 ปี
+            (start_time + datetime.timedelta(days=random.randint(0, 365 * years),
                                             hours=random.randint(0, 23),
                                             minutes=random.randint(0, 59))
             ).strftime("%Y-%m-%d %H:%M:%S"),  # payment_time
