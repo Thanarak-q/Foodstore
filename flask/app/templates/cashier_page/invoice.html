@@ -278,27 +278,45 @@
             }
 
             function create_list(data, total, vat) {
-                let totalamout = 0;
-                if (typeof data !== 'object' || data === null) {
-                    console.error('Expected an object with item data');
-                    $('#details').html('<p>Error: No item data available</p>');
-                    return;
+                let payment_method = "{{ payment_method }}"
+                let table_id_ = "{{ table_id }}"
+                var img_ = ""
+                function fetchQRCode() {
+                    return new Promise((resolve, reject) => {
+                        if (payment_method == "promtpay") {
+                            $.post("/payment/customer", { table_id: table_id_ }, function (e) {
+                                resolve((e.qrcode).replace("app", ""));
+                            }).fail(() => reject(""));
+                        } else {
+                            resolve("");
+                        }
+                    });
                 }
 
-                let listItems = '<ul class="item-list">';
-                listItems += `<li class="item"> 
+                fetchQRCode().then((img_) => {
+                    let totalamout = 0;
+                    if (typeof data !== 'object' || data === null) {
+                        console.error('Expected an object with item data');
+                        $('#details').html('<p>Error: No item data available</p>');
+                        return;
+                    }
+
+
+
+                    let listItems = '<ul class="item-list">';
+                    listItems += `<li class="item"> 
                     <span class="item-name">ชื่อเมนู</span>
                     <span class="item-amount">จำนวน</span>
                     <span class="item-price-per-unit">ราคาต่อชิ้น</span>
                     <span class="item-price">ราคารวม</span>
                 </li><hr/>`;
 
-                Object.entries(data).forEach(([key, item], index) => {
-                    let amount = item.amount || 'N/A';
-                    let price = parseFloat(item.price).toFixed(2) || 'N/A';
-                    let pricePerUnit = parseFloat(item.price_per_unit).toFixed(2) || 'N/A';
-                    totalamout += amount;
-                    listItems += `
+                    Object.entries(data).forEach(([key, item], index) => {
+                        let amount = item.amount || 'N/A';
+                        let price = parseFloat(item.price).toFixed(2) || 'N/A';
+                        let pricePerUnit = parseFloat(item.price_per_unit).toFixed(2) || 'N/A';
+                        totalamout += amount;
+                        listItems += `
                 <li class="item">
                     <span class="item-name">${key || 'Unnamed'}</span>
                     <span class="item-amount">${amount}</span>
@@ -306,9 +324,9 @@
                     <span class="item-price">${price}</span>
                 </li>
             `;
-                });
+                    });
 
-                listItems += `
+                    listItems += `
                     <hr>
                 <li class="item">
                     <span class="item-name">ราคาไม่รวม vat</span>
@@ -318,42 +336,48 @@
                 </li>
             `;
 
-                listItems += `
+                    listItems += `
                 <li class="item">
-                    <span class="item-name">vat 7%</span>
+                    <span class="item-name">vat {{vat_}}</span>
                     <span class="item-amount"></span>
                     <span class="item-price-per-unit"></span>
                     <span class="item-price">${(vat).toFixed(2)}</span>
                 </li>
             `;
 
-                listItems += `
+                    listItems += `
                 <li class="item">
-                    <span class="item-name">ราคารวม vat 7%</span>
+                    <span class="item-name">ราคารวม vat {{vat_}}</span>
                     <span class="item-amount"></span>
                     <span class="item-price-per-unit"></span>
                     <span class="item-price">${(vat + total).toFixed(2)}</span>
                 </li>
             `;
 
-                listItems += `
+                    listItems += `
                 <li class="item">
-                    <span class="item-name">ราคารวม vat 7% (ปัดเศษ)</span>
+                    <span class="item-name">ราคารวม vat {{vat_}} (ปัดเศษ)</span>
                     <span class="item-amount"></span>
                     <span class="item-price-per-unit"></span>
                     <span class="item-price">${Math.floor(vat + total)}</span>
                 </li>
             `;
+                    if (img_ != "") {
+                        console.log(img_)
+                        listItems += `<hr/><div style="width : 100%; display : flex; flex-direction: column; align-items:center;"><h1 style="font-size: 1.5rem"><strong>QR Code</strong></h1><img src="${img_}" alt="QR Image" style="width: 250px; height: auto;"><h1 style="font-size: 1.5rem"><strong>{{ promptpay }}</strong></h1><h1 style="font-size: 1.5rem"><strong>{{ promptpayname }}</strong></h1></div>`;
+                        listItems += ""
+                    }
 
-                listItems += `
-                    <hr>
+                    listItems += `
+                    <hr/>
                 <div style="display: flex; justify-content: center;">
-                    <p>ขอบคุณที่มาใช้บริการครับ/ค่ะ</p>
+                    <p style="font-size: 1.1rem"><strong>🙏ขอบคุณที่มาใช้บริการครับ/ค่ะ🙏</strong></p>
                 </div>
             `;
 
-                listItems += '</ul>';
-                $('#details').html(listItems);
+                    listItems += '</ul>';
+                    $('#details').html(listItems);
+                })
             }
         });
     </script>

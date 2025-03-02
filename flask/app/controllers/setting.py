@@ -160,6 +160,20 @@ def setting():
                     )
                     db.session.add(newNoti)
                     db.session.commit()
+                    
+                if 'Promptpay_name' in request.form:
+                    Promptpay_name = str(request.form['Promptpay_name'])
+                    store.update_promptpayname(Promptpay_name)
+                    response_data['message'] = 'อัปเดตชื่อพร้อมเพลย์'
+                    response_data['success'] = True
+
+                    newNoti = Noti(                    
+                        type="Setting",
+                        message="มีการแก้ไขชื่อพร้อมเพลย์",
+                        link='http://localhost:56733/setting'
+                    )
+                    db.session.add(newNoti)
+                    db.session.commit()
 
                 if 'Promptpay_id' in request.form:
                     promptpay = str(request.form['Promptpay_id'])

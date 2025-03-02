@@ -474,7 +474,7 @@
         confirmButtonText: "ใช่",
         cancelButtonText: "ยกเลิก",
         preConfirm: () => {
-          return document.getElementById('payment-method').value;
+          return $('#payment-method').val();
         }
       }).then((result) => {
         if (result.isConfirmed) {
@@ -487,7 +487,6 @@
             });
 
           }
-
 
           let tableId = encodeURIComponent(rowData.table_id);
           let url = `/cashier/invoice?table_id=${tableId}&payment_method=${payment_method}`;
