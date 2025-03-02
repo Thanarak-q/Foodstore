@@ -31,5 +31,13 @@ def qrcode():
 def invoice():
     table_id = request.args.get('table_id')
     payment_method = request.args.get('payment_method')
-    print(payment_method)
     return render_template('cashier_page/invoice.html', table_id=table_id, payment_method=payment_method)
+
+
+
+
+@app.route('/customer')
+def customer():
+    # table_id = request.args.get('table_id')
+    # payment_method = request.args.get('payment_method')
+    return render_template('cashier_page/customer.html')

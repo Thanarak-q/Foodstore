@@ -1,4 +1,5 @@
 import json
+import requests
 from flask import (jsonify, render_template,
                   request, url_for, flash, redirect)
 
@@ -53,7 +54,7 @@ def table_create():
                 tables.sort(key=(lambda x: int(x['table_id'])), reverse=True)
                 id = tables[0]['table_id'] + 1
                 qrCode = gennerate_qrcode(id, 0)
-                db.session.add(Tables(qrcode=qrCode))
+                db.session.add(Tables(qrCode))
                 db.session.commit()
 
                 # newNoti = Noti(                    
@@ -71,11 +72,20 @@ def table_create():
     return table_list()
 
 def gennerate_qrcode(id, count):
-    token = generate_jwt(id, count)
-    img = qrcode.make(f'http://localhost:56733/menu/table/{token}') # Must to change to menu select url
-    type(img)  # qrcode.image.pil.PilImage
-    img.save(f"app/static/qrcode/{id}.png")
-    return f"app/static/qrcode/{id}.png"
+        response = requests.get("http://ngrok:4040/api/tunnels")
+        if response.status_code == 200:
+            data = response.json()
+            public_url = data["tunnels"][0]["public_url"]
+            token = generate_jwt(id, count)
+            img = qrcode.make(f'{public_url}/menu/table/{token}') # Must to change to menu select url
+            type(img)  # qrcode.image.pil.PilImage
+            img.save(f"app/static/qrcode/{id}.png")
+            return f"app/static/qrcode/{id}.png"
+        else:
+            print(f"Failed to retrieve ngrok URL. Status code: {response.status_code}")
+        return ""
+
+    
 
 def generate_jwt(table_number, count):
     expiration_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=48)
@@ -134,7 +144,7 @@ def table_admin():
                 ))
                 db.session.commit()
                 
-                if validated_dict['status'] == 'Available':
+                if validated_dict['status'] == 'Occupied':
                     new_qrcode = gennerate_qrcode(table.table_id, table.count)
                     table.change_qrcode(new_qrcode)
                     db.session.add(Noti(
@@ -196,7 +206,7 @@ def table_update():
                 # )
                 # db.session.add(newNoti)
                 
-                if validated_dict['status'] == 'Available':
+                if validated_dict['status'] == 'Occupied':
                     table = Tables.query.get(validated_dict['table_id'])
                     qrcode = gennerate_qrcode(table.table_id, table.count)
                     # newNoti = Noti(                    

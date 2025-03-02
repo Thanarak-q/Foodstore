@@ -153,14 +153,8 @@
 
       <!-- Card Content (Table) -->
       <div class="card-content">
-        <table
-          id="table-list"
-          class="table is-fullwidth is-hoverable"
-          data-toggle="table"
-          data-pagination="true"
-          data-search="true"
-          paginationDetailHAlign="hidden"
-        >
+        <table id="table-list" class="table is-fullwidth is-hoverable" data-toggle="table" data-pagination="true"
+          data-search="true" paginationDetailHAlign="hidden">
           <thead>
             <tr>
               <th data-field="table_id" data-sortable="false">หมายเลขโต๊ะ</th>
@@ -177,29 +171,11 @@
 
         <!-- Card Footer -->
         <footer class="card-footer">
-          <a
-            href="#"
-            id="refresh"
-            class="card-footer-item"
-            onclick="loadTable()"
-            >รีเฟรช</a
-          >
-          <a
-            href="#"
-            id="view-all"
-            class="card-footer-item"
-            style="border-right: 0px"
-            onclick="showAllTables()"
-            >แสดงรายการทั้งหมด</a
-          >
-          <a
-            href="#"
-            id="view-less"
-            class="card-footer-item"
-            style="display: none"
-            onclick="showLessTables()"
-            >แสดงน้อยลง</a
-          >
+          <a href="#" id="refresh" class="card-footer-item" onclick="loadTable()">รีเฟรช</a>
+          <a href="#" id="view-all" class="card-footer-item" style="border-right: 0px"
+            onclick="showAllTables()">แสดงรายการทั้งหมด</a>
+          <a href="#" id="view-less" class="card-footer-item" style="display: none"
+            onclick="showLessTables()">แสดงน้อยลง</a>
         </footer>
       </div>
     </div>
@@ -272,15 +248,29 @@
     return value;
   }
 
+  function statusFormatter(value) {
+    if (value === "Available") {
+      return '<span class="tag is-success width-tag is-large has-text-weight-bold">พร้อมใช้งาน</span>';
+    } else if (value === "Reserved") {
+      return '<span class="tag is-warning width-tag is-large has-text-weight-bold">มีผู้จองแล้ว</span>';
+    } else if (value === "Occupied") {
+      return '<span class="tag is-danger width-tag is-large has-text-weight-bold">มีผู้ใช้งาน</span>';
+    } else if (value === "Disable") {
+      return '<span class="tag is-dark width-tag is-large has-text-weight-bold">ปิดใช้งาน</span>';
+    }
+    return value;
+  }
+
   function stateButton(value, row, index) {
-    text = "ชำระเงิน";
-    color = "is-success";
-    cancel_button = `
-            <br>
-            <button id="cancel" class="button width-tag is-medium is-respondsive is-danger mt-3">
-                <p class="has-text-weight-bold">ยกเลิก</p>
-            </button>
-        `;
+    let text = "ชำระเงิน";
+    let color = "is-success";
+    let disabled = row.status === "Disable" ? "disabled" : "";
+    let cancel_button = `
+        <br>
+        <button id="cancel" class="button width-tag is-medium is-respondsive is-danger mt-3" ${disabled}>
+            <p class="has-text-weight-bold">ยกเลิก</p>
+        </button>
+    `;
 
     if (row.status !== "Occupied") {
       text = "เริ่มใช้งาน";
@@ -288,16 +278,16 @@
       cancel_button = "";
     }
     return `
-            <button id="occupy" class="button width-tag is-medium is-respondsive ${color}">
-                <p class="has-text-weight-bold">${text}</p>
-            </button>${cancel_button}
-        `;
+        <button id="occupy" class="button width-tag is-medium is-respondsive ${color}" ${disabled}>
+            <p class="has-text-weight-bold">${text}</p>
+        </button>${cancel_button}
+    `;
   }
 
   function reserveButton(value, row, index) {
-    text = "ยกเลิก";
-    color = "is-danger";
-    state = "";
+    let text = "ยกเลิก";
+    let color = "is-danger";
+    let state = "";
 
     if (row.status === "Available") {
       text = "จองโต๊ะ";
@@ -307,38 +297,41 @@
       text = "จองโต๊ะ";
       color = "is-reserve";
       state = "disabled";
+    } else if (row.status === "Disable") {
+      text = "จองโต๊ะ"
+      color = "is-reserve"
+      state = "disabled"
     }
     return `
-                <button id="reserve" class="button ${color} width-tag is-medium is-respondsive" ${state}>
-                    <p class="has-text-weight-bold">${text}</p>
-                </button >
-            `;
+        <button id="reserve" class="button ${color} width-tag is-medium is-respondsive" ${state}>
+            <p class="has-text-weight-bold">${text}</p>
+        </button>
+    `;
   }
 
   function printButton(value, row, index) {
-    state = "disabled";
-    if (row.status === "Occupied") {
-      state = "";
+    let state = row.status === "Occupied" ? "" : "disabled";
+    if (row.status === "Disable") {
+      state = "disabled";
     }
     return `
-            <button id="print" class="button width-tag is-medium is-respondsive is-link" ${state}>
-                <p class="has-text-weight-bold">พิมพ์</p>
-            </button >
-        `;
+        <button id="print" class="button width-tag is-medium is-respondsive is-link" ${state}>
+            <p class="has-text-weight-bold">พิมพ์</p>
+        </button>
+    `;
   }
-  $("#print").attr("disabled", "");
 
   function statusFormatter(value) {
     if (value === "Available") {
       return '<span class="tag is-success width-tag is-large has-text-weight-bold">พร้อมใช้งาน</span>';
     } else if (value === "Reserved") {
       return '<span class="tag is-warning width-tag is-large has-text-weight-bold">มีผู้จองแล้ว</span>';
-    } else if (value === "Paid") {
-      return '<span class="tag is-info width-tag is-large has-text-weight-bold">ชำระเงินแล้ว</span>';
     } else if (value === "Occupied") {
       return '<span class="tag is-danger width-tag is-large has-text-weight-bold">มีผู้ใช้งาน</span>';
-    }
+    } else {
 
+
+    }
     return value;
   }
 
@@ -404,7 +397,7 @@
             row: { status: "Reserved" },
           });
           let data_ = { table_id: rowData.table_id, status: "Reserved" };
-          $.post("/table/update", data_, function (event) {});
+          $.post("/table/update", data_, function (event) { });
 
           // let reserve_data_ = {table_id: rowData.table_id, }
           // $.post('reserve/create', )
@@ -427,7 +420,7 @@
             row: { status: "Available" },
           });
           var data_ = { table_id: rowData.table_id, status: "Available" };
-          $.post("/table/update", data_, function (event) {});
+          $.post("/table/update", data_, function (event) { });
         } else {
           console.log("ผู้ใช้กด Cancel");
         }
@@ -459,7 +452,7 @@
           var data_ = { table_id: rowData.table_id, status: "Occupied" };
           console.log(data_);
 
-          $.post("/table/update", data_, function (event) {});
+          $.post("/table/update", data_, function (event) { });
         } else {
           console.log("ผู้ใช้กด Cancel");
         }
@@ -473,7 +466,7 @@
                     <option value="cash">เงินสด</option>
                     <option value="credit_card">บัตรเครดิต</option>
                     <option value="bank_transfer">โอนผ่านธนาคาร</option>
-                    <option value="paypal">Paypal</option>
+                    <option value="promtpay">Promptpay</option>
                 </select>
             `,
         icon: "warning",
@@ -481,22 +474,26 @@
         confirmButtonText: "ใช่",
         cancelButtonText: "ยกเลิก",
         preConfirm: () => {
-          const selectedPayment =
-            document.getElementById("payment-method").value;
-          if (!selectedPayment) {
-            Swal.showValidationMessage("กรุณาเลือกวิธีการชำระเงิน");
-          }
-          return selectedPayment;
-        },
+          return document.getElementById('payment-method').value;
+        }
       }).then((result) => {
         if (result.isConfirmed) {
-          let tableId = encodeURIComponent(rowData.table_id);
           let payment_method = encodeURIComponent(result.value);
+          if (payment_method == "promtpay") {
+            data = { table_id: rowData.table_id }
+            console.log(data)
+            $.post("/payment/customer", data, function (data_) {
+              console.log(data_)
+            });
 
+          }
+
+
+          let tableId = encodeURIComponent(rowData.table_id);
           let url = `/cashier/invoice?table_id=${tableId}&payment_method=${payment_method}`;
 
-          // Redirect to invoice.html
           window.location.href = url;
+
         } else {
           console.log("ผู้ใช้กด Cancel");
         }
@@ -550,7 +547,7 @@
           index: rowIndex,
           row: { status: "Available" },
         });
-        $.post("/table/cancel", data_, function (event) {}).fail(function (
+        $.post("/table/cancel", data_, function (event) { }).fail(function (
           error
         ) {
           console.error("Error can't cancel table", "error");

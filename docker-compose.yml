@@ -8,14 +8,14 @@ services:
     working_dir: /flask_app
     env_file:
       - .env.dev
-    depends_on:
-      - db
     deploy:
       resources:
         limits:
           memory: 512M
         reservations:
           memory: 256M
+    networks:
+      - flask-network # Add this line
 
   db:
     image: postgres:13-alpine
@@ -33,16 +33,23 @@ services:
           memory: 512M
         reservations:
           memory: 256M
+    networks:
+      - flask-network # Add this line
 
-  # pgadmin:
-  #   container_name: pgadmin_pladug
-  #   image: dpage/pgadmin4
-  #   restart: always
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: admin@admin.com
-  #     PGADMIN_DEFAULT_PASSWORD: root
-  #   ports:
-  #     - "5050:80"
+  ngrok:
+    image: wernight/ngrok
+    environment:
+      - NGROK_PORT=flask:8000
+      - NGROK_AUTHTOKEN=24AU78hQwAZMbQUvvShHMt7Jv7o_462StCAH9JbhteWCpgTrs
+    ports:
+      - "4040:4040"
+    entrypoint: ["sh", "-c", "ngrok http flask:8000"]
+    networks:
+      - flask-network
+
+networks:
+  flask-network:
+    driver: bridge
 
 volumes:
   postgres_data:

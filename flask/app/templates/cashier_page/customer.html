@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Data with SSE and jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <h1>Real-Time Data</h1>
+    <div id="output"></div>
+
+    <script>
+        $(document).ready(function () {
+            // Create an EventSource connection to the /events endpoint
+            var eventSource = new EventSource('/event/test');
+            console.log(eventSource)
+
+            // Listen for incoming messages from the server
+            eventSource.onmessage = function (event) {
+                console.log(event)
+                // Update the output div with the new data
+                $('#output').text("Real-time message:${event.data}");
+
+            };
+
+            // Handle errors (optional)
+            eventSource.onerror = function (event) {
+                console.error('EventSource failed:', event);
+                eventSource.close();  // Close the connection on error
+            };
+        });
+    </script>
+</body>
+
+</html>

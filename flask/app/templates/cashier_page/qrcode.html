@@ -1,232 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>QR Code Slip</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css"
+    />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+      }
+
+      .invoice-container {
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #store-name {
+        display: flex;
+        justify-content: center;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px dashed;
+        height: 2px;
+        margin: 1rem 0;
+        opacity: 0.7;
+      }
+
+      .circle-image {
+        width: 125px;
+        height: 125px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto 1rem auto;
+      }
+
+      #qrcode {
+        display: flex;
+        justify-content: center;
+      }
+
+      @media print {
         body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
+          margin: 0;
+          padding: 0;
+          font-family: Arial, sans-serif;
         }
 
         .invoice-container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #store-name {
-            display: flex;
-            justify-content: center;
-        }
-
-        hr {
-            border: none;
-            border-top: 1px dashed;
-            height: 2px;
-            margin: 1rem 0;
-            opacity: 0.7;
+          width: 80mm;
+          max-width: 80mm;
+          margin: 0;
+          padding: 5mm;
+          border: none;
+          box-shadow: none;
+          text-align: center;
         }
 
         .circle-image {
-            width: 125px;
-            height: 125px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: block;
-            margin: 0 auto 1rem auto;
+          width: 40mm;
+          height: 40mm;
+          margin: 0 auto 5mm auto;
         }
 
-        #qrcode {
-            display: flex;
-            justify-content: center;
+        #store-name {
+          font-size: 16pt;
+          margin-bottom: 2mm;
         }
 
-        @media print {
-            body {
-                margin: 0;
-                padding: 0;
-                font-family: Arial, sans-serif;
-            }
-
-            .invoice-container {
-                width: 80mm;
-                max-width: 80mm;
-                margin: 0;
-                padding: 5mm;
-                border: none;
-                box-shadow: none;
-                text-align: center;
-            }
-
-            .circle-image {
-                width: 40mm;
-                height: 40mm;
-                margin: 0 auto 5mm auto;
-            }
-
-            #store-name {
-                font-size: 16pt;
-                margin-bottom: 2mm;
-            }
-
-            #header-details {
-                font-size: 12pt;
-                margin-top: 5mm;
-                text-align: center;
-            }
-
-            #details p {
-                font-size: 12pt;
-                margin: 5mm 0;
-            }
-
-            #qrcode img {
-                width: 50mm;
-                height: auto;
-                margin: 5mm 0;
-            }
-
-            hr {
-                margin: 5mm 0;
-            }
-
-            .button {
-                display: none;
-            }
+        #header-details {
+          font-size: 12pt;
+          margin-top: 5mm;
+          text-align: center;
         }
+
+        #details p {
+          font-size: 12pt;
+          margin: 5mm 0;
+        }
+
+        #qrcode img {
+          width: 50mm;
+          height: auto;
+          margin: 5mm 0;
+        }
+
+        hr {
+          margin: 5mm 0;
+        }
+
+        .button {
+          display: none;
+        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="invoice-container" id="slip-content">
-        <div id="header-container" style="margin-top: 1.5rem;">
-            <img src="/static/logo/1.jpg" class="circle-image" alt="Logo" id="logo-image">
-            <h1 id="store-name">{{name}}</h1>
-            <h2 style="justify-content: center; display: flex;" id="header-details"
-                class="is-size-4 has-text-weight-bold">ใบสั่งอาหาร</h2>
+      <div id="header-container" style="margin-top: 1.5rem">
+        <img
+          src="/static/logo/1.jpg"
+          class="circle-image"
+          alt="Logo"
+          id="logo-image"
+        />
+        <h1 id="store-name">{{name}}</h1>
+        <h2
+          style="justify-content: center; display: flex"
+          id="header-details"
+          class="is-size-4 has-text-weight-bold"
+        >
+          ใบสั่งอาหาร
+        </h2>
+      </div>
+
+      <hr />
+
+      <div id="content-container">
+        <div id="details">
+          <p
+            id="table_id"
+            style="justify-content: center; display: flex"
+            class="is-size-4 has-text-weight-bold"
+          >
+            หมายเลขโต๊ะ : {{table_id}}
+          </p>
+          <p
+            class="is-size-4 has-text-weight-bold"
+            style="justify-content: center; display: flex"
+          >
+            Scan สั่งอาหารที่นี่
+          </p>
         </div>
 
-        <hr>
-
-        <div id="content-container">
-            <div id="details">
-                <p id="table_id" style="justify-content: center; display: flex;" class="is-size-4 has-text-weight-bold">
-                    หมายเลขโต๊ะ : {{table_id}}
-                </p>
-                <p class="is-size-4 has-text-weight-bold" style="justify-content: center; display: flex;">
-                    Scan สั่งอาหารที่นี่
-                </p>
-            </div>
-
-            <div id="qr-image">
-                <span style="margin: 1.5rem 0 1.5rem 0;" id="qrcode">{{qrcode}}</span>
-            </div>
+        <div id="qr-image">
+          <span style="margin: 1.5rem 0 1.5rem 0" id="qrcode">{{qrcode}}</span>
         </div>
+      </div>
     </div>
 
-    <div style="text-align: center; margin-top: 1.5rem;">
-        <a href="#" id="print-qr-button" class="button is-medium is-link has-text-weight-bold is-responsive mr-3">
-            พิมพ์ QR Code
-        </a>
-        <a href="/cashier" id="home-button" class="button is-medium has-text-weight-bold is-responsive"
-            style="background-color: coral; color: white;">
-            กลับหน้าหลัก
-        </a>
+    <div style="text-align: center; margin-top: 1.5rem">
+      <a
+        href="#"
+        id="print-qr-button"
+        class="button is-medium is-link has-text-weight-bold is-responsive mr-3"
+      >
+        พิมพ์ QR Code
+      </a>
+      <a
+        href="/cashier"
+        id="home-button"
+        class="button is-medium has-text-weight-bold is-responsive"
+        style="background-color: coral; color: white"
+      >
+        กลับหน้าหลัก
+      </a>
     </div>
 
     <script>
-        $(document).ready(function () {
-            updateDetails();
+      $(document).ready(function () {
+        updateDetails();
 
-            // แปลง QR Code URL เป็นรูปภาพ
-            var qrCodeValue = $("#qrcode").text();
-            $("#qrcode").html(qrcodeFormatter(qrCodeValue));
+        // แปลง QR Code URL เป็นรูปภาพ
+        var qrCodeValue = $("#qrcode").text();
+        $("#qrcode").html(qrcodeFormatter(qrCodeValue));
 
-            // รอให้รูปภาพโหลดก่อนพิมพ์
-            const logoImg = document.getElementById("logo-image");
-            const qrImg = $("#qrcode img")[0];
-            const images = [logoImg, qrImg];
+        // รอให้รูปภาพโหลดก่อนพิมพ์
+        const logoImg = document.getElementById("logo-image");
+        const qrImg = $("#qrcode img")[0];
+        const images = [logoImg, qrImg];
 
-            Promise.all(
-                images.map(img => {
-                    return new Promise((resolve, reject) => {
-                        img.onload = resolve;
-                        img.onerror = () => reject(new Error(`Failed to load image: ${img.src}`));
-                        if (img.complete) resolve(); // ถ้ารูปโหลดเสร็จแล้ว
-                    });
-                })
-            ).then(() => {
-                console.log("All images loaded successfully");
-            }).catch(error => {
-                console.error(error);
-                alert("ไม่สามารถโหลดรูปภาพบางรูปได้ กรุณาตรวจสอบ URL");
+        Promise.all(
+          images.map((img) => {
+            return new Promise((resolve, reject) => {
+              img.onload = resolve;
+              img.onerror = () =>
+                reject(new Error(`Failed to load image: ${img.src}`));
+              if (img.complete) resolve(); // ถ้ารูปโหลดเสร็จแล้ว
             });
+          })
+        )
+          .then(() => {
+            console.log("All images loaded successfully");
+          })
+          .catch((error) => {
+            console.error(error);
+            alert("ไม่สามารถโหลดรูปภาพบางรูปได้ กรุณาตรวจสอบ URL");
+          });
 
-            $("#print-qr-button").on("click", function (e) {
-                e.preventDefault();
+        $("#print-qr-button").on("click", function (e) {
+          e.preventDefault();
 
-                const element = document.getElementById("slip-content");
-                html2canvas(element, {
-                    scale: 2,
-                    useCORS: true,
-                    logging: true // Helps with debugging
-                }).then(canvas => {
-                    const imgData = canvas.toDataURL("image/png");
-                    const { jsPDF } = window.jspdf;
+          const element = document.getElementById("slip-content");
+          html2canvas(element, {
+            scale: 2,
+            useCORS: true,
+            logging: true, // Helps with debugging
+          })
+            .then((canvas) => {
+              const imgData = canvas.toDataURL("image/png");
+              const { jsPDF } = window.jspdf;
 
-                    // Set PDF width to 80mm (standard receipt width)
-                    const pdfWidth = 80; // in mm
-                    // Calculate height based on canvas aspect ratio
-                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Maintains aspect ratio
+              // Set PDF width to 80mm (standard receipt width)
+              const pdfWidth = 80; // in mm
+              // Calculate height based on canvas aspect ratio
+              const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Maintains aspect ratio
 
-                    const pdf = new jsPDF({
-                        orientation: "portrait",
-                        unit: "mm",
-                        format: [pdfWidth, pdfHeight] // Dynamic height
-                    });
+              const pdf = new jsPDF({
+                orientation: "portrait",
+                unit: "mm",
+                format: [pdfWidth, pdfHeight], // Dynamic height
+              });
 
-                    // Add image with calculated dimensions
-                    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+              // Add image with calculated dimensions
+              pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
 
-                    // Open PDF in a new window for printing
-                    const printWindow = window.open(pdf.output("bloburl"), "_blank");
+              // Open PDF in a new window for printing
+              const printWindow = window.open(pdf.output("bloburl"), "_blank");
 
-                    printWindow.onload = function () {
-                        printWindow.print();
-                        setTimeout(() => {
-                            printWindow.close();
-                        }, 3000); // Close window after 3 seconds
-                    };
-                }).catch(error => {
-                    console.error("Error generating PDF:", error);
-                    alert("เกิดข้อผิดพลาดในการสร้างบิล กรุณาตรวจสอบคอนโซล");
-                });
+              printWindow.onload = function () {
+                printWindow.print();
+                setTimeout(() => {
+                  printWindow.close();
+                }, 3000); // Close window after 3 seconds
+              };
+            })
+            .catch((error) => {
+              console.error("Error generating PDF:", error);
+              alert("เกิดข้อผิดพลาดในการสร้างบิล กรุณาตรวจสอบคอนโซล");
             });
         });
+      });
 
-        function qrcodeFormatter(value) {
-            const formattedUrl = value.replace("app/", "/");
-            return `<img src="${formattedUrl}" alt="QR Image" style="width: 250px; height: auto;">`;
-        }
+      function qrcodeFormatter(value) {
+        const formattedUrl = value.replace("app/", "/");
+        return `<img src="${formattedUrl}" alt="QR Image" style="width: 250px; height: auto;">`;
+      }
 
-        function updateDetails() {
-            $.getJSON("/store_list", function (data) {
-                $("#store-name").html(data[0].name)
-
-            });
-
-        }
+      function updateDetails() {
+        $.getJSON("/store_list", function (data) {
+          $("#store-name").html(data[0].name);
+        });
+      }
     </script>
-</body>
-
+  </body>
 </html>
