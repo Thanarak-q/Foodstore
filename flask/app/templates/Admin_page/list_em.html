@@ -11,94 +11,45 @@
       <div class="field">
         <label class="label has-text-black" for="firstname">First Name</label>
         <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="firstname"
-            name="firstname"
-            maxlength="100"
-            placeholder="First Name"
-            required
-          />
+          <input class="input" type="text" id="firstname" name="firstname" maxlength="100" placeholder="First Name"
+            required />
         </div>
       </div>
       <div class="field">
         <label class="label has-text-black" for="lastname">Last Name</label>
         <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="lastname"
-            name="lastname"
-            maxlength="100"
-            placeholder="Last Name"
-            required
-          />
+          <input class="input" type="text" id="lastname" name="lastname" maxlength="100" placeholder="Last Name"
+            required />
         </div>
       </div>
       <div class="field">
         <label class="label has-text-black" for="phone">Phone</label>
         <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="phone"
-            name="phone"
-            maxlength="12"
-            placeholder="Phone Number"
-            required
-          />
+          <input class="input" type="text" id="phone" name="phone" maxlength="12" placeholder="Phone Number" required />
         </div>
       </div>
       <div class="field">
         <label class="label has-text-black" for="username">Username</label>
         <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="username"
-            name="username"
-            placeholder="Username"
-            required
-          />
+          <input class="input" type="text" id="username" name="username" placeholder="Username" required />
         </div>
       </div>
       <div class="field">
         <label class="label has-text-black" for="password">Password</label>
         <div class="control">
-          <input
-            class="input"
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Password"
-            required
-          />
+          <input class="input" type="password" id="password" name="password" placeholder="Password" required />
         </div>
       </div>
       <div class="field">
         <label class="label has-text-black" for="role">Role</label>
         <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="role"
-            name="role"
-            maxlength="50"
-            placeholder="Role"
-            required
-          />
+          <input class="input" type="text" id="role" name="role" maxlength="50" placeholder="Role" required />
         </div>
       </div>
       <input type="hidden" id="id" name="id" />
       <div class="field is-grouped">
         <div class="control">
-          <input
-            class="button is-link"
-            type="submit"
-            name="submit"
-            value="Submit"
-          />
+          <input class="button is-link" type="submit" name="submit" value="Submit" />
         </div>
         <div class="control">
           <button id="clear_form" class="button is-light" type="button">
@@ -122,13 +73,8 @@
     <p></p>
     <br />
     <div class="table-container">
-      <table
-        class="table is-striped is-bordered is-hoverable is-fullwidth"
-        id="employee-table"
-        data-search="true"
-        data-sort-name="id"
-        data-sort-order="asc"
-      >
+      <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="employee-table" data-search="true"
+        data-sort-name="id" data-sort-order="asc">
         <thead>
           <tr>
             <th data-field="id" data-sortable="true">
@@ -152,11 +98,7 @@
             <th data-field="status" data-sortable="true">
               <span class="has-text-black"> status </span>
             </th>
-            <th
-              data-field="operation"
-              data-formatter="actionFormatter"
-              data-events="operateEvents"
-            >
+            <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
               <span class="has-text-black"> Edit/Delete </span>
             </th>
           </tr>
@@ -172,11 +114,59 @@
 <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
 <script>
   function populate_employee_table(employee_data) {
+    console.log(employee_data)
     $("#employee-table").bootstrapTable({
       data: employee_data,
-      loadingTemplate: function () {
-        return ""; // เอาข้อความ "Loading, please wait" ออก
-      },
+      columns: [
+        {
+          field: "id",
+          title: "ID",
+          sortable: false
+        },
+        {
+          field: "firstname",
+          title: "First Name",
+          sortable: false
+        },
+        {
+          field: "lastname",
+          title: "Last name",
+          sortable: false
+        },
+        {
+          field: "phone",
+          title: "Phone",
+          sortable: false
+        },
+        {
+          field: "username",
+          title: "Username",
+          sortable: false
+
+        },
+        {
+          field: "role",
+          title: "Role",
+          sortable: false
+        },
+        {
+          field: "status",
+          title: "Status",
+          sortable: false,
+          formatter: function (value) {
+            if (value === "Disable") { return `<span style="color: red;">Fired</span>` }
+            return value
+          }
+        },
+        {
+          field: "operation",
+          title: "Edit/Delete",
+          sortable: false,
+          formatter: actionFormatter
+        }
+
+      ]
+
     });
   }
 
@@ -283,6 +273,7 @@
   $("#cancel_form").click(function () {
     clearForm();
     toggleView();
+
   });
 </script>
 {% endblock %}

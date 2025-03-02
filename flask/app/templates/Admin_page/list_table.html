@@ -9,7 +9,7 @@
     </h2>
     <form id="addTableForm" class="box">
       <div class="field">
-        <input class="input" type="hidden" id="table_id"  value="table_id" name="table_id" >
+        <input class="input" type="hidden" id="table_id" value="table_id" name="table_id">
         <label class="label has-text-black" for="status">Status</label>
         <div class="control">
           <div class="select">
@@ -25,12 +25,7 @@
       <input type="hidden" id="CT_id" name="id" />
       <div class="field is-grouped">
         <div class="control">
-          <input
-            class="button is-link"
-            type="submit"
-            name="submit"
-            value="Submit"
-          />
+          <input class="button is-link" type="submit" name="submit" value="Submit" />
         </div>
         <div class="control">
           <button id="clear_form" class="button is-light" type="button">
@@ -47,52 +42,43 @@
   </div>
 </div>
 <div class="card p-5">
-<div id="table_display" class="container">
-  <button id="add_table" class="button is-primary" type="button">
-    Create Table
-  </button>
-  <p></p>
-  <br />
-  <div class="table-container">
-    <table
-      class="table is-striped is-bordered is-hoverable is-fullwidth"
-      id="table-table"
-      data-search="true"
-      data-sort-name="CT_id"
-      data-sort-order="asc"
-    >
-      <thead>
-        <tr>
-          <th data-field="table_id" data-sortable="true">
-            <span class="has-text-black"> Table ID </span>
-          </th>
-          <th data-field="qrcode" data-sortable="true">
-            <span class="has-text-black"> QR Code </span>
-          </th>
-          <th data-field="status" data-sortable="true">
-            <span class="has-text-black"> Status </span>
-          </th>
-          <th
-            data-field="operation"
-            data-formatter="actionFormatter"
-            data-events="operateEvents"
-          >
-            <span class="has-text-black"> Edit/Delete </span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Add rows dynamically -->
-      </tbody>
-    </table>
+  <div id="table_display" class="container">
+    <button id="add_table" class="button is-primary" type="button">
+      Create Table
+    </button>
+    <p></p>
+    <br />
+    <div class="table-container">
+      <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="table-table" data-search="true"
+        data-sort-name="CT_id" data-sort-order="asc">
+        <thead>
+          <tr>
+            <th data-field="table_id" data-sortable="true">
+              <span class="has-text-black"> Table ID </span>
+            </th>
+            <th data-field="qrcode" data-sortable="true">
+              <span class="has-text-black"> QR Code </span>
+            </th>
+            <th data-field="status" data-sortable="true">
+              <span class="has-text-black"> Status </span>
+            </th>
+            <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
+              <span class="has-text-black"> Edit/Delete </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Add rows dynamically -->
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 </div>
 {% endblock %} {% block extra_js %}
 <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
 <script>
   function populate_table(table_data) {
-    
+
     $("#table-table").bootstrapTable({
       data: table_data,
       columns: [
@@ -113,6 +99,7 @@
         {
           field: "status",
           title: "Status",
+          formatter: statusFormatter,
           sortable: true,
         },
         {
@@ -127,6 +114,15 @@
       },
     });
   }
+
+  function statusFormatter(value) {
+    if (value === "Disable") {
+      return '<span style="color: red;">Disabled</span>';
+    }
+
+    return value;
+  }
+
 
   $(document).ready(function () {
     (function () {
@@ -219,7 +215,7 @@
   $("#add_table").click(function () {
     clearForm();
     toggleView();
-    $.getJSON("/table/get_all_table", function(x){
+    $.getJSON("/table/get_all_table", function (x) {
       let lasttable = Object.keys(x).length + 1;
       $('#table_id').val(lasttable);
     });
