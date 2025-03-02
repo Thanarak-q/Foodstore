@@ -1,335 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>สั่งอาหารร้านขายปลาดุกทอด</title>
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/Order_page.css') }}"
-    />
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <style>
-      body {
-        position: relative;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>สั่งอาหารร้านขายปลาดุกทอด</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/Order_page.css') }}" />
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <style>
+    body {
+      position: relative;
+    }
+
+    /* Fly-to-cart animation */
+    @keyframes flyToCart {
+      0% {
+        opacity: 1;
+        transform: scale(1);
       }
 
-      /* Fly-to-cart animation */
-      @keyframes flyToCart {
-        0% {
-          opacity: 1;
-          transform: scale(1);
-        }
-
-        50% {
-          opacity: 0.8;
-          transform: scale(0.7);
-        }
-
-        100% {
-          opacity: 0;
-          transform: scale(0.5) translateX(0) translateY(0);
-        }
+      50% {
+        opacity: 0.8;
+        transform: scale(0.7);
       }
 
-      .fly-item {
-        position: absolute;
-        z-index: 2000;
-        pointer-events: none;
-        animation: flyToCart 0.7s ease forwards;
+      100% {
+        opacity: 0;
+        transform: scale(0.5) translateX(0) translateY(0);
+      }
+    }
+
+    .fly-item {
+      position: absolute;
+      z-index: 2000;
+      pointer-events: none;
+      animation: flyToCart 0.7s ease forwards;
+    }
+
+    /* Existing animations */
+    @keyframes bounce {
+
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateY(0);
       }
 
-      /* Existing animations */
-      @keyframes bounce {
-        0%,
-        20%,
-        50%,
-        80%,
-        100% {
-          transform: translateY(0);
-        }
-
-        40% {
-          transform: translateY(-10px);
-        }
-
-        60% {
-          transform: translateY(-5px);
-        }
+      40% {
+        transform: translateY(-10px);
       }
 
-      @keyframes slideUp {
-        0% {
-          transform: translateY(100%);
-          opacity: 0;
-        }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
 
-        100% {
-          transform: translateY(0);
-          opacity: 1;
-        }
+    @keyframes slideUp {
+      0% {
+        transform: translateY(100%);
+        opacity: 0;
       }
 
-      #cart-count.animate {
-        animation: bounce 0.5s ease;
+      100% {
+        transform: translateY(0);
+        opacity: 1;
       }
+    }
 
-      .toast.animate {
-        animation: slideUp 0.5s ease;
-      }
-    </style>
-  </head>
+    #cart-count.animate {
+      animation: bounce 0.5s ease;
+    }
 
-  <body>
-    <!-- Toast Notification -->
-    <div
-      class="toast position-fixed bottom-0 right-0 p-3"
-      style="z-index: 1055; bottom: 1rem; right: 1rem"
-      id="cart-toast"
-      data-delay="2000"
-    >
-      <div class="toast-body">
-        <i class="fas fa-check-circle"></i> สินค้าได้ถูกเพิ่มลงในตะกร้า!
-      </div>
+    .toast.animate {
+      animation: slideUp 0.5s ease;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Toast Notification -->
+  <div class="toast position-fixed bottom-0 right-0 p-3" style="z-index: 1055; bottom: 1rem; right: 1rem"
+    id="cart-toast" data-delay="2000">
+    <div class="toast-body">
+      <i class="fas fa-check-circle"></i> สินค้าได้ถูกเพิ่มลงในตะกร้า!
     </div>
-    <!-- Toast Notification for item removal -->
-    <div
-      class="toast position-fixed bottom-0 right-0 p-3"
-      style="z-index: 1060; bottom: 1rem; right: 1rem; background-color: red"
-      id="remove-toast"
-      data-delay="2000"
-    >
-      <div class="toast-body" style="background-color: red">
-        <i class="fas fa-trash-alt"></i> สินค้าได้ถูกลบออกจากตะกร้า!
-      </div>
+  </div>
+  <!-- Toast Notification for item removal -->
+  <div class="toast position-fixed bottom-0 right-0 p-3"
+    style="z-index: 1060; bottom: 1rem; right: 1rem; background-color: red" id="remove-toast" data-delay="2000">
+    <div class="toast-body" style="background-color: red">
+      <i class="fas fa-trash-alt"></i> สินค้าได้ถูกลบออกจากตะกร้า!
     </div>
-    <!-- Toast Notification for all item removal -->
-    <div
-      class="toast position-fixed bottom-0 right-0 p-3"
-      style="z-index: 1060; bottom: 1rem; right: 1rem; background-color: red"
-      id="remove-all-toast"
-      data-delay="2000"
-    >
-      <div class="toast-body" style="background-color: red">
-        <i class="fas fa-trash-alt"></i> สินค้าทั้งหมดได้ถูกลบออกจากตะกร้า!
+  </div>
+  <!-- Toast Notification for all item removal -->
+  <div class="toast position-fixed bottom-0 right-0 p-3"
+    style="z-index: 1060; bottom: 1rem; right: 1rem; background-color: red" id="remove-all-toast" data-delay="2000">
+    <div class="toast-body" style="background-color: red">
+      <i class="fas fa-trash-alt"></i> สินค้าทั้งหมดได้ถูกลบออกจากตะกร้า!
+    </div>
+  </div>
+
+  <div class="cart-popup-backdrop" id="cart-backdrop"></div>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand navbar-dark bg-danger">
+    <img class="mr-2 logo-animation" src="/static/ico/logo.jpg" style="height: 40px; border-radius: 20px" alt="logo" />
+    <div class="navbar-nav">
+      <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-white" href="#" id="nav-menu" role="button" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          ประเภทอาหาร
+        </a>
+        <ul class="dropdown-menu fade-in-animation" aria-labelledby="nav-menu" id="categories-dropdown"></ul>
       </div>
     </div>
 
-    <div class="cart-popup-backdrop" id="cart-backdrop"></div>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand navbar-dark bg-danger">
-      <img
-        class="mr-2 logo-animation"
-        src="/static/ico/logo.jpg"
-        style="height: 40px; border-radius: 20px"
-        alt="logo"
-      />
-      <div class="navbar-nav">
-        <div class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle text-white"
-            href="#"
-            id="nav-menu"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            ประเภทอาหาร
-          </a>
-          <ul
-            class="dropdown-menu fade-in-animation"
-            aria-labelledby="nav-menu"
-            id="categories-dropdown"
-          ></ul>
-        </div>
-      </div>
-
-      <div class="ml-auto">
-        <button
-          class="btn btn-link text-white animate-on-hover"
-          onclick="toggleSearchPopup()"
-        >
-          <i class="fas fa-search"></i>
-        </button>
-        <button
-          class="btn btn-link text-white animate-on-hover"
-          onclick="toggleCartPopup()"
-          id="cart-button"
-        >
-          <i class="fas fa-shopping-cart"></i>
-          <span id="cart-count" class="badge badge-warning">0</span>
-        </button>
-      </div>
-    </nav>
-
-    <!-- Search Bar -->
-    <div
-      class="search-bar-bottom bg-danger p-3 justify-content-center"
-      id="search-bar-bottom"
-      style="display: none"
-    >
-      <input
-        type="text"
-        class="form-control"
-        id="search-input-bottom"
-        placeholder="ค้นหาอาหาร..."
-      />
-      <button class="btn btn-warning ml-2" onclick="toggleSearchPopup()">
-        Close
+    <div class="ml-auto">
+      <button class="btn btn-link text-white animate-on-hover" onclick="toggleSearchPopup()">
+        <i class="fas fa-search"></i>
+      </button>
+      <button class="btn btn-link text-white animate-on-hover" onclick="toggleCartPopup()" id="cart-button">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-count" class="badge badge-warning">0</span>
       </button>
     </div>
+  </nav>
 
-    <!-- Menu Grid -->
-    <div class="container mt-4" id="menu-grid-container"></div>
+  <!-- Search Bar -->
+  <div class="search-bar-bottom bg-danger p-3 justify-content-center" id="search-bar-bottom" style="display: none">
+    <input type="text" class="form-control" id="search-input-bottom" placeholder="ค้นหาอาหาร..." />
+    <button class="btn btn-warning ml-2" onclick="toggleSearchPopup()">
+      Close
+    </button>
+  </div>
 
-    <!-- Product Popup -->
-    <div class="cart-popup-item" id="product-popup">
-      <div class="popup-content">
-        <img id="product-image" src="" alt="Product Image" class="img-fluid" />
-        <h3 id="product-name" class="mt-3"></h3>
-        <p id="product-description"></p>
-        <p id="product-price"></p>
-        <div class="form-group">
-          <label for="quantity-input">จำนวน:</label>
-          <input
-            type="number"
-            id="quantity-input"
-            class="form-control"
-            value="1"
-            min="1"
-          />
-        </div>
-        <button class="btn btn-danger mt-2" onclick="closeProductPopup()">
-          ปิด
-        </button>
-        <button
-          id="add-from-popup"
-          class="btn btn-warning mt-2"
-          onclick="addToCartFromPopup()"
-        >
-          เพิ่มลงตะกร้า
-        </button>
+  <!-- Menu Grid -->
+  <div class="container mt-4" id="menu-grid-container"></div>
+
+  <!-- Product Popup -->
+  <div class="cart-popup-item" id="product-popup">
+    <div class="popup-content">
+      <img id="product-image" src="" alt="Product Image" class="img-fluid" />
+      <h3 id="product-name" class="mt-3"></h3>
+      <p id="product-description"></p>
+      <p id="product-price"></p>
+      <div class="form-group">
+        <label for="quantity-input">จำนวน:</label>
+        <input type="number" id="quantity-input" class="form-control" value="1" min="1" />
       </div>
-    </div>
-
-    <!-- Cart Popup -->
-    <div class="cart-popup" id="cart-popup">
-      <button
-        class="close-button btn btn-link text-dark float-right"
-        onclick="toggleCartPopup()"
-      >
-        <i class="fas fa-times"></i>
+      <button class="btn btn-danger mt-2" onclick="closeProductPopup()">
+        ปิด
       </button>
-      <h2>ตะกร้าสินค้า</h2>
-      <div id="cart-items"></div>
-      <div class="text-right">
-        <div id="total-price" class="mt-3 font-weight-bold">
-          รวมทั้งหมด: 0 บาท
-        </div>
-        <button class="btn btn-danger mr-2" onclick="clearcart()">
-          <i class="fas fa-trash-alt"></i> ทั้งหมด
-        </button>
-        <button class="btn btn-success" onclick="checkout()">
-          <i class="fas fa-check"></i> ยืนยันการสั่งซื้อ
-        </button>
-      </div>
+      <button id="add-from-popup" class="btn btn-warning mt-2" onclick="addToCartFromPopup()">
+        เพิ่มลงตะกร้า
+      </button>
     </div>
+  </div>
 
-    <script>
-      window.history.replaceState({}, document.title, "/order_food");
-      let menuItems = [];
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  <!-- Cart Popup -->
+  <div class="cart-popup" id="cart-popup">
+    <button class="close-button btn btn-link text-dark float-right" onclick="toggleCartPopup()">
+      <i class="fas fa-times"></i>
+    </button>
+    <h2>ตะกร้าสินค้า</h2>
+    <div id="cart-items"></div>
+    <div class="text-right">
+      <div id="total-price" class="mt-3 font-weight-bold">
+        รวมทั้งหมด: 0 บาท
+      </div>
+      <button class="btn btn-danger mr-2" onclick="clearcart()">
+        <i class="fas fa-trash-alt"></i> ทั้งหมด
+      </button>
+      <button class="btn btn-success" onclick="checkout()">
+        <i class="fas fa-check"></i> ยืนยันการสั่งซื้อ
+      </button>
+    </div>
+  </div>
 
-      var max_menu = 0;
-      var max_qua = 0;
-      $(document).ready(function () {
-        $.getJSON("/menu/menus", populate_table);
-        console.log("{{ table_id }}");
-        console.log("{{ count }}");
-        $.getJSON("/store_list", function (data) {
-          max_menu = data[0]["Max_Menu_per_Round"];
-          max_qua = data[0]["Max_Food_Quantity_per_Order"];
-        });
-        updateCart();
+  <script>
+    window.history.replaceState({}, document.title, "/order_food");
+    let menuItems = [];
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        $("#search-input-bottom").on("input", function () {
-          const searchTerm = $(this).val().toLowerCase();
-          const filteredItems = menuItems.filter((item) =>
-            item.name.toLowerCase().includes(searchTerm)
-          );
-          renderMenuByCategory(filteredItems);
-        });
+    var max_menu = 0;
+    var max_qua = 0;
+    $(document).ready(function () {
+      $.getJSON("/menu/menus", populate_table);
+      console.log("{{ table_id }}");
+      console.log("{{ count }}");
+      $.getJSON("/store_list", function (data) {
+        max_menu = data[0]["Max_Menu_per_Round"];
+        max_qua = data[0]["Max_Food_Quantity_per_Order"];
       });
+      updateCart();
 
-      $(document).on("scroll", function () {
-        if ($(document).scrollTop() > 50) {
-          $(".navbar").addClass("scrolled");
-        } else {
-          $(".navbar").removeClass("scrolled");
-        }
+      $("#search-input-bottom").on("input", function () {
+        const searchTerm = $(this).val().toLowerCase();
+        const filteredItems = menuItems.filter((item) =>
+          item.name.toLowerCase().includes(searchTerm)
+        );
+        renderMenuByCategory(filteredItems);
       });
+    });
 
-      function populate_table(data) {
-        menuItems = data;
-        renderMenuByCategory();
-        renderCategoriesNav();
+    $(document).on("scroll", function () {
+      if ($(document).scrollTop() > 50) {
+        $(".navbar").addClass("scrolled");
+      } else {
+        $(".navbar").removeClass("scrolled");
       }
+    });
 
-      function renderCategoriesNav() {
-        const categoriesDropdown = $("#categories-dropdown");
-        categoriesDropdown.empty();
-        const categories = [...new Set(menuItems.map((item) => item.category))];
-        categoriesDropdown.append(`
+    function populate_table(data) {
+      menuItems = data;
+      renderMenuByCategory();
+      renderCategoriesNav();
+    }
+
+    function renderCategoriesNav() {
+      const categoriesDropdown = $("#categories-dropdown");
+      categoriesDropdown.empty();
+      const categories = [...new Set(menuItems.map((item) => item.category))];
+      categoriesDropdown.append(`
           <li><a class="dropdown-item" href="javascript:void(0)" onclick="filterMenucat('')">ทั้งหมด</a></li>
         `);
-        categories.forEach((category) => {
-          categoriesDropdown.append(`
+      categories.forEach((category) => {
+        categoriesDropdown.append(`
             <li><a class="dropdown-item" href="javascript:void(0)" onclick="filterMenucat('${category}')">${category}</a></li>
           `);
-        });
+      });
+    }
+
+    function renderMenuByCategory(filteredItems = menuItems) {
+      const isMobile = window.innerWidth <= 768;
+      const viewType = isMobile ? "list" : "grid";
+      const menuContainer = $("#menu-grid-container");
+      menuContainer.empty();
+
+      const groupedByCategory = filteredItems.reduce((acc, item) => {
+        acc[item.category] = acc[item.category] || [];
+        acc[item.category].push(item);
+        return acc;
+      }, {});
+
+      for (const category in groupedByCategory) {
+        groupedByCategory[category].sort((a, b) => a.price - b.price);
       }
 
-      function renderMenuByCategory(filteredItems = menuItems) {
-        const isMobile = window.innerWidth <= 768;
-        const viewType = isMobile ? "list" : "grid";
-        const menuContainer = $("#menu-grid-container");
-        menuContainer.empty();
+      Object.keys(groupedByCategory).forEach((category) => {
+        const categoryContainer = $("<div>").addClass("mb-4");
+        const categoryTitle = $("<h3>")
+          .addClass("text-danger font-weight-bold mb-3")
+          .text(category);
+        categoryContainer.append(categoryTitle);
+        const gridContainer = $("<div>").addClass("row");
 
-        const groupedByCategory = filteredItems.reduce((acc, item) => {
-          acc[item.category] = acc[item.category] || [];
-          acc[item.category].push(item);
-          return acc;
-        }, {});
-
-        for (const category in groupedByCategory) {
-          groupedByCategory[category].sort((a, b) => a.price - b.price);
-        }
-
-        Object.keys(groupedByCategory).forEach((category) => {
-          const categoryContainer = $("<div>").addClass("mb-4");
-          const categoryTitle = $("<h3>")
-            .addClass("text-danger font-weight-bold mb-3")
-            .text(category);
-          categoryContainer.append(categoryTitle);
-          const gridContainer = $("<div>").addClass("row");
-
-          groupedByCategory[category].forEach((item) => {
-            if (viewType === "list") {
-              const listItem = $("<div>").addClass("list-view-item");
-              listItem.html(`
+        groupedByCategory[category].forEach((item) => {
+          if (viewType === "list") {
+            const listItem = $("<div>").addClass("list-view-item");
+            listItem.html(`
                 <img src="${item.image_url}" alt="${item.name}" />
                 <div class="item-details">
                   <h5>${item.name}</h5>
@@ -344,12 +281,12 @@
                   <button class="btn btn-outline-secondary" onclick="showProductPopup(${item.id})">ดูรายละเอียด</button>
                 </div>
               `);
-              categoryContainer.append(listItem);
-            } else {
-              const cardDiv = $("<div>").addClass(
-                "col-md-4 col-sm-6 col-12 mb-4"
-              );
-              cardDiv.html(`
+            categoryContainer.append(listItem);
+          } else {
+            const cardDiv = $("<div>").addClass(
+              "col-md-4 col-sm-6 col-12 mb-4"
+            );
+            cardDiv.html(`
                 <div class="card">
                   <img src="${item.image_url}" class="card-img-top" alt="${item.name}" style="height: 232px; width: 348px; object-fit: cover" />
                   <div class="card-body">
@@ -366,110 +303,110 @@
                   </div>
                 </div>
               `);
-              gridContainer.append(cardDiv);
-            }
-          });
-          if (viewType === "grid") {
-            categoryContainer.append(gridContainer);
+            gridContainer.append(cardDiv);
           }
-          menuContainer.append(categoryContainer);
         });
-      }
-
-      function addToCart(itemId, quantity = 1, buttonElement) {
-        const item = menuItems.find((menuItem) => menuItem.id === itemId);
-        if (!item) return;
-
-        const existingItem = cart.find((cartItem) => cartItem.id === itemId);
-        if (existingItem) {
-          if (existingItem.quantity + quantity > max_qua) {
-            alert("เกินจำนวนสินค้าที่สามารถสั่งได้ต่อครั้ง");
-            return;
-          }
-          existingItem.quantity += quantity;
-        } else {
-          console.log(quantity);
-          if (quantity > max_qua) {
-            alert("เกินจำนวนสินค้าที่สามารถสั่งได้ต่อครั้ง");
-            return;
-          }
-          if (cart.length === max_menu) {
-            alert("ตะกร้าเต็มแล้ว กรุณายืนยันการสั่งซื้อก่อนเพิ่มสินค้าเพิ่ม");
-            return;
-          }
-          cart.push({ ...item, quantity: quantity });
+        if (viewType === "grid") {
+          categoryContainer.append(gridContainer);
         }
+        menuContainer.append(categoryContainer);
+      });
+    }
 
-        updateCart();
-        showAddToCartToast();
+    function addToCart(itemId, quantity = 1, buttonElement) {
+      const item = menuItems.find((menuItem) => menuItem.id === itemId);
+      if (!item) return;
 
-        const button = $(buttonElement);
-        const cartButton = $("#cart-button");
-
-        // Get the starting position from the clicked button
-        const buttonOffset = button.offset();
-        const buttonWidth = button.outerWidth();
-        const buttonHeight = button.outerHeight();
-
-        // Create the flying item
-        const flyItem = $("<img>")
-          .attr("src", item.image_url)
-          .addClass("fly-item")
-          .css({
-            width: "50px",
-            height: "50px",
-            borderRadius: "50%",
-            objectFit: "cover",
-            // Position at the center of the clicked button
-            top: buttonOffset.top + buttonHeight / 2 - 25,
-            left: buttonOffset.left + buttonWidth / 2 - 25,
-          });
-
-        $("body").append(flyItem);
-
-        // Get cart button position dynamically
-        const cartOffset = cartButton.offset();
-        const cartWidth = cartButton.outerWidth();
-        const cartHeight = cartButton.outerHeight();
-
-        // Calculate the target position (center of cart button)
-        const targetTop = cartOffset.top + cartHeight / 2 - 25;
-        const targetLeft = cartOffset.left + cartWidth / 2 - 25;
-
-        // Animate to cart position
-        flyItem.animate(
-          {
-            top: targetTop,
-            left: targetLeft,
-          },
-          700,
-          function () {
-            flyItem.remove();
-            $("#cart-count").addClass("animate");
-            setTimeout(() => $("#cart-count").removeClass("animate"), 500);
-          }
-        );
+      const existingItem = cart.find((cartItem) => cartItem.id === itemId);
+      if (existingItem) {
+        if (existingItem.quantity + quantity > max_qua) {
+          alert("เกินจำนวนสินค้าที่สามารถสั่งได้ต่อครั้ง");
+          return;
+        }
+        existingItem.quantity += quantity;
+      } else {
+        console.log(quantity);
+        if (quantity > max_qua) {
+          alert("เกินจำนวนสินค้าที่สามารถสั่งได้ต่อครั้ง");
+          return;
+        }
+        if (cart.length === max_menu) {
+          alert("ตะกร้าเต็มแล้ว กรุณายืนยันการสั่งซื้อก่อนเพิ่มสินค้าเพิ่ม");
+          return;
+        }
+        cart.push({ ...item, quantity: quantity });
       }
 
-      function updateCart() {
-        localStorage.setItem("cart", JSON.stringify(cart));
-        const totalQuantity = cart.reduce(
-          (acc, item) => acc + item.quantity,
-          0
-        );
-        $("#cart-count").text(totalQuantity);
-        renderCart();
-      }
+      updateCart();
+      showAddToCartToast();
 
-      function renderCart() {
-        const cartItemsDiv = $("#cart-items");
-        const totalPriceDiv = $("#total-price");
-        cartItemsDiv.empty();
-        let totalPrice = 0;
+      const button = $(buttonElement);
+      const cartButton = $("#cart-button");
 
-        cart.forEach((item) => {
-          const cartItemDiv = $("<div>").addClass("cart-item");
-          cartItemDiv.html(`
+      // Get the starting position from the clicked button
+      const buttonOffset = button.offset();
+      const buttonWidth = button.outerWidth();
+      const buttonHeight = button.outerHeight();
+
+      // Create the flying item
+      const flyItem = $("<img>")
+        .attr("src", item.image_url)
+        .addClass("fly-item")
+        .css({
+          width: "50px",
+          height: "50px",
+          borderRadius: "50%",
+          objectFit: "cover",
+          // Position at the center of the clicked button
+          top: buttonOffset.top + buttonHeight / 2 - 25,
+          left: buttonOffset.left + buttonWidth / 2 - 25,
+        });
+
+      $("body").append(flyItem);
+
+      // Get cart button position dynamically
+      const cartOffset = cartButton.offset();
+      const cartWidth = cartButton.outerWidth();
+      const cartHeight = cartButton.outerHeight();
+
+      // Calculate the target position (center of cart button)
+      const targetTop = cartOffset.top + cartHeight / 2 - 25;
+      const targetLeft = cartOffset.left + cartWidth / 2 - 25;
+
+      // Animate to cart position
+      flyItem.animate(
+        {
+          top: targetTop,
+          left: targetLeft,
+        },
+        700,
+        function () {
+          flyItem.remove();
+          $("#cart-count").addClass("animate");
+          setTimeout(() => $("#cart-count").removeClass("animate"), 500);
+        }
+      );
+    }
+
+    function updateCart() {
+      localStorage.setItem("cart", JSON.stringify(cart));
+      const totalQuantity = cart.reduce(
+        (acc, item) => acc + item.quantity,
+        0
+      );
+      $("#cart-count").text(totalQuantity);
+      renderCart();
+    }
+
+    function renderCart() {
+      const cartItemsDiv = $("#cart-items");
+      const totalPriceDiv = $("#total-price");
+      cartItemsDiv.empty();
+      let totalPrice = 0;
+
+      cart.forEach((item) => {
+        const cartItemDiv = $("<div>").addClass("cart-item");
+        cartItemDiv.html(`
             <span>${item.name}</span>
             <div class="quantity-buttons">
               <button class="btn btn-sm btn-danger" onclick="changeQuantity(${item.id}, -1)"><i class="fas fa-minus"></i></button>
@@ -478,130 +415,127 @@
               <button class="btn btn-sm btn-danger" onclick="removeItem(${item.id})"><i class="fas fa-trash-alt"></i></button>
             </div>
           `);
-          cartItemsDiv.append(cartItemDiv);
-          totalPrice += item.price * item.quantity;
-        });
-
-        totalPriceDiv.text(`รวมทั้งหมด: ${totalPrice} บาท`);
-      }
-
-      function changeQuantity(itemId, change) {
-        const item = cart.find((cartItem) => cartItem.id === itemId);
-        if (!item) return;
-        item.quantity += change;
-        if (item.quantity > max_qua) {
-          alert("เกินจำนวนสินค้าที่สามารถสั่งได้ต่อครั้ง");
-          item.quantity = max_qua;
-        }
-        if (item.quantity <= 0) {
-          cart = cart.filter((cartItem) => cartItem.id !== itemId);
-        }
-        updateCart();
-      }
-
-      function removeItem(itemId) {
-        cart = cart.filter((cartItem) => cartItem.id !== itemId);
-        updateCart();
-        showRemoveFromCartToast();
-      }
-
-      function checkout() {
-        if (cart.length === 0) {
-          alert("คุณยังไม่ได้สั่งอะไรเลย");
-          toggleCartPopup();
-        } else {
-          alert("ทำการสั่งซื้อแล้ว!");
-          console.log(cart);
-          var time_ = new Date().toISOString();
-          let cart_send = {
-            count: "{{ count }}",
-            table_id: "{{ table_id }}",
-            time: time_,
-          };
-          for (menu of cart) {
-            cart_send[menu["id"]] = menu["quantity"];
-          }
-          $.post("/orders/create", cart_send, function (data) {
-            cart = [];
-            updateCart();
-          });
-          toggleCartPopup();
-        }
-      }
-
-      function clearcart() {
-        cart = [];
-        updateCart();
-        showRemoveallFromCartToast();
-      }
-
-      function toggleSearchPopup() {
-        $("#search-bar-bottom").css("display", function (i, v) {
-          return v === "none" ? "flex" : "none";
-        });
-        $("#search-input-bottom").focus();
-      }
-
-      function toggleCartPopup() {
-        $("#cart-popup").toggleClass("show");
-        $("#cart-backdrop").toggle();
-      }
-
-      function filterMenucat(category) {
-        const filteredItems = category
-          ? menuItems.filter((item) => item.category === category)
-          : menuItems;
-        renderMenuByCategory(filteredItems);
-      }
-
-      function showProductPopup(productId) {
-        const product = menuItems.find((item) => item.id === productId);
-        if (!product) return;
-        $("#product-image")
-          .attr("src", product.image_url)
-          .css({ width: "560px", height: "336px", "object-fit": "cover" });
-        $("#product-name").text(product.name);
-        $("#product-description").text(`รายละเอียด: ${product.description}`);
-        $("#product-price").text(`ราคา: ${product.price} บาท`);
-        $("#add-from-popup").data("product-id", productId);
-        $("#product-popup").addClass("show");
-      }
-
-      function addToCartFromPopup() {
-        const productId = $("#add-from-popup").data("product-id");
-        const quantity = parseInt($("#quantity-input").val(), 10);
-        if (quantity > 0) {
-          const button = $("#add-from-popup");
-          addToCart(productId, quantity, button[0]);
-        } else {
-          alert("กรุณาระบุจำนวนสินค้าที่มากกว่า 0");
-        }
-      }
-
-      function closeProductPopup() {
-        $("#product-popup").removeClass("show");
-      }
-
-      function showAddToCartToast() {
-        $("#cart-toast").addClass("animate").toast("show");
-        $("#cart-toast").on("hidden.bs.toast", function () {
-          $(this).removeClass("animate");
-        });
-      }
-
-      function showRemoveFromCartToast() {
-        $("#remove-toast").toast("show");
-      }
-
-      function showRemoveallFromCartToast() {
-        $("#remove-all-toast").toast("show");
-      }
-
-      $(window).resize(() => {
-        renderMenuByCategory(menuItems);
+        cartItemsDiv.append(cartItemDiv);
+        totalPrice += item.price * item.quantity;
       });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-  </body>
+
+      totalPriceDiv.text(`รวมทั้งหมด: ${totalPrice} บาท`);
+    }
+
+    function changeQuantity(itemId, change) {
+      const item = cart.find((cartItem) => cartItem.id === itemId);
+      if (!item) return;
+      item.quantity += change;
+      if (item.quantity > max_qua) {
+        alert("เกินจำนวนสินค้าที่สามารถสั่งได้ต่อครั้ง");
+        item.quantity = max_qua;
+      }
+      if (item.quantity <= 0) {
+        cart = cart.filter((cartItem) => cartItem.id !== itemId);
+      }
+      updateCart();
+    }
+
+    function removeItem(itemId) {
+      cart = cart.filter((cartItem) => cartItem.id !== itemId);
+      updateCart();
+      showRemoveFromCartToast();
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        alert("คุณยังไม่ได้สั่งอะไรเลย");
+        toggleCartPopup();
+      } else {
+        alert("ทำการสั่งซื้อแล้ว!");
+        console.log(cart);
+        var time_ = new Date().toISOString();
+        let cart_send = {
+          count: "{{ count }}",
+          table_id: "{{ table_id }}",
+          time: time_,
+        };
+        for (menu of cart) {
+          cart_send[menu["id"]] = menu["quantity"];
+        }
+        $.post("/orders/create", cart_send, function (data) {
+          cart = [];
+          updateCart();
+        });
+        toggleCartPopup();
+      }
+    }
+
+    function clearcart() {
+      cart = [];
+      updateCart();
+      showRemoveallFromCartToast();
+    }
+
+    function toggleSearchPopup() {
+      $("#search-bar-bottom").css("display", function (i, v) {
+        return v === "none" ? "flex" : "none";
+      });
+      $("#search-input-bottom").focus();
+    }
+
+    function toggleCartPopup() {
+      $("#cart-popup").toggleClass("show");
+      $("#cart-backdrop").toggle();
+    }
+
+    function filterMenucat(category) {
+      const filteredItems = category
+        ? menuItems.filter((item) => item.category === category)
+        : menuItems;
+      renderMenuByCategory(filteredItems);
+    }
+
+    function showProductPopup(productId) {
+      const product = menuItems.find((item) => item.id === productId);
+      if (!product) return;
+      $("#product-image")
+        .attr("src", product.image_url)
+        .css({ width: "560px", height: "336px", "object-fit": "cover" });
+      $("#product-name").text(product.name);
+      $("#product-description").text(`รายละเอียด: ${product.description}`);
+      $("#product-price").text(`ราคา: ${product.price} บาท`);
+      $("#add-from-popup").data("product-id", productId);
+      $("#product-popup").addClass("show");
+    }
+
+    function addToCartFromPopup() {
+      const productId = $("#add-from-popup").data("product-id");
+      const quantity = parseInt($("#quantity-input").val(), 10);
+      if (quantity > 0) {
+        const button = $("#add-from-popup");
+        addToCart(productId, quantity, button[0]);
+      } else {
+        alert("กรุณาระบุจำนวนสินค้าที่มากกว่า 0");
+      }
+    }
+
+    function closeProductPopup() {
+      $("#product-popup").removeClass("show");
+    }
+
+    function showAddToCartToast() {
+      $("#cart-toast").addClass("animate").toast("show");
+      $("#cart-toast").on("hidden.bs.toast", function () {
+        $(this).removeClass("animate");
+      });
+    }
+
+    function showRemoveFromCartToast() {
+      $("#remove-toast").toast("show");
+    }
+
+    function showRemoveallFromCartToast() {
+      $("#remove-all-toast").toast("show");
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+</body>
+
 </html>

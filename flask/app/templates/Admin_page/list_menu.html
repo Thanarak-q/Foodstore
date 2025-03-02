@@ -11,74 +11,36 @@
       <div class="field">
         <label class="label has-text-black" for="name">Menu Name</label>
         <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="name"
-            name="name"
-            maxlength="100"
-            placeholder="Menu Name.."
-            required
-          />
+          <input class="input" type="text" id="name" name="name" maxlength="100" placeholder="Menu Name.." required />
         </div>
       </div>
       <div class="field">
-        <label class="label has-text-black" for="description"
-          >Description</label
-        >
+        <label class="label has-text-black" for="description">Description</label>
         <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="description"
-            name="description"
-            placeholder="Description.."
-          />
+          <input class="input" type="text" id="description" name="description" placeholder="Description.." />
         </div>
       </div>
       <div class="field">
         <label class="label has-text-black" for="price">Price</label>
         <div class="control">
-          <input
-            class="input"
-            type="number"
-            id="price"
-            name="price"
-            placeholder="Price.."
-            required
-          />
+          <input class="input" type="number" id="price" name="price" placeholder="Price.." required />
         </div>
       </div>
       <div class="field">
         <label class="label has-text-black" for="category">Category</label>
         <div class="control">
-          <input
-            class="input"
-            type="text"
-            id="category"
-            name="category"
-            maxlength="50"
-            placeholder="Category.."
-            required
-          />
+          <input class="input" type="text" id="category" name="category" maxlength="50" placeholder="Category.."
+            required />
         </div>
       </div>
       <div class="field">
         <label class="label has-text-black" for="image_file">Image File</label>
         <div class="control">
-          <input
-            class="input"
-            type="file"
-            id="image_file"
-            name="image_file"
-            accept="image/*"
-          />
+          <input class="input" type="file" id="image_file" name="image_file" accept="image/*" />
         </div>
       </div>
       <div class="field">
-        <label class="label has-text-black" for="availability"
-          >Availability</label
-        >
+        <label class="label has-text-black" for="availability">Availability</label>
         <div class="control">
           <div class="select">
             <select id="availability" name="availability" required>
@@ -91,12 +53,7 @@
       <input type="hidden" id="id" name="id" />
       <div class="field is-grouped">
         <div class="control">
-          <input
-            class="button is-link"
-            type="submit"
-            name="submit"
-            value="Submit"
-          />
+          <input class="button is-link" type="submit" name="submit" value="Submit" />
         </div>
         <div class="control">
           <button id="clear_form" class="button is-light" type="button">
@@ -113,57 +70,49 @@
   </div>
 </div>
 <div class="card p-5">
-<div id="table_display" class="container">
-  <button id="add_menu" class="button is-primary" type="button">
-    Create Menu
-  </button>
-  <p></p>
-  <br />
-  <div class="table-container">
-    <table
-      class="table is-striped is-bordered is-hoverable is-fullwidth"
-      id="menu-table"
-      data-sort-name="id"
-    >
-      <thead>
-        <tr>
-          <th data-field="id" data-visible="false">
-            <span class="has-text-black"> ID </span>
-          </th>
-          <th data-field="name" data-sortable="true">
-            <span class="has-text-black"> Menu Name </span>
-          </th>
-          <th data-field="description" data-sortable="true">
-            <span class="has-text-black"> Description </span>
-          </th>
-          <th data-field="price" data-sortable="true">
-            <span class="has-text-black"> Price </span>
-          </th>
-          <th data-field="category" data-sortable="true">
-            <span class="has-text-black"> Category </span>
-          </th>
-          <th data-field="availability" data-sortable="true">
-            <span class="has-text-black"> Availability </span>
-          </th>
-          <th data-field="image_url" data-sortable="true">
-            <span class="has-text-black"> Image URL </span>
-          </th>
-          <th data-field="ordered" data-sortable="true">
-            <span class="has-text-black"> ordered </span>
-          </th>
-          <th
-            data-field="operation"
-            data-formatter="actionFormatter"
-            data-events="operateEvents"
-          >
-            <span class="has-text-black"> Edit/Delete </span>
-          </th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+  <div id="table_display" class="container">
+    <button id="add_menu" class="button is-primary" type="button">
+      Create Menu
+    </button>
+    <p></p>
+    <br />
+    <div class="table-container">
+      <table class="table is-striped is-bordered is-hoverable is-fullwidth" id="menu-table" data-sort-name="id">
+        <thead>
+          <tr>
+            <th data-field="id" data-visible="false">
+              <span class="has-text-black"> ID </span>
+            </th>
+            <th data-field="name" data-sortable="true">
+              <span class="has-text-black"> Menu Name </span>
+            </th>
+            <th data-field="description" data-sortable="true">
+              <span class="has-text-black"> Description </span>
+            </th>
+            <th data-field="price" data-sortable="true">
+              <span class="has-text-black"> Price </span>
+            </th>
+            <th data-field="category" data-sortable="true">
+              <span class="has-text-black"> Category </span>
+            </th>
+            <th data-field="availability" data-sortable="true">
+              <span class="has-text-black"> Availability </span>
+            </th>
+            <th data-field="image_url" data-sortable="true">
+              <span class="has-text-black"> Image URL </span>
+            </th>
+            <th data-field="ordered" data-sortable="true">
+              <span class="has-text-black"> ordered </span>
+            </th>
+            <th data-field="operation" data-formatter="actionFormatter" data-events="operateEvents">
+              <span class="has-text-black"> Edit/Delete </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </div>
-</div>
 </div>
 {% endblock %} {% block extra_js %}
 <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
@@ -242,10 +191,10 @@
 
   $("#addMenuForm").submit(function (event) {
     event.preventDefault();
-  
+
     var formData = new FormData(this);
     var url = "/menu";
-  
+
     $.ajax({
       url: url,
       type: "POST",
@@ -253,6 +202,9 @@
       processData: false,
       contentType: false,
       success: function (table_data) {
+        if (table_data['response'] == 'notsuck') {
+          alert("รายชื่ออาหารซ้ำกัน")
+        }
         refresh_table(table_data);
         clearForm();
         toggleView();

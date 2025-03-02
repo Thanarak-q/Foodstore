@@ -473,23 +473,25 @@
         showCancelButton: true,
         confirmButtonText: "ใช่",
         cancelButtonText: "ยกเลิก",
+        preConfirm: () => {
+          return document.getElementById('payment-method').value;
+        }
       }).then((result) => {
         if (result.isConfirmed) {
-          // if (result.value === "promtpay") {
-          //   $.post("/customer", function (data) {
-              
+          let payment_method = encodeURIComponent(result.value);
+          if (payment_method == "promtpay") {
+            data = { table_id: rowData.table_id }
+            console.log(data)
+            $.post("/payment/customer", data, function (data_) {
+              console.log(data_)
+            });
 
-          //   });
-
-          // }
+          }
 
 
           let tableId = encodeURIComponent(rowData.table_id);
-          let payment_method = encodeURIComponent(result.value);
-
           let url = `/cashier/invoice?table_id=${tableId}&payment_method=${payment_method}`;
 
-          // Redirect to invoice.html
           window.location.href = url;
 
         } else {
