@@ -13,9 +13,13 @@ from app.models.order import Order
 from app.models.payment import Payment
 from app.models.menu import Menu
 from manage import SECRET_KEY
+import math
 import jwt
 import qrcode
 import datetime
+import io
+import base64
+from promptpay import qrcode as pp_qrcode
 
 
 @app.route('/payment/get_all_payment')
@@ -197,9 +201,44 @@ def slip_create():
                                       'amount': menu_list[menu_id]}
     
         vat = subtotal * store['vat'] / 100
-        temp = {'vat_7%': vat, 'total' : subtotal, 'sum_price': sum_list}
+        temp = {'vat_7%': vat, 'total' : subtotal, 'sum_price': sum_list, 'vat%': store['vat']}
         app.logger.debug(temp)
         return temp
+    
+@app.route('/payment/customer')
+def customer_view():
+    result = request.form.to_dict()
+    table_id = result.get('table_id', '')
+    app.logger.debug(table_id)
+    db_order = db.session.query(Order).filter((Order.table_id == table_id) & (Order.status != 'Paid')).all() 
+    orders = list(map(lambda x: x.to_dict(), db_order))
+    menu_list = dict()
+    sum_list = dict()
+    subtotal = 0
+    store = get_store_dict()
+    for order in orders:
+        subtotal += order['total_price']
+        menu_list = merge_dict(menu_list, order['menu_list'])
+
+    for menu_id in menu_list:
+        menu = get_menu_dict(menu_id)
+        sum_list[menu['name']] = {'price' : menu_list[menu_id] * menu['price'],
+                                    'price_per_unit': menu['price'],
+                                    'amount': menu_list[menu_id]}
+
+    vat = subtotal * store['vat'] / 100
+    total = math.floor(subtotal * (100 + store['vat']) / 100)
+    qr_data = pp_qrcode.generate_payload(store['Promptpay_id'], amount=total)
+    qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+    qr.add_data(qr_data)
+    qr.make(fit=True)
+    img = qr.make_image(fill='black', back_color='white')
+    img.save(f'app/static/qrcode/{table_id}.png')
+
+
+    temp = {'vat_7%': vat, 'total' : subtotal, 'sum_price': sum_list, 'vat%': store['vat'], 'qrcode': f'app/static/qrcode_pp/{table_id}.png'}
+    # app.logger.debug(temp)
+    return temp
 
 def merge_dict(A, B):
     temp = dict(A)

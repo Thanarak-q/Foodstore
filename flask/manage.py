@@ -163,7 +163,7 @@ def seed_db():
     def plus_menu_ordered(menu_id, amount):
         menu = Menu.query.get(menu_id)
         menu.update_ordered(amount)
-        db.session.commit()
+        # db.session.commit()
     
     def random_date(start_year=2023):
             start_date = datetime.date(start_year, 1, 1)
@@ -207,7 +207,7 @@ def seed_db():
                                 , role=role))
 
     #?-------------------------------------------------------------------------
-    payment_methods = ["cash", "credit_card", "paypal", "bank_transfer"]
+    payment_methods = ["cash", "credit_card", "promptpay", "bank_transfer"]
     start_time = datetime.datetime(2023, 1, 1, 0, 0, 0)  # เริ่มตั้งแต่ปี 2015
 
     num_payments = 19
@@ -237,7 +237,7 @@ def seed_db():
     db.session.commit()
     #?-------------------------------------------------------------------------
 
-    db.session.add(Store(name = "ปลาดุกทอด", vat = 7.0, service_charge = 0 ,  Max_Menu_per_Round = 5, Max_Food_Quantity_per_Order = 100, Tax = "1650614130100"))
+    db.session.add(Store(name = "ปลาดุกทอด", vat = 7.0, service_charge = 0 ,  Max_Menu_per_Round = 5, Max_Food_Quantity_per_Order = 100, Tax = "1650614130100", Promptpay_id = '0961837859'))
     db.session.commit()
 
     db.session.add(Noti(type='other', message='ยินดีต้อนรับ', link='http://localhost:56733/admin'))

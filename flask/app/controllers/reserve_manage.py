@@ -41,6 +41,7 @@ def reserve_create():
 
             validated_dict[key] = value
         app.logger.debug(validated_dict)
+        validated_dict['phone'] = phonenumber_format(validated_dict['phone'])
         if validated:
             try:
                 temp = Reserve(
@@ -90,6 +91,7 @@ def reserve_update():
 
             validated_dict[key] = value
         app.logger.debug(validated_dict)
+        validated_dict['phone'] = phonenumber_format(validated_dict['phone'])
         if validated:
             try:
                 reserve = Reserve.query.get(reserve_id)
@@ -141,3 +143,14 @@ def reserve_delete():
                 raise
             
     return reserve_list()
+
+def phonenumber_format(phonenumber):
+    phonenumber = str(phonenumber)
+    temp = ''
+    for digit in phonenumber:
+        if digit.isdigit():
+            # print(digit)
+            temp += digit
+    if len(temp) != 10:
+        return 'Wrong Format'
+    return temp[:3] + '-' + temp[3:6] + '-' + temp[6:]

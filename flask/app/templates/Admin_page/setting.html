@@ -151,7 +151,7 @@
   <!-- Tax & Service Charge -->
   <div class="card rows mt-5">
     <div class="card-header">
-      <h1 class="card-header-title">ตั้งค่าเกี่ยกับภาษี</h1>
+      <h1 class="card-header-title">ตั้งค่าเกี่ยวกับภาษี</h1>
     </div>
     <div class="card-content">
       <div class="columns is-multiline">
@@ -200,6 +200,36 @@
                   maxlength="13"
                   step="0.01"
                   value="{{ store.Tax if store else '' }}"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+                <button type="submit" class="button is-info">
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="column is-one-third">
+        <div class="box">
+          <h2 class="subtitle">ตั้งค่าพร้อมเพลย์</h2>
+          <form method="POST" action="/setting">
+            <div class="field">
+              <label class="label" for="Promptpay_id">Prompt Pay</label>
+              <div class="control">
+                <input
+                  type="text"
+                  class="input"
+                  id="Tax_id"
+                  name="Promptpay_id"
+                  minlength="10"
+                  maxlength="13"
+                  step="0.01"
+                  value="{{ store.Promptpay_id if store else '' }}"
                 />
               </div>
             </div>

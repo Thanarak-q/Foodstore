@@ -160,6 +160,25 @@ def setting():
                     )
                     db.session.add(newNoti)
                     db.session.commit()
+
+                if 'Promptpay_id' in request.form:
+                    promptpay = str(request.form['Promptpay_id'])
+                    temp = is_Prompt_format(promptpay)
+                    if temp == 'Wrong Format':
+                        response_data['message'] = 'เกิดข้อผิดพลาด: Prompt Pay ผิด'
+                        response_data['success'] = False
+                    else:
+                        store.update_promptpay(promptpay)
+                        response_data['message'] = 'อัปเดตรหัสพร้อมเพลย์'
+                        response_data['success'] = True
+
+                        newNoti = Noti(                    
+                            type="Setting",
+                            message="มีการแก้ไขรหัสพร้อมเพลย์",
+                            link='http://localhost:56733/setting'
+                        )
+                        db.session.add(newNoti)
+                        db.session.commit()
                     
 
         except Exception as e:
@@ -172,6 +191,11 @@ def setting():
     store = Store.query.first()
     return render_template('Admin_page/setting.html', store=store)
 
+def is_Prompt_format(num):
+    num = str(num)
+    if len(num) != 10 and len(num) != 13 or not num.isdigit():
+        return 'Wrong Format'
+    return num
 
 
 @app.route("/store_list")

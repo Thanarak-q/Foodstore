@@ -161,8 +161,8 @@ def cal_price(menu_list):
         total = 0
         # note menu_list key start at 0 but menus start at 1
         for key in menu_list:
-            app.logger.debug(type(menus[int(key) - 1]['price']))
-            app.logger.debug(f"{key} : {int(menus[int(key) - 1]['price']) * menu_list[key]}")
+            # app.logger.debug(type(menus[int(key) - 1]['price']))
+            # app.logger.debug(f"{key} : {int(menus[int(key) - 1]['price']) * menu_list[key]}")
             total += int(menus[int(key) - 1]['price']) * menu_list[key]
             plus_menu_ordered(key, menu_list[key])
             

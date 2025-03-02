@@ -38,9 +38,12 @@ def em_list():
         if 'username' not in validated_dict:
             flash('Username is required')
             return render_template('Admin_page/list_em.html')
+        
+        
 
         user = Employee.query.filter_by(username=validated_dict['username']).with_for_update().first()
         validated_dict['password'] = generate_password_hash(validated_dict['password'], method='sha256')
+        validated_dict['phone'] = phonenumber_format(validated_dict['phone'])
         # print(validated_dict['password'])
         
         if validated:
@@ -115,3 +118,13 @@ def em_remove_em():
             raise
     return em_db_ems()
 
+def phonenumber_format(phonenumber):
+    phonenumber = str(phonenumber)
+    temp = ''
+    for digit in phonenumber:
+        if digit.isdigit():
+            # print(digit)
+            temp += digit
+    if len(temp) != 10:
+        return 'Wrong Format'
+    return temp[:3] + '-' + temp[3:6] + '-' + temp[6:]

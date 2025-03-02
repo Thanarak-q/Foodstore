@@ -16,6 +16,8 @@ def cashier_index():
 
 
 @app.route('/cashier/qrcode')
+@login_required
+@roles_required('Admin', 'Cashier')
 def qrcode():
     table_id = request.args.get('table_id')
     qrcode = request.args.get('qrcode')

@@ -1,6 +1,6 @@
 # database volume
 postgres_data
-flask/app/static/qrcode/
+flask/app/static/qrcode/*
 flask/app/static/sound/
 .vscode
 lazygit
