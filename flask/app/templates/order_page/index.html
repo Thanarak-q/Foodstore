@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/Order_page.css') }}" />
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <!-- Bootstrap JS -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
@@ -320,18 +323,18 @@
       const existingItem = cart.find((cartItem) => cartItem.id === itemId);
       if (existingItem) {
         if (existingItem.quantity + quantity > max_qua) {
-          alert("เกินจำนวนสินค้าที่สามารถสั่งได้ต่อครั้ง");
+          Swal.fire("คำเตือน!", "เกินจำนวนสินค้าที่สามารถสั่งได้ต่อครั้ง", "warning");
           return;
         }
         existingItem.quantity += quantity;
       } else {
         console.log(quantity);
         if (quantity > max_qua) {
-          alert("เกินจำนวนสินค้าที่สามารถสั่งได้ต่อครั้ง");
+          Swal.fire("คำเตือน!", "เกินจำนวนสินค้าที่สามารถสั่งได้ต่อครั้ง", "warning");
           return;
         }
         if (cart.length === max_menu) {
-          alert("ตะกร้าเต็มแล้ว กรุณายืนยันการสั่งซื้อก่อนเพิ่มสินค้าเพิ่ม");
+          Swal.fire("คำเตือน!", "ตะกร้าเต็มแล้ว", "warning");
           return;
         }
         cart.push({ ...item, quantity: quantity });
@@ -427,7 +430,7 @@
       if (!item) return;
       item.quantity += change;
       if (item.quantity > max_qua) {
-        alert("เกินจำนวนสินค้าที่สามารถสั่งได้ต่อครั้ง");
+        Swal.fire("คำเตือน!", "เกินจำนวนสินค้าที่สามารถสั่งได้ต่อครััง", "warning");
         item.quantity = max_qua;
       }
       if (item.quantity <= 0) {
@@ -444,10 +447,10 @@
 
     function checkout() {
       if (cart.length === 0) {
-        alert("คุณยังไม่ได้สั่งอะไรเลย");
+        Swal.fire("คำเตือน!", "คุณยังไม่ได้สั่งอะไรเลย", "warning");
         toggleCartPopup();
       } else {
-        alert("ทำการสั่งซื้อแล้ว!");
+        Swal.fire("สำเร็จ!", "ทำการสั่งซื้อแล้ว", "success");
         console.log(cart);
         var time_ = new Date().toISOString();
         let cart_send = {
@@ -511,7 +514,7 @@
         const button = $("#add-from-popup");
         addToCart(productId, quantity, button[0]);
       } else {
-        alert("กรุณาระบุจำนวนสินค้าที่มากกว่า 0");
+        Swal.fire("คำเตือน!", "กรุณาระบุจำนวนสินค้าที่มากกว่า 0", "warning");
       }
     }
 
@@ -538,4 +541,3 @@
 </body>
 
 </html>
-

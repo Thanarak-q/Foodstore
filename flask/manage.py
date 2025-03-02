@@ -246,7 +246,7 @@ def seed_db():
     db.session.commit()
     #?-------------------------------------------------------------------------
 
-    db.session.add(Store(name = "ปลาดุกทอด", vat = 7.0, service_charge = 0 ,  Max_Menu_per_Round = 5, Max_Food_Quantity_per_Order = 100, Tax = "1650614130100", Promptpay_id = '0961837859'))
+    db.session.add(Store(name = "ปลาดุกทอด", vat = 7.0, service_charge = 0 ,  Max_Menu_per_Round = 5, Max_Food_Quantity_per_Order = 100, Tax = "1650614130100", Promptpay_id = '0930381632', Promptpay_name = 'ทิชานนท์ รตนแสนวัน'))
     db.session.commit()
 
     db.session.add(Noti(type='other', message='ยินดีต้อนรับ', link='http://localhost:56733/admin'))

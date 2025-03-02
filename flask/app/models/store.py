@@ -12,8 +12,9 @@ class Store(db.Model, SerializerMixin):
     Max_Food_Quantity_per_Order = db.Column(db.Integer)
     Tax = db.Column(db.String(100))
     Promptpay_id = db.Column(db.String(13))
+    Promptpay_name = db.Column(db.String(100))
 
-    def __init__(self, name, vat, service_charge, Max_Menu_per_Round, Max_Food_Quantity_per_Order, Tax, Promptpay_id):
+    def __init__(self, name, vat, service_charge, Max_Menu_per_Round, Max_Food_Quantity_per_Order, Tax, Promptpay_id, Promptpay_name):
         self.name = name
         self.vat = vat
         self.service_charge = service_charge
@@ -21,6 +22,7 @@ class Store(db.Model, SerializerMixin):
         self.Max_Food_Quantity_per_Order = Max_Food_Quantity_per_Order
         self.Tax = Tax
         self.Promptpay_id = Promptpay_id
+        self.Promptpay_name = Promptpay_name
 
     def update_name(self, name):
         self.name = name
@@ -52,5 +54,9 @@ class Store(db.Model, SerializerMixin):
 
     def update_promptpay(self, promptpay):
         self.Promptpay_id = promptpay
+        db.session.commit()
+
+    def update_promptpayname(self,name):
+        self.Promptpay_name = name
         db.session.commit()
     

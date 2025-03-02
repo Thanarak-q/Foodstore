@@ -3,9 +3,9 @@ from flask_login import login_required
 from app.controllers.role_controller import roles_required 
 
 from app import app
+from app.models.store import Store
 
-
-
+from math import floor as flooreiei
 
 @app.route('/cashier')
 @login_required
@@ -31,7 +31,9 @@ def qrcode():
 def invoice():
     table_id = request.args.get('table_id')
     payment_method = request.args.get('payment_method')
-    return render_template('cashier_page/invoice.html', table_id=table_id, payment_method=payment_method)
+    Store_ = Store.query.get(1).to_dict()
+    vat_ = str(flooreiei(Store_['vat'])) + " %"
+    return render_template('cashier_page/invoice.html', table_id=table_id, payment_method=payment_method, promptpay=Store_['Promptpay_id'], promptpayname=Store_['Promptpay_name'], vat_=vat_ )
 
 
 
