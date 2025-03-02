@@ -85,8 +85,11 @@ def menu_list():
         if validated:
             app.logger.debug('Validated dict: ' + str(validated_dict))
             if not id_:  # ถ้าไม่มี id => เพิ่มใหม่
+                if Menu.query.filter_by(name=validated_dict['name']):
+                    return jsonify({'response': 'notsuck'})
+                app.logger.debug(11111111111111111111111)
                 entry = Menu(**validated_dict)
-                db.session.add(entry)
+                db.session.add(entry)   
                 last_menu = Menu.query.order_by(Menu.id.desc()).first()
                 last_menu_id = last_menu.id if last_menu else 0
                 next_menu_id = last_menu_id
@@ -99,7 +102,8 @@ def menu_list():
                 db.session.commit()
 
             else:  # ถ้ามี id => แก้ไขรายการเดิม
-                menu = Menu.query.filter_by(name=id_).first()
+                app.logger.debug(id_)
+                menu = Menu.query.filter_by(id=id_).first() 
                 if menu:
                     for key, value in validated_dict.items():
                         setattr(menu, key, value)

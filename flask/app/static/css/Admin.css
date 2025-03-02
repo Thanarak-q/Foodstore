@@ -15,17 +15,16 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.navbar-item, .navbar-link {
+.navbar-item,
+.navbar-link {
   color: #ffffff;
   font-weight: 500;
-  
 }
 
 .navbar-dropdown {
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  
 }
 
 .navbar-dropdown .navbar-item {
@@ -35,7 +34,6 @@ body {
 .navbar-dropdown .navbar-item:hover {
   background-color: #f3e8ff;
   color: #6b48ff;
-  
 }
 
 .sidebar {
@@ -100,7 +98,9 @@ body {
   background-color: #f5f5f5;
   margin: 0;
   min-height: calc(100vh - 60px);
-  width: calc(100% - 300px); /* ปรับความกว้างของ main-content ให้สัมพันธ์กับ sidebar */
+  width: calc(
+    100% - 300px
+  ); /* ปรับความกว้างของ main-content ให้สัมพันธ์กับ sidebar */
 }
 
 .card {
@@ -124,13 +124,18 @@ body {
 }
 
 .card-header::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
 }
 
 .card-content {
@@ -254,7 +259,6 @@ body {
   transition: transform 0.2s;
 }
 
-
 .notif-success {
   background: #e6ffe6;
   border-left: 4px solid #00cc00;
@@ -328,14 +332,13 @@ body {
   color: inherit;
 }
 
-
 .sidebar a {
   color: #6b7280;
   display: flex;
   align-items: center;
-  padding: 16px 24px; 
+  padding: 16px 24px;
   margin: 0;
-  font-size: 18px; 
+  font-size: 18px;
   border-radius: 0px;
   text-decoration: none;
   background-color: transparent;
@@ -346,6 +349,6 @@ body {
 .sidebar a i {
   margin-right: 16px;
   color: #9ca3af;
-  font-size: 20px; 
+  font-size: 20px;
   transition: all 0.3s ease;
 }
