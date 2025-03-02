@@ -233,7 +233,7 @@ def customer_view():
     qr.add_data(qr_data)
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
-    img.save(f'app/static/qrcode/{table_id}.png')
+    img.save(f'app/static/qrcode_pp/{table_id}.png')
 
 
     temp = {'vat_7%': vat, 'total' : subtotal, 'sum_price': sum_list, 'vat%': store['vat'], 'qrcode': f'app/static/qrcode_pp/{table_id}.png'}
