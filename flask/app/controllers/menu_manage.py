@@ -53,17 +53,17 @@ def menu_list():
             if file and allowed_file(file.filename):
                 # เปิดไฟล์ด้วย Pillow
                 img = Image.open(file)
-                # width, height = 228, 232
+                width, height = 228, 232
 
-                # # คำนวณตำแหน่งของตรงกลางของภาพ
-                # img_width, img_height = img.size
-                # left = (img_width - width) // 2
-                # top = (img_height - height) // 2
-                # right = (img_width + width) // 2
-                # bottom = (img_height + height) // 2
+                # คำนวณตำแหน่งของตรงกลางของภาพ
+                img_width, img_height = img.size
+                left = (img_width - width) // 2
+                top = (img_height - height) // 2
+                right = (img_width + width) // 2
+                bottom = (img_height + height) // 2
 
-                # # ตัดรูป
-                # img = img.crop((left, top, right, bottom))
+                # ตัดรูป
+                img = img.crop((left, top, right, bottom))
 
                 # ทำความสะอาดชื่อไฟล์และกำหนด path
                 filename = validated_dict['name'].replace(' ', '_') + '.jpg'
