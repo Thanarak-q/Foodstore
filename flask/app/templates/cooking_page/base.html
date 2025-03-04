@@ -1,287 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cooking Room Order</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <!-- Bulma CSS -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css"
-    />
-    <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/Admin.css') }}"
-    />
 
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f8f9fa;
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        overflow: hidden;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cooking Room Order</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bulma CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/Admin.css') }}" />
 
-      .container-fluid {
-        flex-grow: 1;
-        display: flex;
-        width: 100%;
-        height: 100%;
-        padding: 10px; /* To ensure there is some space around the cards */
-      }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      overflow: hidden;
+    }
 
-      .order-list {
-        display: flex;
-        flex: 1;
-        gap: 20px; /* Space between columns */
-        width: 100%;
-        height: 100%;
-      }
+    .container-fluid {
+      flex-grow: 1;
+      display: flex;
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+      /* To ensure there is some space around the cards */
+    }
 
-      .order-list-column {
-        flex: 1; /* Each column takes equal width */
-        display: flex;
-        flex-direction: column;
-        gap: 20px; /* Space between cards */
-      }
+    .order-list {
+      display: flex;
+      flex: 1;
+      gap: 20px;
+      /* Space between columns */
+      width: 100%;
+      height: 100%;
+    }
 
-      .order-card {
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        background-color: #ffffff;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        flex: 1; /* Each card takes full height of its column */
-      }
+    .order-list-column {
+      flex: 1;
+      /* Each column takes equal width */
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      /* Space between cards */
+    }
 
-      .order-card h5 {
-        font-size: 2.5rem;
-        font-weight: bold;
-      }
+    .order-card {
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+      /* Each card takes full height of its column */
+    }
 
-      .order-details {
-        font-size: 1.5rem;
-      }
+    .order-card h5 {
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
 
-      .menu-item {
-        font-size: 1.8rem;
-      }
+    .order-details {
+      font-size: 1.5rem;
+    }
 
-      .btn-confirm {
-        font-size: 1.5rem;
-        padding: 16px 20px;
-        border-radius: 8px;
-        width: 100%;
-        margin-top: auto;
-      }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  </head>
-  <body>
-    <nav
-      class="navbar is-dark"
-      style="height: 4.5rem; width: 100%"
-      role="navigation"
-      aria-label="main navigation"
-    >
-      <div class="navbar-brand">
-        <a class="navbar-item" href="#" id="title_"
-          ><strong
-            >{{current_user.firstname}} {{current_user.lastname}}</strong
-          ></a
-        >
-        <a
-          role="button"
-          class="navbar-burger"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="navbarAdmin"
-        >
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-      </div>
-      <div id="navbarAdmin" class="navbar-menu">
-        <div class="navbar-end">
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
-              <i class="fas fa-user"></i>&nbsp; {{ current_user.role }}
+    .menu-item {
+      font-size: 1.8rem;
+    }
+
+    .btn-confirm {
+      font-size: 1.5rem;
+      padding: 16px 20px;
+      border-radius: 8px;
+      width: 100%;
+      margin-top: auto;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar is-dark" style="height: 4.5rem; width: 100%" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="#" id="title_"><strong>{{current_user.firstname}}
+          {{current_user.lastname}}</strong></a>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarAdmin">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div id="navbarAdmin" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            <i class="fas fa-user"></i>&nbsp; {{ current_user.role }}
+          </a>
+          <div class="navbar-dropdown is-right">
+            <a class="navbar-item" href="/logout">
+              <i class="fas fa-sign-out-alt"></i>&nbsp; Logout
             </a>
-            <div class="navbar-dropdown is-right">
-              <a class="navbar-item" href="/profile">
-                <i class="fas fa-id-badge"></i>&nbsp; Profile
-              </a>
-              <a class="navbar-item" href="/logout">
-                <i class="fas fa-sign-out-alt"></i>&nbsp; Logout
-              </a>
-            </div>
           </div>
         </div>
       </div>
-    </nav>
-    <div class="container-fluid">
-      <div class="order-list" id="order-list">
-        <!-- Orders will be dynamically injected here -->
-      </div>
     </div>
+  </nav>
+  <div class="container-fluid">
+    <div class="order-list" id="order-list">
+      <!-- Orders will be dynamically injected here -->
+    </div>
+  </div>
 
-    <script>
-      var csrf_token = "{{ csrf_token() }}";
-      $.ajaxSetup({
-        beforeSend: function (xhr, settings) {
-          if (
-            !/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) &&
-            !this.crossDomain
-          ) {
-            xhr.setRequestHeader("X-CSRFToken", csrf_token);
-          }
-        },
-      });
-      $(document).ready(function () {
-        let menuMap = {};
-        let previousOrderCount = 0; // Track the previous number of orders
-
-        // Function to fetch menu items and build a map
-        function fetchMenus(callback) {
-          $.ajax({
-            url: "/menu/menus",
-            method: "GET",
-            success: function (menus) {
-              menus.forEach((menu) => {
-                menuMap[menu.id] = menu.name;
-              });
-              callback();
-            },
-            error: function () {
-              alert("Failed to fetch menu information.");
-            },
-          });
+  <script>
+    var csrf_token = "{{ csrf_token() }}";
+    $.ajaxSetup({
+      beforeSend: function (xhr, settings) {
+        if (
+          !/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) &&
+          !this.crossDomain
+        ) {
+          xhr.setRequestHeader("X-CSRFToken", csrf_token);
         }
+      },
+    });
+    $(document).ready(function () {
+      let menuMap = {};
+      let previousOrderCount = 0; // Track the previous number of orders
 
-        // Function to fetch order items
-        function fetchOrders() {
-          $.ajax({
-            url: "/orders/get_all_orders",
-            method: "GET",
-            success: function (data) {
-              $("#order-list").empty();
-              const preparingOrders = data.filter(
-                (order) => order.status === "Preparing"
+      // Function to fetch menu items and build a map
+      function fetchMenus(callback) {
+        $.ajax({
+          url: "/menu/menus",
+          method: "GET",
+          success: function (menus) {
+            menus.forEach((menu) => {
+              menuMap[menu.id] = menu.name;
+            });
+            callback();
+          },
+          error: function () {
+            alert("Failed to fetch menu information.");
+          },
+        });
+      }
+
+      // Function to fetch order items
+      function fetchOrders() {
+        $.ajax({
+          url: "/orders/get_all_orders",
+          method: "GET",
+          success: function (data) {
+            $("#order-list").empty();
+            const preparingOrders = data.filter(
+              (order) => order.status === "Preparing"
+            );
+
+            // Check if new orders are added
+            if (preparingOrders.length > previousOrderCount) {
+              const alertSound = new Audio("/static/sounds/cooking_room.mp3"); // Replace with your sound file
+              alertSound.play();
+              console.log("New order received!");
+            }
+
+            previousOrderCount = preparingOrders.length; // Update the previous order count
+
+            if (preparingOrders.length === 0) {
+              $("#order-list").append(
+                '<div class="col-12"><h1 class="text-center">No orders are being prepared.</h1></div>'
               );
-
-              // Check if new orders are added
-              if (preparingOrders.length > previousOrderCount) {
-                const alertSound = new Audio("/static/sounds/cooking_room.mp3"); // Replace with your sound file
-                alertSound.play();
-                console.log("New order received!");
-              }
-
-              previousOrderCount = preparingOrders.length; // Update the previous order count
-
-              if (preparingOrders.length === 0) {
+            } else {
+              // Create 3 columns
+              for (let i = 0; i < 3; i++) {
                 $("#order-list").append(
-                  '<div class="col-12"><h1 class="text-center">No orders are being prepared.</h1></div>'
+                  '<div class="order-list-column"></div>'
                 );
-              } else {
-                // Create 3 columns
-                for (let i = 0; i < 3; i++) {
-                  $("#order-list").append(
-                    '<div class="order-list-column"></div>'
-                  );
-                }
-                const ordershow = preparingOrders.slice(0, 3);
-                // Distribute preparing orders across columns
-                ordershow.forEach(function (order, index) {
-                  let menuItems = "";
-                  $.each(order.menu_list, function (menuId, quantity) {
-                    const menuName = menuMap[menuId] || `Menu ID: ${menuId}`;
-                    menuItems += `<li class="menu-item">${menuName} (x${quantity})</li>`;
-                  });
-                  var utcDate = new Date(order.order_time);
-                  var offset = utcDate.getTimezoneOffset();
-                  var localDate = new Date(utcDate.getTime() - offset * 60000);
-                  let year = localDate.getFullYear();
-                  let month = String(localDate.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
-                  let day = String(localDate.getDate()).padStart(2, "0");
-                  let hours = String(localDate.getHours()).padStart(2, "0");
-                  let minutes = String(localDate.getMinutes()).padStart(2, "0");
-                  let seconds = String(localDate.getSeconds()).padStart(2, "0");
-                  localDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+              }
+              const ordershow = preparingOrders.slice(0, 3);
+              // Distribute preparing orders across columns
+              ordershow.forEach(function (order, index) {
+                let menuItems = "";
+                $.each(order.menu_list, function (menuId, quantity) {
+                  const menuName = menuMap[menuId] || `Menu ID: ${menuId}`;
+                  menuItems += `<li class="menu-item">${menuName} (x${quantity})</li>`;
+                });
+                var utcDate = new Date(order.order_time);
+                var offset = utcDate.getTimezoneOffset();
+                var localDate = new Date(utcDate.getTime() - offset * 60000);
+                let year = localDate.getFullYear();
+                let month = String(localDate.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+                let day = String(localDate.getDate()).padStart(2, "0");
+                let hours = String(localDate.getHours()).padStart(2, "0");
+                let minutes = String(localDate.getMinutes()).padStart(2, "0");
+                let seconds = String(localDate.getSeconds()).padStart(2, "0");
+                localDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
-                  const columnIndex = index % 3; // Distribute orders across 3 columns
-                  $(`.order-list-column:eq(${columnIndex})`).append(`
+                const columnIndex = index % 3; // Distribute orders across 3 columns
+                $(`.order-list-column:eq(${columnIndex})`).append(`
                     <div class="order-card">
                       <h5>Order ID: ${order.order_id}</h5>
                       <p class="order-details"><strong>Order Time:</strong> ${localDate}</p>
-                      <!-- <p class="order-details"><strong>Status:</strong> ${
-                        order.status
-                      }</p> -->
-                      <p class="order-details"><strong>Table ID:</strong> ${
-                        order.table_id
-                      }</p>
+                      <!-- <p class="order-details"><strong>Status:</strong> $order.status
+                  }</p> -->
+                      <p class="order-details"><strong>Table ID:</strong> ${order.table_id
+                  }</p>
                       <!-- <p class="order-details"><strong>Total Price:</strong> $${order.total_price.toFixed(
-                        2
-                      )}</p> -->
+                    2
+                  )}</p> -->
                       <p class="order-details"><strong>Menu Items:</strong></p>
                       <ul style="list-style-type:disc" class="ml-5">${menuItems}</ul>
-                      <button class="btn btn-success btn-confirm" data-order-id="${
-                        order.order_id
-                      }">Confirm Order</button>
+                      <button class="btn btn-success btn-confirm" data-order-id="${order.order_id
+                  }">Confirm Order</button>
                     </div>
                   `);
-                });
-              }
-            },
-            error: function () {
-              alert("Failed to fetch orders.");
-            },
-          });
-        }
+              });
+            }
+          },
+          error: function () {
+            alert("Failed to fetch orders.");
+          },
+        });
+      }
 
-        // Fetch menus first, then fetch orders
-        fetchMenus(fetchOrders);
+      // Fetch menus first, then fetch orders
+      fetchMenus(fetchOrders);
 
-        // Set interval to fetch orders every 10 seconds to simulate update from the backend
-        setInterval(fetchOrders, 5000); // Refresh orders every 10 seconds
+      // Set interval to fetch orders every 10 seconds to simulate update from the backend
+      setInterval(fetchOrders, 5000); // Refresh orders every 10 seconds
 
-        // Handle confirm order button click
-        $(document).on("click", ".btn-confirm", function () {
-          const orderId = $(this).data("order-id");
+      // Handle confirm order button click
+      $(document).on("click", ".btn-confirm", function () {
+        const orderId = $(this).data("order-id");
 
-          // Confirm the order via API (for example)
-          $.ajax({
-            url: "/orders/update", // Your API endpoint for confirming the order
-            method: "POST",
-            data: { order_id: orderId, status: "Ready" },
-            success: function (response) {
-              // alert(`Order ID ${orderId} confirmed successfully!`);
-              fetchOrders(); // Refresh the order list after confirmation
-            },
-            error: function () {
-              alert("Failed to confirm the order.");
-            },
-          });
+        // Confirm the order via API (for example)
+        $.ajax({
+          url: "/orders/update", // Your API endpoint for confirming the order
+          method: "POST",
+          data: { order_id: orderId, status: "Ready" },
+          success: function (response) {
+            // alert(`Order ID ${orderId} confirmed successfully!`);
+            fetchOrders(); // Refresh the order list after confirmation
+          },
+          error: function () {
+            alert("Failed to confirm the order.");
+          },
         });
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>
