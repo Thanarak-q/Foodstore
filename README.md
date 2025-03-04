@@ -9,8 +9,8 @@
 
 ### Tech Stack:
 
-- **Frontend:** Flask, TailwindCss, jQuery
-- **Backend:** Flask
+- **Frontend:** HTML, CSS, Bootstrap, JavaScript, Bulma, jQuery
+- **Backend:** Flask, Gunicorn, PostgreSQL,Ngrok
 
 ### Members:
 
