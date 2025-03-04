@@ -96,15 +96,18 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>
-    <!-- Navbar -->
     <nav
       class="navbar is-dark"
+      style="height: 4.5rem; width: 100%"
       role="navigation"
       aria-label="main navigation"
-      style="width: 100%; padding: 0%"
     >
       <div class="navbar-brand">
-        <a class="navbar-item" href="#"><strong>Waiter Panel</strong></a>
+        <a class="navbar-item" href="#" id="title_"
+          ><strong
+            >{{current_user.firstname}} {{current_user.lastname}}</strong
+          ></a
+        >
         <a
           role="button"
           class="navbar-burger"
@@ -117,7 +120,6 @@
           <span aria-hidden="true"></span>
         </a>
       </div>
-
       <div id="navbarAdmin" class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-item has-dropdown is-hoverable">
@@ -144,13 +146,16 @@
 
     <script>
       var csrf_token = "{{ csrf_token() }}";
-        $.ajaxSetup({
-        beforeSend: function(xhr, settings) {
-            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+      $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+          if (
+            !/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) &&
+            !this.crossDomain
+          ) {
             xhr.setRequestHeader("X-CSRFToken", csrf_token);
-            }
-        }
-        });
+          }
+        },
+      });
       $(document).ready(function () {
         let menuMap = {};
         let previousOrderCount = 0; // Track the previous number of orders
