@@ -18,7 +18,7 @@
 
 - **Student ID:** 660510634
 - **GitHub ID:** [kittapas-g](https://github.com/kittapas-g)
-- **Role:** UX/UI / Sub Frontend
+- **Role:** UX/UI / Sup Frontend
 
 #### 2. ทิวัตถ์ ทาจุมปู
 
@@ -30,7 +30,7 @@
 
 - **Student ID:** 660510655
 - **GitHub ID:** [thanarak-q](https://github.com/thanarak-q)
-- **Role:** Project Manager / Tester / Sub Frontend / Sub Backend
+- **Role:** Project Manager / Tester / Sup Frontend / Sup Backend
 
 #### 4. ทิชานนท์ รตนแสนวัน
 
