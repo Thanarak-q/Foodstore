@@ -4,17 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Ordering System - Landing Page</title>
+    <title>Food Ordering System - User Journey</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <style>
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
         .container {
@@ -22,21 +19,21 @@
             border-radius: 24px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 48px;
-            max-width: 1300px;
-            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
             backdrop-filter: blur(10px);
-            animation: scaleIn 0.5s ease-out;
+            animation: fadeIn 0.6s ease-out;
         }
 
-        @keyframes scaleIn {
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: scale(0.95);
+                transform: translateY(20px);
             }
 
             to {
                 opacity: 1;
-                transform: scale(1);
+                transform: translateY(0);
             }
         }
 
@@ -50,7 +47,7 @@
 
         .header h1 {
             font-family: var(--font-primary);
-            font-size: 3rem;
+            font-size: 2.8rem;
             color: #333;
             margin-bottom: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -62,238 +59,282 @@
 
         .header p {
             color: #666;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 500;
         }
 
         .credentials {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 32px;
-            border-radius: 18px;
+            padding: 24px 32px;
+            border-radius: 16px;
             margin-bottom: 48px;
-            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
-            animation: fadeInUp 0.6s ease-out 0.2s both;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 16px;
         }
 
-        @keyframes fadeInUp {
+        .cred-item {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cred-label {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 14px;
+        }
+
+        .cred-value {
+            color: #333;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .journey-container {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .scene {
+            position: relative;
+            margin-bottom: 40px;
+            animation: slideIn 0.6s ease-out backwards;
+        }
+
+        .scene:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .scene:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .scene:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .scene:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .scene:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .scene:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+        .scene:nth-child(7) {
+            animation-delay: 0.7s;
+        }
+
+        @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateX(-30px);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(0);
             }
         }
 
-        .credentials h2 {
-            color: white;
-            margin-bottom: 24px;
-            font-size: 1.75rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 700;
-        }
-
-        .credentials h2::before {
-            content: "🔐";
-            font-size: 1.5rem;
-        }
-
-        .credential-item {
-            background: rgba(255, 255, 255, 0.98);
-            padding: 18px 24px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .credential-item:hover {
-            transform: translateX(8px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .credential-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .credential-label {
-            font-weight: 700;
-            color: #667eea;
-            min-width: 100px;
-            font-size: 15px;
-        }
-
-        .credential-value {
-            color: #333;
-            font-family: 'Courier New', monospace;
-            background: #f8f9fa;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 15px;
-        }
-
-        .pages-section {
-            margin-top: 32px;
-        }
-
-        .pages-section h2 {
-            color: #333;
-            margin-bottom: 28px;
-            font-size: 1.75rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 700;
-        }
-
-        .pages-section h2::before {
-            content: "📄";
-            font-size: 1.5rem;
-        }
-
-        .page-category {
-            margin-bottom: 36px;
-            animation: fadeInUp 0.6s ease-out both;
-        }
-
-        .page-category:nth-child(2) {
-            animation-delay: 0.1s;
-        }
-
-        .page-category:nth-child(3) {
-            animation-delay: 0.2s;
-        }
-
-        .page-category:nth-child(4) {
-            animation-delay: 0.3s;
-        }
-
-        .page-category:nth-child(5) {
-            animation-delay: 0.4s;
-        }
-
-        .page-category:nth-child(6) {
-            animation-delay: 0.5s;
-        }
-
-        .category-title {
-            color: #667eea;
-            font-size: 1.35rem;
-            margin-bottom: 18px;
-            padding-left: 16px;
-            border-left: 5px solid #667eea;
-            font-weight: 700;
-        }
-
-        .pages-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .page-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 24px;
+        .scene-content {
+            background: white;
             border-radius: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            text-decoration: none;
-            display: block;
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.25);
-            position: relative;
-            overflow: hidden;
+            padding: 28px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            margin-left: calc(50% + 40px);
+            width: calc(50% - 60px);
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
         }
 
-        .page-card::before {
-            content: '';
+        .scene:nth-child(even) .scene-content {
+            margin-left: 20px;
+            margin-right: calc(50% + 40px);
+            border-left: none;
+            border-right: 5px solid #764ba2;
+        }
+
+        .scene-content:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .scene-number {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .page-card:hover::before {
-            opacity: 1;
-        }
-
-        .page-card:hover {
-            transform: translateY(-6px) scale(1.02);
-            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
-        }
-
-        .page-card h3 {
+            left: 50%;
+            transform: translateX(-50%);
+            top: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            margin-bottom: 10px;
-            font-size: 1.15rem;
+            font-weight: 800;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            z-index: 10;
+        }
+
+        .scene-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .scene-title {
+            color: #333;
+            font-size: 1.5rem;
             font-weight: 700;
-            position: relative;
-            z-index: 1;
+            margin-bottom: 12px;
+            font-family: var(--font-primary);
         }
 
-        .page-card p {
-            color: rgba(255, 255, 255, 0.95);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            position: relative;
-            z-index: 1;
-            margin: 0;
-        }
-
-        .badge {
+        .scene-role {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.25);
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
             color: white;
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.75rem;
-            margin-top: 10px;
+            font-size: 0.85rem;
             font-weight: 700;
-            backdrop-filter: blur(10px);
+            margin-bottom: 12px;
         }
 
-        .note {
+        .scene-description {
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .scene-paths {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 10px;
+            margin-top: 16px;
+        }
+
+        .path-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .path-item i {
+            color: #667eea;
+        }
+
+        .path-link {
+            color: #667eea;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .path-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .steps-list {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .steps-list li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            color: #555;
+        }
+
+        .steps-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .note-box {
             background: linear-gradient(135deg, #fff3cd 0%, #fff9e6 100%);
             border-left: 5px solid #ffc107;
             padding: 20px;
             border-radius: 12px;
-            margin-top: 36px;
-            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+            margin-top: 40px;
         }
 
-        .note p {
+        .note-box p {
             color: #856404;
             margin: 0;
-            font-size: 0.95rem;
             font-weight: 500;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 968px) {
+            .timeline {
+                left: 30px;
+            }
+
+            .scene-number {
+                left: 30px;
+            }
+
+            .scene-content {
+                margin-left: 80px !important;
+                margin-right: 0 !important;
+                width: calc(100% - 100px) !important;
+                border-left: 5px solid #667eea !important;
+                border-right: none !important;
+            }
+        }
+
+        @media (max-width: 640px) {
             .container {
-                padding: 28px;
+                padding: 28px 20px;
             }
 
             .header h1 {
                 font-size: 2rem;
             }
 
-            .pages-grid {
-                grid-template-columns: 1fr;
+            .credentials {
+                flex-direction: column;
             }
 
-            .credentials {
-                padding: 24px;
+            .scene-content {
+                padding: 20px;
+            }
+
+            .scene-title {
+                font-size: 1.2rem;
             }
         }
     </style>
@@ -303,126 +344,229 @@
     <div class="container">
         <div class="header">
             <h1>🍽️ Food Ordering System</h1>
-            <p>ระบบสั่งอาหารออนไลน์ - Year 2 Project</p>
+            <p>ระบบสั่งอาหารออนไลน์ - User Journey</p>
         </div>
 
         <div class="credentials">
-            <h2>Demo Login Credentials</h2>
-            <div class="credential-item">
-                <span class="credential-label">Username:</span>
-                <span class="credential-value">User1</span>
+            <div class="cred-item">
+                <span class="cred-label">👤 Username:</span>
+                <span class="cred-value">User1</span>
             </div>
-            <div class="credential-item">
-                <span class="credential-label">Password:</span>
-                <span class="credential-value">1234</span>
+            <div class="cred-item">
+                <span class="cred-label">🔑 Password:</span>
+                <span class="cred-value">1234</span>
             </div>
-            <div class="credential-item">
-                <span class="credential-label">Role:</span>
-                <span class="credential-value">Admin</span>
-            </div>
-        </div>
-
-        <div class="pages-section">
-            <h2>Available Pages</h2>
-
-            <div class="page-category">
-                <h3 class="category-title">🔐 Authentication</h3>
-                <div class="pages-grid">
-                    <a href="/login" class="page-card">
-                        <h3><i class="fas fa-sign-in-alt"></i> Login Page</h3>
-                        <p>เข้าสู่ระบบพนักงาน (Admin, Chef, Waiter, Cashier)</p>
-                        <span class="badge">All Roles</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="page-category">
-                <h3 class="category-title">👤 Customer Pages</h3>
-                <div class="pages-grid">
-                    <a href="/order" class="page-card">
-                        <h3><i class="fas fa-shopping-bag"></i> Order Page</h3>
-                        <p>หน้าสั่งอาหารสำหรับลูกค้า (เลือกเมนู, ตะกร้าสินค้า)</p>
-                        <span class="badge">Customer</span>
-                    </a>
-                    <a href="/payment" class="page-card">
-                        <h3><i class="fas fa-credit-card"></i> Payment Page</h3>
-                        <p>หน้าชำระเงิน (QR Code PromptPay)</p>
-                        <span class="badge">Customer</span>
-                    </a>
-                    <a href="/review" class="page-card">
-                        <h3><i class="fas fa-star"></i> Review Page</h3>
-                        <p>ให้คะแนนและรีวิวร้าน</p>
-                        <span class="badge">Customer</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="page-category">
-                <h3 class="category-title">🛡️ Admin Pages</h3>
-                <div class="pages-grid">
-                    <a href="/dashboard" class="page-card">
-                        <h3><i class="fas fa-chart-line"></i> Dashboard</h3>
-                        <p>หน้าแดชบอร์ด สรุปสถิติและยอดขาย</p>
-                        <span class="badge">Admin</span>
-                    </a>
-                    <a href="/employee" class="page-card">
-                        <h3><i class="fas fa-users"></i> Employee Management</h3>
-                        <p>จัดการพนักงาน (เพิ่ม/ลบ/แก้ไข)</p>
-                        <span class="badge">Admin</span>
-                    </a>
-                    <a href="/menu" class="page-card">
-                        <h3><i class="fas fa-utensils"></i> Menu Management</h3>
-                        <p>จัดการเมนูอาหาร (เพิ่ม/ลบ/แก้ไข)</p>
-                        <span class="badge">Admin</span>
-                    </a>
-                    <a href="/table" class="page-card">
-                        <h3><i class="fas fa-table"></i> Table Management</h3>
-                        <p>จัดการโต๊ะอาหาร (สถานะ, QR Code)</p>
-                        <span class="badge">Admin</span>
-                    </a>
-                    <a href="/review_manage" class="page-card">
-                        <h3><i class="fas fa-comments"></i> Review Management</h3>
-                        <p>ดูและจัดการรีวิวจากลูกค้า</p>
-                        <span class="badge">Admin</span>
-                    </a>
-                    <a href="/report" class="page-card">
-                        <h3><i class="fas fa-file-alt"></i> Reports</h3>
-                        <p>รายงานสรุปยอดขายและสถิติ</p>
-                        <span class="badge">Admin</span>
-                    </a>
-                    <a href="/setting" class="page-card">
-                        <h3><i class="fas fa-cog"></i> Settings</h3>
-                        <p>ตั้งค่าร้าน (VAT, PromptPay)</p>
-                        <span class="badge">Admin</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="page-category">
-                <h3 class="category-title">💵 Cashier | 🍳 Kitchen | 💁 Waiter</h3>
-                <div class="pages-grid">
-                    <a href="/cashier" class="page-card">
-                        <h3><i class="fas fa-cash-register"></i> Cashier Dashboard</h3>
-                        <p>หน้าเช็คบิลและออกใบเสร็จ</p>
-                        <span class="badge">Cashier</span>
-                    </a>
-                    <a href="/cookingroom" class="page-card">
-                        <h3><i class="fas fa-fire"></i> Kitchen Display</h3>
-                        <p>หน้าจอครัว (รายการอาหารที่ต้องทำ)</p>
-                        <span class="badge">Chef</span>
-                    </a>
-                    <a href="/waiter" class="page-card">
-                        <h3><i class="fas fa-concierge-bell"></i> Waiter Dashboard</h3>
-                        <p>หน้าจอเสิร์ฟ (อาหารพร้อมเสิร์ฟ)</p>
-                        <span class="badge">Waiter</span>
-                    </a>
-                </div>
+            <div class="cred-item">
+                <span class="cred-label">👑 Role:</span>
+                <span class="cred-value">Admin</span>
             </div>
         </div>
 
-        <div class="note">
-            <p><strong>📝 Note:</strong> Some pages require authentication. Please login with the credentials above to
-                access protected pages.</p>
+        <div class="journey-container">
+            <div class="timeline"></div>
+
+            <!-- Scene 1: Cashier เตรียมโต๊ะ -->
+            <div class="scene">
+                <div class="scene-number">1</div>
+                <div class="scene-content">
+                    <div class="scene-icon">💵</div>
+                    <div class="scene-role">Cashier / Admin</div>
+                    <h3 class="scene-title">เตรียมโต๊ะสำหรับลูกค้า</h3>
+                    <p class="scene-description">แคชเชียร์หรือแอดมินเข้าสู่ระบบและเตรียมโต๊ะให้ลูกค้า
+                        โดยสร้างโต๊ะใหม่หรือเปลี่ยนสถานะโต๊ะเป็น "Occupied" ระบบจะสร้าง QR Code ให้โดยอัตโนมัติ</p>
+                    <ul class="steps-list">
+                        <li>เข้าสู่ระบบ</li>
+                        <li>ไปหน้า Table Management</li>
+                        <li>สร้างโต๊ะใหม่หรือเปิดโต๊ะ</li>
+                        <li>ระบบสร้าง QR Code</li>
+                    </ul>
+                    <div class="scene-paths">
+                        <div class="path-item">
+                            <i class="fas fa-link"></i>
+                            <a href="/login" class="path-link">/login</a>
+                        </div>
+                        <div class="path-item">
+                            <i class="fas fa-table"></i>
+                            <a href="/table/create_new" class="path-link">/table/create_new</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 2: ลูกค้าสั่งอาหาร -->
+            <div class="scene">
+                <div class="scene-number">2</div>
+                <div class="scene-content">
+                    <div class="scene-icon">🍜</div>
+                    <div class="scene-role">Customer</div>
+                    <h3 class="scene-title">ลูกค้าแสกน QR และสั่งอาหาร</h3>
+                    <p class="scene-description">ลูกค้าใช้มือถือแสกน QR Code บนโต๊ะ เปิดหน้าสั่งอาหาร
+                        เลือกเมนูที่ต้องการ ใส่ลงตะกร้า และยืนยันการสั่งซื้อ</p>
+                    <ul class="steps-list">
+                        <li>แสกน QR Code</li>
+                        <li>ดูเมนูอาหาร</li>
+                        <li>เพิ่มอาหารลงตะกร้า</li>
+                        <li>ยืนยันการสั่งซื้อ</li>
+                    </ul>
+                    <div class="scene-paths">
+                        <div class="path-item">
+                            <i class="fas fa-qrcode"></i>
+                            <span class="path-link">/menu/table/&lt;token&gt;</span>
+                        </div>
+                        <div class="path-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="path-link">POST /orders/create</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 3: ห้องครัวทำอาหาร -->
+            <div class="scene">
+                <div class="scene-number">3</div>
+                <div class="scene-content">
+                    <div class="scene-icon">👨‍🍳</div>
+                    <div class="scene-role">Chef</div>
+                    <h3 class="scene-title">ห้องครัวรับออเดอร์และทำอาหาร</h3>
+                    <p class="scene-description">พ่อครัวเข้าสู่ระบบและเปิดหน้าจอครัว เห็นรายการอาหารที่ต้องทำแบบ
+                        Real-time เมื่อทำเสร็จกดยืนยัน อาหารจะพร้อมให้เสิร์ฟ</p>
+                    <ul class="steps-list">
+                        <li>Login (role: Chef)</li>
+                        <li>เปิดหน้า Kitchen Display</li>
+                        <li>ดูรายการอาหารที่ต้องทำ</li>
+                        <li>กด Confirm (เสร็จแล้ว)</li>
+                    </ul>
+                    <div class="scene-paths">
+                        <div class="path-item">
+                            <i class="fas fa-fire"></i>
+                            <a href="/cookingroom" class="path-link">/cookingroom</a>
+                        </div>
+                        <div class="path-item">
+                            <i class="fas fa-check"></i>
+                            <span class="path-link">POST /orders/update</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 4: พนักงานเสิร์ฟ -->
+            <div class="scene">
+                <div class="scene-number">4</div>
+                <div class="scene-content">
+                    <div class="scene-icon">💁</div>
+                    <div class="scene-role">Waiter</div>
+                    <h3 class="scene-title">พนักงานเสิร์ฟอาหารให้ลูกค้า</h3>
+                    <p class="scene-description">พนักงานเสิร์ฟเข้าสู่ระบบและเปิดหน้าจอเสิร์ฟ
+                        เห็นรายการอาหารที่ทำเสร็จแล้ว นำไปเสิร์ฟให้ลูกค้า และกดยืนยันการเสิร์ฟ</p>
+                    <ul class="steps-list">
+                        <li>Login (role: Waiter)</li>
+                        <li>ดูรายการอาหารพร้อมเสิร์ฟ</li>
+                        <li>นำอาหารไปเสิร์ฟ</li>
+                        <li>กดยืนยันการเสิร์ฟ</li>
+                    </ul>
+                    <div class="scene-paths">
+                        <div class="path-item">
+                            <i class="fas fa-concierge-bell"></i>
+                            <a href="/waiter" class="path-link">/waiter</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 5: ชำระเงิน -->
+            <div class="scene">
+                <div class="scene-number">5</div>
+                <div class="scene-content">
+                    <div class="scene-icon">💰</div>
+                    <div class="scene-role">Cashier</div>
+                    <h3 class="scene-title">แคชเชียร์เก็บเงิน</h3>
+                    <p class="scene-description">แคชเชียร์เปิดหน้าเก็บเงิน เลือกโต๊ะที่จะเก็บเงิน สร้าง QR Code
+                        PromptPay หรือรับเงินสด พิมพ์ใบเสร็จ และอัพเดทสถานะโต๊ะ</p>
+                    <ul class="steps-list">
+                        <li>Login (role: Cashier)</li>
+                        <li>เลือกโต๊ะที่จะเก็บเงิน</li>
+                        <li>เลือกวิธีชำระเงิน (QR/เงินสด)</li>
+                        <li>พิมพ์ใบเสร็จ</li>
+                        <li>เปลี่ยนสถานะโต๊ะเป็น Available</li>
+                    </ul>
+                    <div class="scene-paths">
+                        <div class="path-item">
+                            <i class="fas fa-cash-register"></i>
+                            <a href="/cashier" class="path-link">/cashier</a>
+                        </div>
+                        <div class="path-item">
+                            <i class="fas fa-qrcode"></i>
+                            <span class="path-link">/cashier/qrcode</span>
+                        </div>
+                        <div class="path-item">
+                            <i class="fas fa-receipt"></i>
+                            <span class="path-link">/cashier/invoice</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 6: รีวิว -->
+            <div class="scene">
+                <div class="scene-number">6</div>
+                <div class="scene-content">
+                    <div class="scene-icon">⭐</div>
+                    <div class="scene-role">Customer (Optional)</div>
+                    <h3 class="scene-title">ลูกค้าให้รีวิว</h3>
+                    <p class="scene-description">ลูกค้าสามารถให้คะแนนดาวและเขียนรีวิวความคิดเห็นเกี่ยวกับร้านและอาหาร
+                        เพื่อช่วยพัฒนาคุณภาพการบริการ</p>
+                    <ul class="steps-list">
+                        <li>เปิดหน้ารีวิว</li>
+                        <li>ให้คะแนนดาว (1-5)</li>
+                        <li>เขียนความคิดเห็น</li>
+                        <li>ส่งรีวิว</li>
+                    </ul>
+                    <div class="scene-paths">
+                        <div class="path-item">
+                            <i class="fas fa-star"></i>
+                            <a href="/review" class="path-link">/review</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 7: Admin ดูสถิติ -->
+            <div class="scene">
+                <div class="scene-number">7</div>
+                <div class="scene-content">
+                    <div class="scene-icon">📊</div>
+                    <div class="scene-role">Admin</div>
+                    <h3 class="scene-title">แอดมินดูสถิติและรายงาน</h3>
+                    <p class="scene-description">แอดมินสามารถเข้าถึงแดชบอร์ดเพื่อดูสถิติต่างๆ เช่น ยอดขาย จำนวนออเดอร์
+                        เมนูขายดี และรีวิวล่าสุด รวมถึงดูรายงานแบบละเอียด</p>
+                    <ul class="steps-list">
+                        <li>Login (role: Admin)</li>
+                        <li>เปิดหน้า Dashboard</li>
+                        <li>ดูสถิติแบบ Real-time</li>
+                        <li>ดูรายงานยอดขาย</li>
+                        <li>จัดการระบบ (เมนู, พนักงาน, โต๊ะ)</li>
+                    </ul>
+                    <div class="scene-paths">
+                        <div class="path-item">
+                            <i class="fas fa-chart-line"></i>
+                            <a href="/dashboard" class="path-link">/dashboard</a>
+                        </div>
+                        <div class="path-item">
+                            <i class="fas fa-file-alt"></i>
+                            <a href="/report" class="path-link">/report</a>
+                        </div>
+                        <div class="path-item">
+                            <i class="fas fa-cog"></i>
+                            <a href="/setting" class="path-link">/setting</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="note-box">
+            <p><strong>📝 หมายเหตุ:</strong> หน้าที่ต้อง Login สามารถใช้ Username: <code>User1</code> Password:
+                <code>1234</code> (Role: Admin) เพื่อทดสอบระบบ</p>
         </div>
     </div>
 </body>
