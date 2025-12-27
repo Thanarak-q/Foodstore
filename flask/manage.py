@@ -73,19 +73,13 @@ def seed_db():
     # db.session.add(CTable(ctable_name="t2", status='Occupied'))
 
     def gennerate_qrcode(id, count):
-        response = requests.get("http://ngrok:4040/api/tunnels")
-        # print(response.json())
-        if response.status_code == 200:
-            data = response.json()
-            public_url = data["tunnels"][0]["public_url"]
-            token = generate_jwt(id, count)
-            img = qrcode.make(f'{public_url}/menu/table/{token}') # Must to change to menu select url
-            type(img)  # qrcode.image.pil.PilImage
-            img.save(f"app/static/qrcode/{id}.png")
-            return f"app/static/qrcode/{id}.png"
-        else:
-            print(f"Failed to retrieve ngrok URL. Status code: {response.status_code}")
-        return ""
+        # Use EC2 public IP instead of ngrok
+        public_url = "http://16.16.56.99:56733"
+        token = generate_jwt(id, count)
+        img = qrcode.make(f'{public_url}/menu/table/{token}')
+        type(img)  # qrcode.image.pil.PilImage
+        img.save(f"app/static/qrcode/{id}.png")
+        return f"app/static/qrcode/{id}.png"
     
     def generate_jwt(table_number, count):
         expiration_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=48)
