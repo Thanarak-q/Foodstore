@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Ordering System - Landing Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -22,72 +18,105 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            max-width: 1200px;
+            padding: 48px;
+            max-width: 1300px;
             width: 100%;
             backdrop-filter: blur(10px);
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #667eea;
+            margin-bottom: 48px;
+            padding-bottom: 24px;
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(90deg, transparent, #667eea, transparent) 1;
         }
 
         .header h1 {
+            font-family: var(--font-primary);
+            font-size: 3rem;
             color: #333;
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            font-weight: 800;
         }
 
         .header p {
             color: #666;
-            font-size: 1.2em;
+            font-size: 1.25rem;
+            font-weight: 500;
         }
 
         .credentials {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.3);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 32px;
+            border-radius: 18px;
+            margin-bottom: 48px;
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .credentials h2 {
             color: white;
-            margin-bottom: 15px;
-            font-size: 1.8em;
+            margin-bottom: 24px;
+            font-size: 1.75rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-weight: 700;
         }
 
         .credentials h2::before {
             content: "🔐";
-            font-size: 1.2em;
+            font-size: 1.5rem;
         }
 
         .credential-item {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 18px 24px;
+            border-radius: 12px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            transition: transform 0.3s ease;
+            gap: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .credential-item:hover {
-            transform: translateX(10px);
+            transform: translateX(8px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .credential-item:last-child {
@@ -95,135 +124,190 @@
         }
 
         .credential-label {
-            font-weight: bold;
-            color: #f5576c;
+            font-weight: 700;
+            color: #667eea;
             min-width: 100px;
+            font-size: 15px;
         }
 
         .credential-value {
             color: #333;
             font-family: 'Courier New', monospace;
             background: #f8f9fa;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 15px;
         }
 
         .pages-section {
-            margin-top: 30px;
+            margin-top: 32px;
         }
 
         .pages-section h2 {
             color: #333;
-            margin-bottom: 20px;
-            font-size: 1.8em;
+            margin-bottom: 28px;
+            font-size: 1.75rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-weight: 700;
         }
 
         .pages-section h2::before {
             content: "📄";
-            font-size: 1.2em;
-        }
-
-        .pages-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            font-size: 1.5rem;
         }
 
         .page-category {
-            margin-bottom: 30px;
+            margin-bottom: 36px;
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        .page-category:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .page-category:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .page-category:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .page-category:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        .page-category:nth-child(6) {
+            animation-delay: 0.5s;
         }
 
         .category-title {
             color: #667eea;
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            padding-left: 10px;
-            border-left: 4px solid #667eea;
-            font-weight: bold;
+            font-size: 1.35rem;
+            margin-bottom: 18px;
+            padding-left: 16px;
+            border-left: 5px solid #667eea;
+            font-weight: 700;
+        }
+
+        .pages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
         }
 
         .page-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            padding: 24px;
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             text-decoration: none;
             display: block;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .page-card:hover::before {
+            opacity: 1;
         }
 
         .page-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
         }
 
         .page-card h3 {
             color: white;
-            margin-bottom: 8px;
-            font-size: 1.1em;
+            margin-bottom: 10px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
         }
 
         .page-card p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.9em;
-            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            margin: 0;
         }
 
         .badge {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.25);
             color: white;
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.75em;
-            margin-top: 8px;
-            font-weight: bold;
+            font-size: 0.75rem;
+            margin-top: 10px;
+            font-weight: 700;
+            backdrop-filter: blur(10px);
         }
 
         .note {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 30px;
+            background: linear-gradient(135deg, #fff3cd 0%, #fff9e6 100%);
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 36px;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
         }
 
         .note p {
             color: #856404;
             margin: 0;
-            font-size: 0.95em;
+            font-size: 0.95rem;
+            font-weight: 500;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+        @media (max-width: 768px) {
+            .container {
+                padding: 28px;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
 
-        .container {
-            animation: fadeIn 0.6s ease;
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .pages-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .credentials {
+                padding: 24px;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
             <h1>🍽️ Food Ordering System</h1>
-            <p>ระบบสั่งอาหารออนไลน์ (Year 2 Project)</p>
+            <p>ระบบสั่งอาหารออนไลน์ - Year 2 Project</p>
         </div>
 
         <div class="credentials">
-            <h2>Login Credentials</h2>
+            <h2>Demo Login Credentials</h2>
             <div class="credential-item">
                 <span class="credential-label">Username:</span>
                 <span class="credential-value">User1</span>
@@ -245,7 +329,7 @@
                 <h3 class="category-title">🔐 Authentication</h3>
                 <div class="pages-grid">
                     <a href="/login" class="page-card">
-                        <h3>Login Page</h3>
+                        <h3><i class="fas fa-sign-in-alt"></i> Login Page</h3>
                         <p>เข้าสู่ระบบพนักงาน (Admin, Chef, Waiter, Cashier)</p>
                         <span class="badge">All Roles</span>
                     </a>
@@ -256,17 +340,17 @@
                 <h3 class="category-title">👤 Customer Pages</h3>
                 <div class="pages-grid">
                     <a href="/order" class="page-card">
-                        <h3>Order Page</h3>
+                        <h3><i class="fas fa-shopping-bag"></i> Order Page</h3>
                         <p>หน้าสั่งอาหารสำหรับลูกค้า (เลือกเมนู, ตะกร้าสินค้า)</p>
                         <span class="badge">Customer</span>
                     </a>
                     <a href="/payment" class="page-card">
-                        <h3>Payment Page</h3>
+                        <h3><i class="fas fa-credit-card"></i> Payment Page</h3>
                         <p>หน้าชำระเงิน (QR Code PromptPay)</p>
                         <span class="badge">Customer</span>
                     </a>
                     <a href="/review" class="page-card">
-                        <h3>Review Page</h3>
+                        <h3><i class="fas fa-star"></i> Review Page</h3>
                         <p>ให้คะแนนและรีวิวร้าน</p>
                         <span class="badge">Customer</span>
                     </a>
@@ -277,37 +361,37 @@
                 <h3 class="category-title">🛡️ Admin Pages</h3>
                 <div class="pages-grid">
                     <a href="/dashboard" class="page-card">
-                        <h3>Dashboard</h3>
+                        <h3><i class="fas fa-chart-line"></i> Dashboard</h3>
                         <p>หน้าแดชบอร์ด สรุปสถิติและยอดขาย</p>
                         <span class="badge">Admin</span>
                     </a>
                     <a href="/employee" class="page-card">
-                        <h3>Employee Management</h3>
+                        <h3><i class="fas fa-users"></i> Employee Management</h3>
                         <p>จัดการพนักงาน (เพิ่ม/ลบ/แก้ไข)</p>
                         <span class="badge">Admin</span>
                     </a>
                     <a href="/menu" class="page-card">
-                        <h3>Menu Management</h3>
+                        <h3><i class="fas fa-utensils"></i> Menu Management</h3>
                         <p>จัดการเมนูอาหาร (เพิ่ม/ลบ/แก้ไข)</p>
                         <span class="badge">Admin</span>
                     </a>
                     <a href="/table" class="page-card">
-                        <h3>Table Management</h3>
+                        <h3><i class="fas fa-table"></i> Table Management</h3>
                         <p>จัดการโต๊ะอาหาร (สถานะ, QR Code)</p>
                         <span class="badge">Admin</span>
                     </a>
                     <a href="/review_manage" class="page-card">
-                        <h3>Review Management</h3>
+                        <h3><i class="fas fa-comments"></i> Review Management</h3>
                         <p>ดูและจัดการรีวิวจากลูกค้า</p>
                         <span class="badge">Admin</span>
                     </a>
                     <a href="/report" class="page-card">
-                        <h3>Reports</h3>
+                        <h3><i class="fas fa-file-alt"></i> Reports</h3>
                         <p>รายงานสรุปยอดขายและสถิติ</p>
                         <span class="badge">Admin</span>
                     </a>
                     <a href="/setting" class="page-card">
-                        <h3>Settings</h3>
+                        <h3><i class="fas fa-cog"></i> Settings</h3>
                         <p>ตั้งค่าร้าน (VAT, PromptPay)</p>
                         <span class="badge">Admin</span>
                     </a>
@@ -315,32 +399,20 @@
             </div>
 
             <div class="page-category">
-                <h3 class="category-title">💵 Cashier Pages</h3>
+                <h3 class="category-title">💵 Cashier | 🍳 Kitchen | 💁 Waiter</h3>
                 <div class="pages-grid">
                     <a href="/cashier" class="page-card">
-                        <h3>Cashier Dashboard</h3>
+                        <h3><i class="fas fa-cash-register"></i> Cashier Dashboard</h3>
                         <p>หน้าเช็คบิลและออกใบเสร็จ</p>
                         <span class="badge">Cashier</span>
                     </a>
-                </div>
-            </div>
-
-            <div class="page-category">
-                <h3 class="category-title">🍳 Kitchen Pages</h3>
-                <div class="pages-grid">
                     <a href="/cookingroom" class="page-card">
-                        <h3>Kitchen Display</h3>
+                        <h3><i class="fas fa-fire"></i> Kitchen Display</h3>
                         <p>หน้าจอครัว (รายการอาหารที่ต้องทำ)</p>
                         <span class="badge">Chef</span>
                     </a>
-                </div>
-            </div>
-
-            <div class="page-category">
-                <h3 class="category-title">💁 Waiter Pages</h3>
-                <div class="pages-grid">
                     <a href="/waiter" class="page-card">
-                        <h3>Waiter Dashboard</h3>
+                        <h3><i class="fas fa-concierge-bell"></i> Waiter Dashboard</h3>
                         <p>หน้าจอเสิร์ฟ (อาหารพร้อมเสิร์ฟ)</p>
                         <span class="badge">Waiter</span>
                     </a>
@@ -349,8 +421,10 @@
         </div>
 
         <div class="note">
-            <p><strong>📝 Note:</strong> Some pages require authentication. Please login with the credentials above to access protected pages.</p>
+            <p><strong>📝 Note:</strong> Some pages require authentication. Please login with the credentials above to
+                access protected pages.</p>
         </div>
     </div>
 </body>
+
 </html>

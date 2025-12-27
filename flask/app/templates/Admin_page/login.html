@@ -1,56 +1,377 @@
-{% extends "Admin_page/base.html" %} {% block content %}
-<div
-  class="column is-4 is-offset-4"
-  style="
-    height: 90vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding-top: 0px;
-  "
->
-  <h3 class="title">Login</h3>
-  <div class="box">
-    {% with messages = get_flashed_messages() %} {% if messages %}
-    <div class="notification is-danger">{{ messages[0] }}</div>
-    {% endif %} {% endwith %}
-    <form method="POST" action="/login">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-      <div class="field">
-        <div class="control">
-          <input
-            class="input is-large"
-            type="text"
-            name="username"
-            placeholder="Your Username"
-            autofocus
-            required
-          />
-        </div>
-      </div>
-      <div class="field">
-        <div class="control">
-          <input
-            class="input is-large"
-            type="password"
-            name="password"
-            placeholder="Your Password"
-          />
-        </div>
-      </div>
-      <button class="button is-block is-info is-large is-fullwidth">
-        Login
-      </button>
-    </form>
-  </div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
 
-{% endblock %} {% block extra_js %}
-<script>
-  // window.history.replaceState({}, document.title, '/login')
-  $("#sidebar-content").css("display", "none");
-  $("html").css("overflow", "hidden");
-  $('#title_').text("Login_Page")
-</script>
-{% endblock %}
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - Food Ordering System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    .login-container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* Left Side - Branding */
+    .login-branding {
+      flex: 1;
+      background: linear-gradient(135deg, #FF6B35 0%, #F7931E 50%, #6B48FF 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-branding::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+
+    .branding-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      color: white;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .branding-logo {
+      font-size: 5rem;
+      margin-bottom: var(--space-6);
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    .branding-title {
+      font-family: var(--font-primary);
+      font-size: var(--text-5xl);
+      font-weight: var(--font-extrabold);
+      margin-bottom: var(--space-4);
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .branding-subtitle {
+      font-size: var(--text-xl);
+      opacity: 0.95;
+      margin-bottom: var(--space-8);
+      font-weight: var(--font-medium);
+    }
+
+    .branding-features {
+      display: flex;
+      gap: var(--space-6);
+      margin-top: var(--space-8);
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-base);
+      opacity: 0.9;
+    }
+
+    .feature-item i {
+      font-size: var(--text-xl);
+    }
+
+    /* Right Side - Login Form */
+    .login-form-section {
+      flex: 1;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-8);
+    }
+
+    .login-form-container {
+      width: 100%;
+      max-width: 420px;
+      animation: fadeInRight 0.8s ease-out;
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: var(--space-8);
+    }
+
+    .form-header h1 {
+      font-size: var(--text-4xl);
+      color: var(--color-gray-900);
+      margin-bottom: var(--space-2);
+    }
+
+    .form-header p {
+      color: var(--color-gray-500);
+      font-size: var(--text-base);
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: var(--space-4);
+      padding-left: var(--space-12);
+      font-size: var(--text-base);
+      border: 2px solid var(--color-gray-300);
+      border-radius: var(--radius-xl);
+      transition: all var(--transition-base);
+      background: var(--color-gray-50);
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(107, 72, 255, 0.1);
+    }
+
+    .form-group i {
+      position: absolute;
+      left: var(--space-4);
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-gray-400);
+      font-size: var(--text-lg);
+      transition: color var(--transition-base);
+    }
+
+    .form-group input:focus+i {
+      color: var(--color-accent);
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--color-gray-600);
+    }
+
+    .remember-me input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--color-accent);
+    }
+
+    .submit-btn {
+      background: var(--gradient-accent);
+      color: white;
+      padding: var(--space-4);
+      border: none;
+      border-radius: var(--radius-xl);
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      box-shadow: 0 4px 12px rgba(107, 72, 255, 0.3);
+      font-family: var(--font-primary);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(107, 72, 255, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .alert {
+      padding: var(--space-4);
+      background: #FEE;
+      border: 1px solid #FCC;
+      border-radius: var(--radius-lg);
+      color: #C33;
+      margin-bottom: var(--space-4);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-10px);
+      }
+
+      75% {
+        transform: translateX(10px);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 968px) {
+      .login-branding {
+        display: none;
+      }
+
+      .login-form-section {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-form-section {
+        padding: var(--space-4);
+      }
+
+      .form-header h1 {
+        font-size: var(--text-3xl);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <!-- Left Side - Branding -->
+    <div class="login-branding">
+      <div class="branding-content">
+        <div class="branding-logo">🍽️</div>
+        <h1 class="branding-title">Food Ordering System</h1>
+        <p class="branding-subtitle">ระบบสั่งอาหารออนไลน์</p>
+
+        <div class="branding-features">
+          <div class="feature-item">
+            <i class="fas fa-bolt"></i>
+            <span>Fast & Easy</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-shield-alt"></i>
+            <span>Secure</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-heart"></i>
+            <span>User Friendly</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Login Form -->
+    <div class="login-form-section">
+      <div class="login-form-container">
+        <div class="form-header">
+          <h1>Welcome Back!</h1>
+          <p>Please login to continue</p>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert">
+          <i class="fas fa-exclamation-circle"></i>
+          <span>{{ messages[0] }}</span>
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <form class="login-form" method="POST" action="/login">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+          <div class="form-group">
+            <input type="text" name="username" placeholder="Username" required autofocus />
+            <i class="fas fa-user"></i>
+          </div>
+
+          <div class="form-group">
+            <input type="password" name="password" placeholder="Password" required />
+            <i class="fas fa-lock"></i>
+          </div>
+
+          <div class="form-options">
+            <label class="remember-me">
+              <input type="checkbox" name="remember" />
+              <span>Remember me</span>
+            </label>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-sign-in-alt"></i>
+            Sign In
+          </button>
+        </form>
+
+        <div
+          style="text-align: center; margin-top: var(--space-8); color: var(--color-gray-500); font-size: var(--text-sm);">
+          <p>Year 2 Computer Science Project</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script>
+    // Hide sidebar if exists from base template
+    $(document).ready(function () {
+      $("#sidebar-content").css("display", "none");
+      $("html").css("overflow", "hidden");
+    });
+  </script>
+</body>
+
+</html>

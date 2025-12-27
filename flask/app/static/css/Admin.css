@@ -1,4 +1,9 @@
-/* Custom Styles */
+/* ============================================
+   ADMIN PAGE CUSTOM STYLES
+   Food Ordering System - Enhanced Design
+   ============================================ */
+
+/* Base Styles */
 body {
   background-color: #f5f5f5;
   color: #374151;
@@ -10,25 +15,33 @@ body {
   overflow-x: hidden;
 }
 
+/* Navbar Styles */
 .navbar.is-dark {
   background: linear-gradient(90deg, #6b48ff 0%, #8b5cf6 100%);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(107, 72, 255, 0.2);
 }
 
 .navbar-item,
 .navbar-link {
   color: #ffffff;
   font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.navbar-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .navbar-dropdown {
   background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  margin-top: 8px;
 }
 
 .navbar-dropdown .navbar-item {
   color: #374151;
+  padding: 12px 20px;
 }
 
 .navbar-dropdown .navbar-item:hover {
@@ -36,22 +49,23 @@ body {
   color: #6b48ff;
 }
 
+/* Sidebar Styles */
 .sidebar {
   background: #ffffff;
   min-height: 100vh;
-  padding: 30px; /* เพิ่ม padding เพื่อให้ภายใน sidebar ดูโปร่งขึ้น */
-  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.05);
+  padding: 24px 16px;
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.06);
   position: sticky;
   top: 0;
   border-right: 1px solid #e5e7eb;
-  width: 300px; /* เพิ่มความกว้างของ sidebar */
+  width: 280px;
 }
 
 .sidebar h1 {
-  font-size: 28px; /* เพิ่มขนาดฟอนต์ของหัวข้อ */
-  font-weight: 600;
+  font-size: 26px;
+  font-weight: 700;
   color: #1f2937;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
   text-align: center;
   letter-spacing: 0.5px;
 }
@@ -60,62 +74,95 @@ body {
   color: #6b7280;
   display: flex;
   align-items: center;
-  padding: 14px 20px; /* เพิ่ม padding เพื่อให้ลิงก์ดูใหญ่ขึ้น */
-  margin: 8px 0;
-  font-size: 16px; /* เพิ่มขนาดฟอนต์ */
-  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 4px 0;
+  font-size: 15px;
+  border-radius: 12px;
   text-decoration: none;
   background-color: transparent;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 .sidebar a:hover {
-  background-color: #f3e8ff;
+  background-color: #f9fafb;
   color: #6b48ff;
+  transform: translateX(4px);
 }
 
 .sidebar a.is-active {
   background: linear-gradient(90deg, #6b48ff 0%, #8b5cf6 100%);
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 2px 10px rgba(107, 72, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(107, 72, 255, 0.25);
 }
 
 .sidebar a i {
-  margin-right: 12px; /* ปรับระยะห่างระหว่างไอคอนกับข้อความ */
+  margin-right: 14px;
   color: #9ca3af;
-  font-size: 18px; /* เพิ่มขนาดไอคอน */
-  transition: all 0.3s ease;
+  font-size: 18px;
+  transition: all 0.25s ease;
+  min-width: 20px;
+  text-align: center;
+}
+
+.sidebar a:hover i {
+  color: #6b48ff;
 }
 
 .sidebar a.is-active i {
   color: #ffffff;
 }
 
-.main-content {
-  padding: 30px;
-  background-color: #f5f5f5;
-  margin: 0;
-  min-height: calc(100vh - 60px);
-  width: calc(
-    100% - 300px
-  ); /* ปรับความกว้างของ main-content ให้สัมพันธ์กับ sidebar */
+/* Submenu Styles */
+.submenu {
+  display: none;
+  margin-left: 34px;
+  padding-top: 4px;
 }
 
+.menu-label {
+  cursor: pointer;
+}
+
+.menu-label.is-active+.submenu {
+  display: block;
+}
+
+.submenu a {
+  font-size: 14px;
+  padding: 10px 16px;
+}
+
+/* Main Content */
+.main-content {
+  padding: 32px;
+  background-color: #f5f5f5;
+  margin: 0;
+  min-height: calc(100vh - 72px);
+  width: calc(100% - 280px);
+}
+
+/* Card Styles */
 .card {
   background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
-  /* margin-bottom: 10px; */
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   overflow: hidden;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+  margin-bottom: 24px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .card-header {
   background: linear-gradient(90deg, #6b48ff 0%, #8b5cf6 100%);
-  padding: 15px 20px;
-  font-size: 20px;
+  padding: 18px 24px;
+  font-size: 19px;
   color: #ffffff;
   font-weight: 600;
   text-align: left;
@@ -130,86 +177,30 @@ body {
   left: 0;
   width: 100%;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
 }
 
 .card-content {
-  padding: 20px;
+  padding: 24px;
   font-size: 15px;
   color: #4b5563;
   background-color: #ffffff;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .sidebar {
-    padding: 20px;
-    min-height: auto;
-    position: relative;
-    box-shadow: none;
-    border-right: none;
-    border-bottom: 1px solid #e5e7eb;
-    width: 100%; /* ปรับ sidebar ให้เต็มความกว้างบนหน้าจอเล็ก */
-  }
-
-  .sidebar a {
-    padding: 12px 15px;
-  }
-
-  .main-content {
-    padding: 20px;
-    margin: 0;
-    width: 100%; /* ปรับ main-content ให้เต็มความกว้างบนหน้าจอเล็ก */
-  }
-
-  .card-header {
-    font-size: 18px;
-    padding: 12px 15px;
-  }
-
-  .card-content {
-    padding: 15px;
-  }
-}
-
-/* Submenu and Dropdown */
-.submenu {
-  display: none;
-  margin-left: 25px;
-  padding-top: 5px;
-}
-
-.menu-label.is-active + .submenu {
-  display: block;
-}
-
-.dropdown-content {
-  display: none;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 8px 0;
-}
-
-.dropdown.is-active .dropdown-content {
-  display: block;
-}
-
+/* Notification System */
 .notification-sidebar {
   position: fixed;
   top: 0;
-  right: -300px;
-  width: 300px;
+  right: -350px;
+  width: 350px;
   height: 100%;
   background-color: #fff;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-  transition: right 0.3s ease;
-  z-index: 1000;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1050;
 }
 
 .notification-sidebar.open {
@@ -217,114 +208,131 @@ body {
 }
 
 .notification-header {
-  padding: 1rem;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #ddd;
+  padding: 20px;
+  background: linear-gradient(90deg, #6b48ff 0%, #8b5cf6 100%);
+  color: white;
+  border-bottom: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.notification-content {
-  padding: 1rem;
-  overflow-y: auto;
-  height: calc(100% - 60px);
-}
-
-.notification-item {
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  /* border: 1px solid #ddd; */
-  /* border-radius: 4px; */
-}
-
-.notification-count {
-  background-color: red;
+.notification-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
   color: white;
+}
+
+.notification-header .delete {
+  background-color: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  padding: 0.2rem 0.5rem;
-  font-size: 0.8rem;
-  margin-left: 0.5rem;
+}
+
+.notification-content {
+  padding: 16px;
+  overflow-y: auto;
+  height: calc(100% - 70px);
 }
 
 .notification-item {
-  margin: 10px 0;
-  max-width: 500px;
+  margin: 12px 0;
+  max-width: 100%;
 }
 
 .notification-card {
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s;
 }
 
+.notification-card:hover {
+  transform: translateX(-4px);
+}
+
 .notif-success {
-  background: #e6ffe6;
-  border-left: 4px solid #00cc00;
+  background: linear-gradient(135deg, #e6ffe6 0%, #f0fff0 100%);
+  border-left: 4px solid #4CAF50;
 }
 
 .notif-warning {
-  background: #fff5e6;
-  border-left: 4px solid #ff9900;
+  background: linear-gradient(135deg, #fff5e6 0%, #fffaf0 100%);
+  border-left: 4px solid #FFA726;
 }
 
 .notif-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .notif-type {
   font-weight: 600;
-  font-size: 0.9em;
+  font-size: 14px;
   color: #333;
 }
 
 .notif-time {
-  font-size: 0.8em;
-  color: #666;
+  font-size: 12px;
+  color: #999;
 }
 
 .notif-message {
-  margin: 8px 0;
-  color: #444;
-  line-height: 1.4;
+  margin: 10px 0;
+  color: #555;
+  line-height: 1.5;
+  font-size: 14px;
 }
 
 .notif-actions {
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 12px;
 }
 
+.notification-count {
+  background: linear-gradient(135deg, #EF5350 0%, #E53935 100%);
+  color: white;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 8px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Buttons */
 .btn {
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 0.9em;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  font-weight: 500;
+  border: none;
 }
 
 .btn-view {
-  background: #f0f7ff;
-  border: 1px solid #0066cc;
-  color: #0066cc;
+  background: #EBF5FF;
+  color: #2196F3;
 }
 
 .btn-view:hover {
-  background: #e6f0ff;
+  background: #2196F3;
+  color: white;
 }
 
 .btn-delete {
-  background: #fff0f0;
-  border: 1px solid #cc0000;
-  color: #cc0000;
+  background: #FFEBEE;
+  color: #F44336;
 }
 
 .btn-delete:hover {
-  background: #ffe6e6;
+  background: #F44336;
+  color: white;
 }
 
 .btn a {
@@ -332,23 +340,88 @@ body {
   color: inherit;
 }
 
-.sidebar a {
-  color: #6b7280;
-  display: flex;
-  align-items: center;
-  padding: 16px 24px;
-  margin: 0;
-  font-size: 18px;
-  border-radius: 0px;
-  text-decoration: none;
-  background-color: transparent;
-  position: relative;
-  transition: all 0.3s ease;
+/* Dropdown Styles */
+.dropdown-content {
+  display: none;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 8px 0;
 }
 
-.sidebar a i {
-  margin-right: 16px;
-  color: #9ca3af;
-  font-size: 20px;
-  transition: all 0.3s ease;
+.dropdown.is-active .dropdown-content {
+  display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 240px;
+  }
+
+  .main-content {
+    width: calc(100% - 240px);
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    padding: 16px;
+    min-height: auto;
+    position: relative;
+    box-shadow: none;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    width: 100%;
+  }
+
+  .sidebar a {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .main-content {
+    padding: 16px;
+    margin: 0;
+    width: 100%;
+  }
+
+  .card {
+    margin-bottom: 16px;
+  }
+
+  .card-header {
+    font-size: 17px;
+    padding: 14px 18px;
+  }
+
+  .card-content {
+    padding: 18px;
+  }
+
+  .notification-sidebar {
+    width: 100%;
+    right: -100%;
+  }
+}
+
+/* Utility Classes */
+.has-text-centered {
+  text-align: center;
+}
+
+.is-fullwidth {
+  width: 100%;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
 }
