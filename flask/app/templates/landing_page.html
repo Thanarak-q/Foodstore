@@ -313,6 +313,23 @@
             <p>ระบบสั่งอาหารออนไลน์ - User Journey</p>
         </div>
 
+        <div class="note-box" style="margin-top: 0; margin-bottom: 48px;">
+            <p style="margin-bottom: 12px;"><strong>📝 หมายเหตุสำหรับการทดสอบระบบ:</strong></p>
+            <p style="margin-bottom: 8px;">🔐 <strong>ข้อมูล Login สำหรับทดสอบ:</strong></p>
+            <ul style="list-style: none; padding-left: 20px; margin-bottom: 12px;">
+                <li>👤 <strong>Username:</strong> <code
+                        style="background: #fff; padding: 2px 8px; border-radius: 4px; color: #667eea; font-weight: 700;">User1</code>
+                </li>
+                <li>🔑 <strong>Password:</strong> <code
+                        style="background: #fff; padding: 2px 8px; border-radius: 4px; color: #667eea; font-weight: 700;">1234</code>
+                </li>
+                <li>👑 <strong>Role:</strong> <code
+                        style="background: #fff; padding: 2px 8px; border-radius: 4px; color: #667eea; font-weight: 700;">Admin</code>
+                </li>
+            </ul>
+            <p style="margin: 0;">💡 <strong>คำแนะนำ:</strong> หน้าที่ต้อง Login (Dashboard, Menu Management, Table
+                Management ฯลฯ) จะ redirect ไปหน้า Login โดยอัตโนมัติ หากยังไม่ได้เข้าสู่ระบบ</p>
+        </div>
 
 
         <div class="journey-container">
@@ -325,13 +342,14 @@
                     <div class="scene-icon">💵</div>
                     <div class="scene-role">Cashier / Admin</div>
                     <h3 class="scene-title">เตรียมโต๊ะสำหรับลูกค้า</h3>
-                    <p class="scene-description">แคชเชียร์หรือแอดมินเข้าสู่ระบบและเตรียมโต๊ะให้ลูกค้า
-                        โดยสร้างโต๊ะใหม่หรือเปลี่ยนสถานะโต๊ะเป็น "Occupied" ระบบจะสร้าง QR Code ให้โดยอัตโนมัติ</p>
+                    <p class="scene-description">แคชเชียร์เข้าสู่ระบบและไปที่หน้า Cashier ซึ่งจะเห็นรายการโต๊ะทั้งหมด
+                        สามารถจองโต๊ะ เปิดโต๊ะเป็น "เริ่มใช้งาน" และพิมพ์ QR Code ให้ลูกค้าแสกน</p>
                     <ul class="steps-list">
-                        <li>เข้าสู่ระบบ</li>
-                        <li>ไปหน้า Table Management</li>
-                        <li>สร้างโต๊ะใหม่หรือเปิดโต๊ะ</li>
-                        <li>ระบบสร้าง QR Code</li>
+                        <li>เข้าสู่ระบบ (Cashier/Admin)</li>
+                        <li>ไปหน้า Cashier</li>
+                        <li>เลือกโต๊ะว่าง กด "เริ่มใช้งาน"</li>
+                        <li>ระบบสร้าง QR Code ให้ลูกค้า</li>
+                        <li>กด "พิมพ์" เพื่อพิมพ์ QR Code</li>
                     </ul>
                     <div class="scene-paths">
                         <div class="path-item">
@@ -339,8 +357,12 @@
                             <a href="/login" class="path-link">/login</a>
                         </div>
                         <div class="path-item">
-                            <i class="fas fa-table"></i>
-                            <a href="/table/create_new" class="path-link">/table/create_new</a>
+                            <i class="fas fa-cash-register"></i>
+                            <a href="/cashier" class="path-link">/cashier</a>
+                        </div>
+                        <div class="path-item">
+                            <i class="fas fa-print"></i>
+                            <span class="path-link">/cashier/qrcode (พิมพ์ QR)</span>
                         </div>
                     </div>
                 </div>
@@ -515,24 +537,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="note-box">
-            <p style="margin-bottom: 12px;"><strong>📝 หมายเหตุสำหรับการทดสอบระบบ:</strong></p>
-            <p style="margin-bottom: 8px;">🔐 <strong>ข้อมูล Login สำหรับทดสอบ:</strong></p>
-            <ul style="list-style: none; padding-left: 20px; margin-bottom: 12px;">
-                <li>👤 <strong>Username:</strong> <code
-                        style="background: #fff; padding: 2px 8px; border-radius: 4px; color: #667eea; font-weight: 700;">User1</code>
-                </li>
-                <li>🔑 <strong>Password:</strong> <code
-                        style="background: #fff; padding: 2px 8px; border-radius: 4px; color: #667eea; font-weight: 700;">1234</code>
-                </li>
-                <li>👑 <strong>Role:</strong> <code
-                        style="background: #fff; padding: 2px 8px; border-radius: 4px; color: #667eea; font-weight: 700;">Admin</code>
-                </li>
-            </ul>
-            <p style="margin: 0;">💡 <strong>คำแนะนำ:</strong> หน้าที่ต้อง Login (Dashboard, Menu Management, Table
-                Management ฯลฯ) จะ redirect ไปหน้า Login โดยอัตโนมัติ หากยังไม่ได้เข้าสู่ระบบ</p>
         </div>
     </div>
 </body>
