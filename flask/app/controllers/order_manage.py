@@ -15,6 +15,8 @@ from app.models.table import Tables
 
 
 @app.route('/orders')
+@login_required
+@roles_required('Admin')
 def orders():
     return render_template('Admin_page/order_list.html')
 

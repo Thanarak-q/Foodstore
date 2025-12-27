@@ -145,6 +145,8 @@ def review_delete():
     return reviews_list()
 
 @app.route('/list_review.html')
+@login_required
+@roles_required('Admin')
 def review_list():
     return render_template('Admin_page/list_review.html')
 

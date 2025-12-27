@@ -9,7 +9,7 @@ from flask_login import login_required
 from app.models.menu import Menu
 
 @app.route('/admin')
-@roles_required('Admin')
 @login_required
+@roles_required('Admin')
 def dashboard():
     return render_template('Admin_page/dashboard.html')
