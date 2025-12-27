@@ -63,40 +63,6 @@
             font-weight: 500;
         }
 
-        .credentials {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 24px 32px;
-            border-radius: 16px;
-            margin-bottom: 48px;
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .cred-item {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 12px 20px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .cred-label {
-            font-weight: 700;
-            color: #667eea;
-            font-size: 14px;
-        }
-
-        .cred-value {
-            color: #333;
-            font-family: 'Courier New', monospace;
-            font-weight: 700;
-            font-size: 14px;
-        }
-
         .journey-container {
             position: relative;
             padding: 20px 0;
@@ -347,20 +313,7 @@
             <p>ระบบสั่งอาหารออนไลน์ - User Journey</p>
         </div>
 
-        <div class="credentials">
-            <div class="cred-item">
-                <span class="cred-label">👤 Username:</span>
-                <span class="cred-value">User1</span>
-            </div>
-            <div class="cred-item">
-                <span class="cred-label">🔑 Password:</span>
-                <span class="cred-value">1234</span>
-            </div>
-            <div class="cred-item">
-                <span class="cred-label">👑 Role:</span>
-                <span class="cred-value">Admin</span>
-            </div>
-        </div>
+
 
         <div class="journey-container">
             <div class="timeline"></div>
@@ -565,8 +518,21 @@
         </div>
 
         <div class="note-box">
-            <p><strong>📝 หมายเหตุ:</strong> หน้าที่ต้อง Login สามารถใช้ Username: <code>User1</code> Password:
-                <code>1234</code> (Role: Admin) เพื่อทดสอบระบบ</p>
+            <p style="margin-bottom: 12px;"><strong>📝 หมายเหตุสำหรับการทดสอบระบบ:</strong></p>
+            <p style="margin-bottom: 8px;">🔐 <strong>ข้อมูล Login สำหรับทดสอบ:</strong></p>
+            <ul style="list-style: none; padding-left: 20px; margin-bottom: 12px;">
+                <li>👤 <strong>Username:</strong> <code
+                        style="background: #fff; padding: 2px 8px; border-radius: 4px; color: #667eea; font-weight: 700;">User1</code>
+                </li>
+                <li>🔑 <strong>Password:</strong> <code
+                        style="background: #fff; padding: 2px 8px; border-radius: 4px; color: #667eea; font-weight: 700;">1234</code>
+                </li>
+                <li>👑 <strong>Role:</strong> <code
+                        style="background: #fff; padding: 2px 8px; border-radius: 4px; color: #667eea; font-weight: 700;">Admin</code>
+                </li>
+            </ul>
+            <p style="margin: 0;">💡 <strong>คำแนะนำ:</strong> หน้าที่ต้อง Login (Dashboard, Menu Management, Table
+                Management ฯลฯ) จะ redirect ไปหน้า Login โดยอัตโนมัติ หากยังไม่ได้เข้าสู่ระบบ</p>
         </div>
     </div>
 </body>
