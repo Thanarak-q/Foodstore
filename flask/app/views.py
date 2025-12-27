@@ -34,12 +34,10 @@ from app.controllers import customer_table
 
 
 
-# @app.route('/')
-# @login_required
-# @roles_required('Admin')
-# def home():
-#     # return render_template('order_page/index.html')
-#     return '<h1> ready </h1>'
+@app.route('/')
+def home():
+    """Root landing page showing all available pages and login credentials"""
+    return render_template('landing_page.html')
 
 # @app.route('/index')
 # def index():
